@@ -1,5 +1,7 @@
 package backend;
 
+import shared.Course;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.*;
@@ -31,126 +33,22 @@ public class DatabaseHelper {
 		}
 	}
 
-	// ~~~~~~~~~~~~~~FOR TESTING CURRENTLY~~~~~~~~~~~~~~~~~~~~~~~~~
 	/**
-	 * Use the connection to create a new database in MySQL.
-	 */
-	public void preparedcreateDB() {
-		try {
-			String query = "CREATE DATABASE " + databaseName;
-			statement = connection.prepareStatement(query);
-			System.out.println("Created Database " + databaseName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create a default set of data table of tools inside the database
-	 */
-	
-	public void preparedcreateTable() {
-		String sql = "CREATE TABLE " + tableName + "(" + "ID INT(4) NOT NULL, " + "TOOLNAME VARCHAR(20) NOT NULL, "
-				+ "QUANTITY INT(4) NOT NULL, " + "PRICE DOUBLE(5,2) NOT NULL, " + "SUPPLIERID INT(4) NOT NULL, "
-				+ "PRIMARY KEY ( id ))";
-		try {
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate(sql);
-			System.out.println("Created Table " + tableName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Create a specific Table
-	 */
-	public void preparedcreateTable(String tableName) {
-		String sql = "CREATE TABLE " + tableName + "(" + "ID INT(4) NOT NULL, " + "TOOLNAME VARCHAR(20) NOT NULL, "
-				+ "QUANTITY INT(4) NOT NULL, " + "PRICE DOUBLE(5,2) NOT NULL, " + "SUPPLIERID INT(4) NOT NULL, "
-				+ "PRIMARY KEY ( id ))";
-		try {
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate(sql);
-			System.out.println("Created Table " + tableName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void preparedremoveTable() {
-		String sql = "DROP TABLE " + tableName;
-		try {
-			statement = connection.prepareStatement(sql);
-			statement.executeUpdate(sql);
-			System.out.println("Removed Table " + tableName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// Fills the data table with all the tools from the text file 'items.txt' if
-	// found
-	public void fillTable() {
-		try {
-			Scanner sc = new Scanner(new FileReader(dataFile));
-			while (sc.hasNext()) {
-				String toolInfo[] = sc.nextLine().split(";");
-				preparedaddItem(new Tool(Integer.parseInt(toolInfo[0]), toolInfo[1], Integer.parseInt(toolInfo[2]),
-						Double.parseDouble(toolInfo[3]), Integer.parseInt(toolInfo[4])));
-			}
-			sc.close();
-		} catch (FileNotFoundException e) {
-			System.err.println("File " + dataFile + " Not Found!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Adds a tool to the database table
+	 * Selects and searches for a course id
 	 * 
-	 * @param tool
-	 *            tool to be added
-	 */
-
-	public void preparedaddItem(Tool tool) {
-		String sql = "INSERT INTO ToolTable VALUES ( ?, ?, ?, ?, ?)";
-		try {
-			statement = connection.prepareStatement(sql);
-
-			// statement.setString(1,tableName);
-			statement.setInt(1, tool.getID());
-			statement.setString(2, tool.getName());
-			statement.setInt(3, tool.getQuantity());
-			statement.setDouble(4, tool.getPrice());
-			statement.setInt(5, tool.getSupplierID());
-
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Selects and searches for a tool id
-	 * 
-	 * @param toolID
+	 * @param courseID
 	 *            to be searched for
-	 * @return tool or null if no tool
+	 * @return course or null if no course
 	 */
-	public Tool preparedsearchTool(int toolID) {
-		String sql = "SELECT * FROM ToolTable WHERE ID= ?";
-		ResultSet tool;
+	public Course preparedsearchCourses(int courseID) {
+		String sql = "SELECT * FROM courses WHERE COURSENUMBER= ?";
+		ResultSet course;
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, toolID);
-			tool = statement.executeQuery();
-			if (tool.next()) {
-				return new Tool(tool.getInt("ID"), tool.getString("TOOLNAME"), tool.getInt("QUANTITY"),
-						tool.getDouble("PRICE"), tool.getInt("SUPPLIERID"));
+			statement.setInt(1, courseID);
+			course = statement.executeQuery();
+			if (course.next()) {
+				return new Course(course.getInt("COURSENUMBER"), course.getInt("PROFESSORID"), course.getString("COURSENAME"),  course.getBoolean("ACTIVE"));
 			}
 
 		} catch (SQLException e) {
@@ -159,68 +57,57 @@ public class DatabaseHelper {
 
 		return null;
 	}
-
+	
 	/**
 	 * prints all items in database to console
 	 */
 	public void preparedprintTable() {
 		try {
-			String sql = "SELECT * FROM " + tableName;
+			String sql = "SELECT * FROM " + coursesTable;
 			statement = connection.prepareStatement(sql);
-			ResultSet tools = statement.executeQuery(sql);
-			System.out.println("Tools:");
-			while (tools.next()) {
-				System.out.println(tools.getInt("ID") + " " + tools.getString("TOOLNAME") + " "
-						+ tools.getInt("QUANTITY") + " " + tools.getDouble("PRICE") + " " + tools.getInt("SUPPLIERID"));
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Courses:");
+			while (course.next()) {
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("PROFESSORID") + " " + course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
 			}
-			tools.close();
+			course.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
+//~~~~~~~~~~~~~FOR TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	public static void main(String args[]) {
-		InventoryManager inventory = new InventoryManager();
+		DatabaseHelper coursesDB = new DatabaseHelper();
 
-		// You should comment this line out once the first database is created (either
-		// here or in MySQL workbench)
-		// inventory.createDB();
 
-		inventory.preparedcreateTable();
+		System.out.println("Reading all courses from the table:");
+		coursesDB.preparedprintTable();
 
-		System.out.println("\nFilling the table with tools");
-		inventory.fillTable();
-
-		System.out.println("Reading all tools from the table:");
-		inventory.preparedprintTable();
-
-		System.out.println("\nSearching table for tool 1002: should return 'Grommets'");
-		int toolID = 1002;
-		Tool searchResult = inventory.preparedsearchTool(toolID);
+		System.out.println("\nSearching table for course 409: should return 'ENSF 409'");
+		int courseID = 409;
+		Course searchResult = coursesDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
-			System.out.println("Search Failed to find a tool matching ID: " + toolID);
+			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
 			System.out.println("Search Result: " + searchResult.toString());
 
-		System.out.println("\nSearching table for tool 9000: should fail to find a tool");
-		toolID = 9000;
-		searchResult = inventory.preparedsearchTool(toolID);
+		System.out.println("\nSearching table for tool 441: should fail to find a tool");
+		courseID = 441;
+		searchResult = coursesDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
-			System.out.println("Search Failed to find a tool matching ID: " + toolID);
+			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
 			System.out.println("Search Result: " + searchResult.toString());
 
-		System.out.println("\nTrying to remove the table");
-		inventory.preparedremoveTable();
 
 		try {
-			inventory.statement.close();
-			inventory.jdbc_connection.close();
+			coursesDB.statement.close();
+			coursesDB.connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			System.out.println("\nThe program is finished running");
 		}
 	}
-
 }
