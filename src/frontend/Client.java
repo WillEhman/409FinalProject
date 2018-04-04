@@ -9,11 +9,11 @@ public class Client {
 	public ObjectOutputStream out;
 	
 	public void communicate() {
-		
+		// TODO
 	}
 	
 	public File getFile(String path) {
-		File file1 = null;
-		return file1;
+		// TODO
+		return null;
 	}
 }

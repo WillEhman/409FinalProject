@@ -11,6 +11,11 @@ public class ProfessorGUI extends PageNavigator {
 	private Professor professor;
 	private boolean isProfessor;
 
+	public ProfessorGUI(JPanel pageHolder, CardLayout cardLayout) {
+		super(pageHolder, cardLayout);
+		// TODO Auto-generated constructor stub
+	}
+
 	public Client getClient() {
 		return client;
 	}
@@ -33,11 +38,6 @@ public class ProfessorGUI extends PageNavigator {
 
 	public void setProfessor(boolean isProfessor) {
 		this.isProfessor = isProfessor;
-	}
-
-	public ProfessorGUI(JPanel pageHolder, CardLayout cardLayout) {
-		super(pageHolder, cardLayout);
-		// TODO Auto-generated constructor stub
 	}
 
 }
