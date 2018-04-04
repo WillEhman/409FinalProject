@@ -10,7 +10,7 @@ public class BoxList {
 		this.scrollBox = scrollBox;
 	}
 	
-	public void addItem(T boxItem) {
+	public <T> void addItem(T boxItem) {
 		
 	}
 	
@@ -25,7 +25,5 @@ public class BoxList {
 	public void setScrollBox(JPanel scrollBox) {
 		this.scrollBox = scrollBox;
 	}
-	
-	
 	
 }
