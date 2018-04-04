@@ -48,7 +48,7 @@ public class DatabaseHelper {
 			statement.setInt(1, courseID);
 			course = statement.executeQuery();
 			if (course.next()) {
-				return new Course(course.getInt("COURSENUMBER"), course.getInt("PROFESSORID"), course.getString("COURSENAME"),  course.getBoolean("ACTIVE"));
+				return new Course(course.getInt("COURSENUMBER"), course.getString("PROFESSORNAME"), course.getString("COURSENAME"),  course.getBoolean("ACTIVE"));
 			}
 
 		} catch (SQLException e) {
@@ -68,7 +68,7 @@ public class DatabaseHelper {
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Courses:");
 			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("PROFESSORID") + " " + course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " " + course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
 			}
 			course.close();
 		} catch (SQLException e) {
@@ -84,13 +84,13 @@ public class DatabaseHelper {
 		System.out.println("Reading all courses from the table:");
 		coursesDB.preparedprintTable();
 
-		System.out.println("\nSearching table for course 409: should return 'ENSF 409'");
+		System.out.println("\nSearching table for course 409: should return 'SoftwareDesign'");
 		int courseID = 409;
 		Course searchResult = coursesDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
 			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
-			System.out.println("Search Result: " + searchResult.toString());
+			System.out.println("Search Result: " + searchResult.getCourseName());
 
 		System.out.println("\nSearching table for tool 441: should fail to find a tool");
 		courseID = 441;
