@@ -1,7 +1,10 @@
 package shared;
 
-public class Grade {
-	
+import java.io.Serializable;
+
+public class Grade implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int studentId;
 	private int grade;
 	private String studentName;

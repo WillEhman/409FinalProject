@@ -1,7 +1,10 @@
 package shared;
 
-public class StudentEnrollment {
-	
+import java.io.Serializable;
+
+public class StudentEnrollment implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int studentId;
 	private int courseId;

@@ -1,7 +1,10 @@
 package shared;
 
-public class Submission {
+import java.io.Serializable;
+
+public class Submission implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int assignId;
 	private int studentId;
