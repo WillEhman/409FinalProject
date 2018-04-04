@@ -3,7 +3,7 @@ package backend;
 import shared.*;
 
 public class FileHelper {
-	String PATH;
+	private String PATH;
 
 	public FileHelper() {
 		// TODO Auto-generated constructor stub

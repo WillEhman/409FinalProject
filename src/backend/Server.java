@@ -4,11 +4,11 @@ import java.util.concurrent.ExecutorService;
 
 public class Server {
 	
-	ExecutorService threadPool;
-	FileHelper fileManager;
-	DatabaseHelper database;
-	EmailHelper emailService;
-	int uniqueID;
+	private ExecutorService threadPool;
+	private FileHelper fileManager;
+	private DatabaseHelper database;
+	private EmailHelper emailService;
+	private int uniqueID;
 
 	public ExecutorService getThreadPool() {
 		return threadPool;

@@ -3,8 +3,8 @@ import shared.*;
 
 public class EmailHelper {
 	
-	String SERVER_EMAIL;
-	String SERVER_PASSWORD;
+	private String SERVER_EMAIL;
+	private String SERVER_PASSWORD;
 	
 	public EmailHelper() {
 		// TODO Auto-generated constructor stub

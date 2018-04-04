@@ -5,8 +5,8 @@ import java.io.ObjectOutputStream;
 
 public class Worker {
 	
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 	
 	public Worker(){
 		
