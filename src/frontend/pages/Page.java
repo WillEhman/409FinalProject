@@ -2,6 +2,7 @@ package frontend.pages;
 
 import java.util.*;
 
+import frontend.StudentGUI;
 import frontend.components.*;
 import shared.*;
 
