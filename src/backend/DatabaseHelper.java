@@ -9,8 +9,7 @@ public class DatabaseHelper {
 	private PreparedStatement statement;
 	private Connection connection;
 	private String sql;
-	public String databaseName = "school_master", studentsTable = "students", professorsTable = "professors",
-			coursesTable = "courses";
+	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master", login = "student", password = "student";
 
 	public DatabaseHelper() {
@@ -45,7 +44,8 @@ public class DatabaseHelper {
 			statement.setInt(1, courseID);
 			course = statement.executeQuery();
 			if (course.next()) {
-				return new Course(course.getInt("COURSENUMBER"), course.getString("PROFESSORNAME"), course.getString("COURSENAME"),  course.getBoolean("ACTIVE"));
+				return new Course(course.getInt("COURSENUMBER"), course.getString("PROFESSORNAME"),
+						course.getString("COURSENAME"), course.getBoolean("ACTIVE"));
 			}
 
 		} catch (SQLException e) {
@@ -54,36 +54,98 @@ public class DatabaseHelper {
 
 		return null;
 	}
-	
+
+	public boolean isValidStudentLogin(String username, String password) {
+		String sql = "SELECT * FROM users WHERE USERNAME= ?";
+		ResultSet user;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			user = statement.executeQuery();
+
+			if (user.next()) {
+				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equals("s")) {
+					return true;
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
+	public boolean isValidProfLogin(String username, String password) {
+		String sql = "SELECT * FROM users WHERE USERNAME= ?";
+		ResultSet user;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, username);
+			user = statement.executeQuery();
+
+			if (user.next()) {
+				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equals("p")) {
+					return true;
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 	/**
 	 * prints all items in database to console
 	 */
-	public void preparedprintTable() {
+	public void preparedprintCourses() {
 		try {
 			String sql = "SELECT * FROM " + coursesTable;
 			statement = connection.prepareStatement(sql);
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Courses:");
 			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " " + course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " "
+						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
 			}
 			course.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-//~~~~~~~~~~~~~FOR TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	public static void main(String args[]) {
-		DatabaseHelper coursesDB = new DatabaseHelper();
 
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintUsers() {
+		try {
+			String sql = "SELECT * FROM " + usersTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Users:");
+			while (course.next()) {
+				System.out.println(course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
+						+ (char) course.getInt("TYPE"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	// ~~~~~~~~~~~~~FOR
+	// TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	public static void main(String args[]) {
+		DatabaseHelper masterDB = new DatabaseHelper();
 
 		System.out.println("Reading all courses from the table:");
-		coursesDB.preparedprintTable();
+		masterDB.preparedprintCourses();
 
 		System.out.println("\nSearching table for course 409: should return 'SoftwareDesign'");
 		int courseID = 409;
-		Course searchResult = coursesDB.preparedsearchCourses(courseID);
+		Course searchResult = masterDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
 			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
@@ -91,20 +153,69 @@ public class DatabaseHelper {
 
 		System.out.println("\nSearching table for tool 441: should fail to find a tool");
 		courseID = 441;
-		searchResult = coursesDB.preparedsearchCourses(courseID);
+		searchResult = masterDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
 			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
 			System.out.println("Search Result: " + searchResult.toString());
 
+		System.out.println("\nThe program is finished running through the courses");
+
+		// try {
+		// coursesDB.statement.close();
+		// coursesDB.connection.close();
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// } finally {
+		// System.out.println("\nThe program is finished running through the courses");
+		// }
+		//
+
+		// DatabaseHelper usersDB = new DatabaseHelper();
+
+		System.out.println("Reading all users from the table:");
+		masterDB.preparedprintCourses();
+
+		System.out.println();
+		System.out.println("Student Logins");
+		System.out.println("Trying to login as Will. Should succeed:");
+		if (masterDB.isValidStudentLogin("will", "pw")) {
+			System.out.println("Successful login");
+		} else {
+			System.err.println("Failed login");
+		}
+
+		System.out.println("Trying to login as David. Should fail:");
+		if (masterDB.isValidStudentLogin("dave", "asdf")) {
+			System.out.println("Successful login");
+		} else {
+			System.err.println("Failed login");
+		}
+
+		System.out.println();
+		System.out.println("Student Logins");
+		System.out.println("Trying to login as Will. Should fail:");
+		if (masterDB.isValidProfLogin("will", "pw")) {
+			System.out.println("Successful login");
+		} else {
+			System.err.println("Failed login");
+		}
+
+		System.out.println("Trying to login as Norm. Should Succeed:");
+		if (masterDB.isValidProfLogin("norm", "42")) {
+			System.out.println("Successful login");
+		} else {
+			System.err.println("Failed login");
+		}
 
 		try {
-			coursesDB.statement.close();
-			coursesDB.connection.close();
+			masterDB.statement.close();
+			masterDB.connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("\nThe program is finished running");
+			System.out.println("\nThe program is finished running through the users");
 		}
+
 	}
 }
