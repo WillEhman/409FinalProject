@@ -8,7 +8,7 @@ import shared.*;
 
 // T extends Box U????
 
-public class Page {
+public class Page <T, U> {
 	protected boolean isProfessor;
 	protected ArrayList<U> itemList;
 	protected BoxList<T> itemDisplay;

@@ -3,7 +3,7 @@ package frontend.components;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 
-public class BoxList {
+public class BoxList <E> {
 	private JPanel scrollBox;
 
 	public BoxList(JPanel scrollBox) {
