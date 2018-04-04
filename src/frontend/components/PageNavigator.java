@@ -26,7 +26,7 @@ public class PageNavigator {
 	}
 	
 	public JPanel searchPage(String page) {
-		
+		return null; //Set later
 	}
 	
 	public JPanel getPageHolder() {
