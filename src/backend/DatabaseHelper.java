@@ -174,7 +174,7 @@ public class DatabaseHelper {
 		// DatabaseHelper usersDB = new DatabaseHelper();
 
 		System.out.println("Reading all users from the table:");
-		masterDB.preparedprintCourses();
+		masterDB.preparedprintUsers();
 
 		System.out.println();
 		System.out.println("Student Logins");
@@ -193,7 +193,7 @@ public class DatabaseHelper {
 		}
 
 		System.out.println();
-		System.out.println("Student Logins");
+		System.out.println("Professor Logins");
 		System.out.println("Trying to login as Will. Should fail:");
 		if (masterDB.isValidProfLogin("will", "pw")) {
 			System.out.println("Successful login");
