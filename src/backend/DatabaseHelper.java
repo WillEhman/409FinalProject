@@ -2,16 +2,13 @@ package backend;
 
 import shared.Course;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.sql.*;
-import java.util.Scanner;
 
 public class DatabaseHelper {
 
-	PreparedStatement statement;
-	Connection connection;
-	String sql;
+	private PreparedStatement statement;
+	private Connection connection;
+	private String sql;
 	public String databaseName = "school_master", studentsTable = "students", professorsTable = "professors",
 			coursesTable = "courses";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master", login = "student", password = "student";
