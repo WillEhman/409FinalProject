@@ -1,4 +1,5 @@
 package backend;
+import shared.*;
 
 public class EmailHelper {
 	
