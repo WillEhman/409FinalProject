@@ -1,6 +1,8 @@
 package frontend.pages;
 
 import java.util.*;
+
+import frontend.components.*;
 import shared.*;
 
 // T extends Box U????
