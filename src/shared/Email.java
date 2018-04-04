@@ -1,9 +1,11 @@
 package shared;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Email {
+public class Email implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String from;
 	private ArrayList<String> to;
 	private String subject;
