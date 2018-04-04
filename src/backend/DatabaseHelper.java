@@ -5,9 +5,6 @@ import java.io.FileReader;
 import java.sql.*;
 import java.util.Scanner;
 
-import lab8ex1.InventoryManager;
-import lab8ex1.Tool;
-
 public class DatabaseHelper {
 
 	PreparedStatement statement;
@@ -51,7 +48,24 @@ public class DatabaseHelper {
 	}
 
 	/**
-	 * Create a data table of tools inside the database
+	 * Create a default set of data table of tools inside the database
+	 */
+	
+	public void preparedcreateTable() {
+		String sql = "CREATE TABLE " + tableName + "(" + "ID INT(4) NOT NULL, " + "TOOLNAME VARCHAR(20) NOT NULL, "
+				+ "QUANTITY INT(4) NOT NULL, " + "PRICE DOUBLE(5,2) NOT NULL, " + "SUPPLIERID INT(4) NOT NULL, "
+				+ "PRIMARY KEY ( id ))";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.executeUpdate(sql);
+			System.out.println("Created Table " + tableName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Create a specific Table
 	 */
 	public void preparedcreateTable(String tableName) {
 		String sql = "CREATE TABLE " + tableName + "(" + "ID INT(4) NOT NULL, " + "TOOLNAME VARCHAR(20) NOT NULL, "
