@@ -10,7 +10,7 @@ import shared.Course;
  *          CoursePage class
  */
 
-public class CoursePage extends Page {
+public class CoursePage<T,U> extends Page<T,U> {
 	
 	/**
 	 * course for CoursePage

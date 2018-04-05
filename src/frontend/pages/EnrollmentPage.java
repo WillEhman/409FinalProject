@@ -11,7 +11,7 @@ import shared.*;
  *          EnrollmentPage class
  */
 
-public class EnrollmentPage extends Page {
+public class EnrollmentPage<T,U> extends Page<T,U> {
 	/**
 	 * list of students currently enrolled
 	 */

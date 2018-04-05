@@ -10,7 +10,7 @@ import shared.*;
  *          GradePage class
  */
 
-public class GradePage extends Page {
+public class GradePage<T,U> extends Page<T,U> {
 	/**
 	 * course used by GradePage
 	 */

@@ -9,7 +9,7 @@ import shared.*;
  * 
  *          Contains SubmissionPage class
  */
-public class SubmissionPage extends Page {
+public class SubmissionPage<T,U> extends Page<T,U> {
 
 	/**
 	 * Submission associated with Page

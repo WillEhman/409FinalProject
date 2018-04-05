@@ -8,6 +8,6 @@ package frontend.pages;
  *          Homepage class
  */
 
-public class Homepage extends Page {
+public class Homepage<T,U> extends Page<T,U> {
 	// TODO: should something be here?
 }
