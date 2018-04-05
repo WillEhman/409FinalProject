@@ -1,5 +1,13 @@
 package frontend.pages;
 
+/**
+ * @author Luke Kushneryk
+ * @since April 4 2018
+ * @version 1.0
+ * 
+ *          Homepage class
+ */
+
 public class Homepage extends Page {
-	// TODO: should this have something in it maybe?  Probably not, but just wondering
+	// TODO: should something be here?
 }
