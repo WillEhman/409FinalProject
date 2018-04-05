@@ -81,7 +81,7 @@ public class Course implements Serializable {
 		return profId;
 	}
 
-	public void setProfName(int profId) {
+	public void setProfId(int profId) {
 		this.profId = profId;
 	}
 

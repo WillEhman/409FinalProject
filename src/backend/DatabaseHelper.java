@@ -2,6 +2,7 @@ package backend;
 
 import shared.Course;
 import shared.LoginInfo;
+import shared.Professor;
 import shared.Student;
 import shared.User;
 
@@ -205,16 +206,16 @@ public class DatabaseHelper {
 			ResultSet uset = statement.executeQuery();
 
 			while (uset.next()) {
-					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
-							uset.getString("type"), uset.getString("email")));
-				
+				results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+						uset.getString("type"), uset.getString("email")));
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return results;
 	}
-	
+
 	public Vector<User> preparedSearchUsersinCourse(int id, int coursenumber) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -259,7 +260,7 @@ public class DatabaseHelper {
 		}
 		return results;
 	}
-	
+
 	public Vector<User> preparedSearchUsersinCourse(String lastname, int coursenumber) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -285,7 +286,7 @@ public class DatabaseHelper {
 		}
 		return results;
 	}
-	
+
 	public void preparedEnrol(int userid, int courseid) {
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
@@ -299,19 +300,42 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preparedUnenrol(int userid, int courseid) {
 		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, courseid);
 			statement.setInt(2, userid);
-			
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	Vector<Course> listCourses(Professor prof) {
+		try {
+			Vector<Course> listofCourses = new Vector<Course>();
+			String sql = "SELECT * FROM WHERE PROFESSORID=?" + coursesTable;
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, prof.getId());
+			ResultSet course = statement.executeQuery(sql);
+			while (course.next()) {
+				Course temp = new Course();
+				temp.setActive(course.getBoolean("ACTIVE"));
+				temp.setCourseId(course.getInt("COURSENUMBER"));
+				temp.setCourseName(course.getString("COURSENAME") );
+				temp.setProfId(course.getInt("PROFESSORID"));
+				listofCourses.add(temp);
+			}
+			course.close();
+			return listofCourses;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -418,12 +442,12 @@ public class DatabaseHelper {
 			System.out.println(result.get(i).toString());
 		}
 		System.out.println("Searching for Students with last name Ehman in 409. Should return 2 results");
-		result = masterDB.preparedSearchUsersinCourse("Ehman",409);
+		result = masterDB.preparedSearchUsersinCourse("Ehman", 409);
 		for (int i = 0; i < result.size(); i++) {
 			System.out.println(result.get(i).toString());
 		}
 		System.out.println("Searching for Students with last name Ehman in 453. Should return 1 result");
-		result = masterDB.preparedSearchUsersinCourse("Ehman",453);
+		result = masterDB.preparedSearchUsersinCourse("Ehman", 453);
 		for (int i = 0; i < result.size(); i++) {
 			System.out.println(result.get(i).toString());
 		}
@@ -431,20 +455,18 @@ public class DatabaseHelper {
 		System.out.println("\nThe program is finished running through the users");
 
 		System.out.println();
-		
+
 		System.out.println("Reading all enrolments from the table:");
 		masterDB.preparedprintEnrolments();
-		
+
 		System.out.println("Enrolling Will in 453");
-		masterDB.preparedEnrol(2,453);
+		masterDB.preparedEnrol(2, 453);
 		masterDB.preparedprintEnrolments();
-		
+
 		System.out.println("Unenrolling Will in 453");
-		masterDB.preparedUnenrol(2,453);
+		masterDB.preparedUnenrol(2, 453);
 		masterDB.preparedprintEnrolments();
-		
-		
-		
+
 		System.out.println();
 
 		System.out.println("Reading all assignments from the table:");
@@ -519,7 +541,7 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * prints all items in database to console
 	 */
@@ -538,4 +560,5 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+
 }

@@ -7,6 +7,7 @@ import java.util.Vector;
 import shared.Course;
 import shared.LoginInfo;
 import shared.Message;
+import shared.Professor;
 import shared.User;
 
 public class Worker implements Runnable {
@@ -79,9 +80,9 @@ public class Worker implements Runnable {
 				}
 			}
 			
-			if (inMessage.getQuery().equals("COURSE")) {
+			if (inMessage.getQuery().equals("COURSE") && inMessage.getObject().getClass().toString().contains("Professor")) {
 				Vector<Course> cVector = new Vector<Course>();
-				
+				cVector = database.listCourses((Professor)inMessage.getObject());
 				Message<?> outMessage = new Message<Vector>(cVector, "PROFLOGIN");
 				out.writeObject(outMessage);
 			}
@@ -110,5 +111,7 @@ public class Worker implements Runnable {
 	void closeConnection() {
 
 	}
+	
+	
 
 }
