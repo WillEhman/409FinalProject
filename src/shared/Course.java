@@ -24,7 +24,7 @@ public class Course implements Serializable {
 	/**
 	 * name of course professor
 	 */
-	private String profName;
+	private int profId;
 
 	/**
 	 * name of course
@@ -44,9 +44,9 @@ public class Course implements Serializable {
 	 * @param courseName
 	 * @param active
 	 */
-	public Course(int courseId, String profName, String courseName, boolean active) {
+	public Course(int courseId, int profId, String courseName, boolean active) {
 		this.courseId = courseId;
-		this.profName = profName;
+		this.profId = profId;
 		this.courseName = courseName;
 		this.active = active;
 	}
@@ -63,12 +63,12 @@ public class Course implements Serializable {
 		this.courseId = courseId;
 	}
 
-	public String getProfName() {
-		return profName;
+	public int getProfName() {
+		return profId;
 	}
 
-	public void setProfName(String profName) {
-		this.profName = profName;
+	public void setProfName(int profId) {
+		this.profId = profId;
 	}
 
 	public String getCourseName() {

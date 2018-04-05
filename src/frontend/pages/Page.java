@@ -5,15 +5,45 @@ import java.util.*;
 import frontend.*;
 import frontend.components.*;
 
-// TODO: T extends Box U????
+/**
+ * @author Luke Kushneryk
+ * @since April 4 2018
+ * @version 1.0
+ * 
+ *          top level Page
+ */
 
-public class Page <T, U> {
+public class Page<T, U> {
+
+	/**
+	 * true if professor
+	 */
 	protected boolean isProfessor;
+
+	/**
+	 * list of information displayed on the page
+	 */
 	protected ArrayList<U> itemList;
+
+	/**
+	 * list of menu items
+	 */
 	protected BoxList<T> itemDisplay;
+
+	/**
+	 * student GUI
+	 */
 	protected StudentGUI student;
+
+	/**
+	 * professor GUI
+	 */
 	protected ProfessorGUI professor;
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public boolean isProfessor() {
 		return isProfessor;
 	}

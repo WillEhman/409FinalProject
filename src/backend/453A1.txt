@@ -1,0 +1,2 @@
+This assignment must be completed in at least 3 colors of pen
+Design a logic circuit to implement A+B+C+D+E+G+H+I+J+K+L+M+N+P+Q+R+S+T+U+V+X+Y+Z=F

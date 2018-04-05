@@ -1,0 +1,2 @@
+This assignment is very easy
+Create a client/server application to hack Google

@@ -3,10 +3,29 @@ package frontend.pages;
 import java.util.*;
 import shared.*;
 
+/**
+ * @author Luke Kushneryk
+ * @since April 4 2018
+ * @version 1.0
+ * 
+ *          EnrollmentPage class
+ */
+
 public class EnrollmentPage extends Page {
+	/**
+	 * list of students currently enrolled
+	 */
 	private ArrayList<Student> enrolledStudentList;
+
+	/**
+	 * course enrollment page is looking at
+	 */
 	private Course course;
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public ArrayList<Student> getEnrolledStudentList() {
 		return enrolledStudentList;
 	}
