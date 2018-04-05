@@ -3,6 +3,8 @@ package frontend;
 import java.io.*;
 import java.net.*;
 
+import com.mysql.jdbc.log.Log;
+
 import shared.LoginInfo;
 
 public class Client implements Serializable {
@@ -26,14 +28,13 @@ public class Client implements Serializable {
 
 	}
 
-	public void communicate(LoginWindow gui){
-//		LoginInfo login = new LoginInfo("will", "pw");
-
+	public void communicate(LoginInfo l) {
 		try {
-			if (gui.getLoginInfo() != null) {
-			out.writeObject(gui.getLoginInfo());
-			}
-		} catch (IOException e) {
+//			if (gui.getLoginInfo().getUsername() != null && gui.getLoginInfo().getPassword() != null) {
+				System.out.println("Its not NULL");
+				out.writeObject(l);
+//			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
@@ -44,7 +45,29 @@ public class Client implements Serializable {
 			e.printStackTrace();
 		}
 
-		
+	}
+	public void communicate(LoginWindow l) {
+//		 LoginInfo login = new LoginInfo("will", "pw");
+//		LoginInfo l = new LoginInfo(null, null);
+//		LoginWindow gui = new LoginWindow(l);
+//		System.out.println(l.getUsername());
+//		System.out.println(l.getPassword());
+		try {
+			if (l.getLoginInfo().getUsername() != null && l.getLoginInfo().getPassword() != null) {
+				System.out.println("Its not NULL");
+				out.writeObject(l.getLoginInfo());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			System.out.println(in.readObject());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public File getFile(String path) {
@@ -53,15 +76,16 @@ public class Client implements Serializable {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Client client = new Client("localhost", 9090);
-		LoginWindow gui = new LoginWindow();
-		while(true) {
-		try {
-		client.communicate(gui);
-		}catch (Exception e) {
-			e.printStackTrace();
-			break;
-		}
-		}
+		Client client = new Client("10.13.166.195", 9090);
+		LoginWindow l = new LoginWindow();
+//		while (true) {
+//			System.out.println(l.getLoginInfo().getUsername());
+//			try {
+//				client.communicate();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				break;
+//			}
+//		}
 	}
 }

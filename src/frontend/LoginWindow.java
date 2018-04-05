@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -19,6 +20,7 @@ public class LoginWindow {
 	private LoginInfo loginInfo;
 
 	public LoginWindow() {
+		loginInfo = new LoginInfo(null,null);
 		JFrame frame = new JFrame("Login");
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
@@ -33,7 +35,7 @@ public class LoginWindow {
 		title.add(titleLabel);
 		
 		username = new JTextField();
-		password = new JPasswordField();
+		password = new JTextField();
 		JLabel userLabel = new JLabel("Username: ");
 		JLabel passLabel = new JLabel("Password: ");
 		main.add(userLabel);
@@ -46,6 +48,15 @@ public class LoginWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				loginInfo.setUsername(username.getText());
 				loginInfo.setPassword(password.getText());
+				System.out.println("Pressed");
+				try {
+					Client client = new Client("10.13.166.195", 9090);
+					client.communicate(loginInfo);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+//				System.out.println(l.getUsername());
+//				System.out.println(l.getPassword());
 			}
 		});
 		buttons.add(b); //TODO: add action listener to send username and pass to server
@@ -57,14 +68,13 @@ public class LoginWindow {
 		frame.setSize(300,200);
 		frame.setVisible(true);
 	}
-
+	
 	public LoginInfo getLoginInfo() {
 		return loginInfo;
 	}
 	
 	public static void main(String[] args) {
 		LoginWindow l = new LoginWindow();
-		System.out.println(l.getLoginInfo());
 	}
 
 }
