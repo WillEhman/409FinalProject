@@ -9,7 +9,7 @@ public class GradeItem {
 	}
 	
 	public void changeBoxColor() {
-		// TODO
+		// TODO: something to do with dropboxes?
 	}
 	
 }
