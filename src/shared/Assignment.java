@@ -2,16 +2,65 @@ package shared;
 
 import java.io.Serializable;
 
-public class Assignment implements Serializable{
+/**
+ * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
+ * 
+ *          class for submitted assignments
+ */
+public class Assignment implements Serializable {
 
+	/**
+	 * serial id for the class
+	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * unique id for each assignment
+	 */
 	private int assignId;
+
+	/**
+	 * associated course id
+	 */
 	private int courseId;
+
+	/**
+	 * title of assignment
+	 */
 	private String title;
+
+	/**
+	 * path of assignment file
+	 */
 	private String path;
+
+	/**
+	 * tells whether or not assignment is active
+	 */
 	private boolean active;
+
+	/**
+	 * due date of assignment
+	 */
 	private String dueDate;
-	
+
+	/**
+	 * constructor for assignment
+	 * 
+	 * @param aid
+	 *            assignment id
+	 * @param cid
+	 *            course id
+	 * @param title
+	 *            String with assignment title
+	 * @param path
+	 * @param a
+	 *            sets active boolean
+	 * @param date
+	 *            due date for assignment
+	 */
 	public Assignment(int aid, int cid, String title, String path, boolean a, String date) {
 		assignId = aid;
 		courseId = cid;
@@ -21,6 +70,10 @@ public class Assignment implements Serializable{
 		dueDate = date;
 	}
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public int getAssignId() {
 		return assignId;
 	}
@@ -68,5 +121,5 @@ public class Assignment implements Serializable{
 	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
-	
+
 }

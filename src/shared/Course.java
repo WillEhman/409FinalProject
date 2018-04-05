@@ -2,14 +2,48 @@ package shared;
 
 import java.io.Serializable;
 
-public class Course implements Serializable{
+/**
+ * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
+ * 
+ *          contains Course object
+ */
+public class Course implements Serializable {
 
+	/**
+	 * Serial id for object
+	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * unique course id
+	 */
 	private int courseId;
+
+	/**
+	 * name of course professor
+	 */
 	private String profName;
+
+	/**
+	 * name of course
+	 */
 	private String courseName;
+
+	/**
+	 * true if currently active
+	 */
 	private boolean active;
-	
+
+	/**
+	 * Constructor for course
+	 * 
+	 * @param courseId
+	 * @param profName
+	 * @param courseName
+	 * @param active
+	 */
 	public Course(int courseId, String profName, String courseName, boolean active) {
 		this.courseId = courseId;
 		this.profName = profName;
@@ -17,6 +51,10 @@ public class Course implements Serializable{
 		this.active = active;
 	}
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public int getCourseId() {
 		return courseId;
 	}
@@ -48,6 +86,5 @@ public class Course implements Serializable{
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
-	
+
 }
