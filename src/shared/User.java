@@ -2,14 +2,49 @@ package shared;
 
 import java.io.Serializable;
 
+/**
+ * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
+ * 
+ *          Contains User Class
+ */
+
 public class User implements Serializable {
 
+	/**
+	 * Serial ID
+	 */
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * unique id of user
+	 */
 	private int id;
+
+	/**
+	 * first name of user
+	 */
 	private String firstName;
+
+	/**
+	 * last name of user
+	 */
 	private String lastName;
+
+	/**
+	 * type of user. 'S' for student, 'P' for professor
+	 */
 	private String type;
 
+	/**
+	 * Constructor for user
+	 * 
+	 * @param id
+	 * @param firstName
+	 * @param lastName
+	 * @param type
+	 */
 	public User(int id, String firstName, String lastName, String type) {
 		this.id = id;
 		this.firstName = firstName;
@@ -17,6 +52,10 @@ public class User implements Serializable {
 		this.type = type;
 	}
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public String getType() {
 		return type;
 	}
