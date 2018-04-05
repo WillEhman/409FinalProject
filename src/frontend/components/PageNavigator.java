@@ -79,6 +79,7 @@ public class PageNavigator {
 		pageHolder = p;
 		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		infoPanel.add(pageHolder);
+		frame.setVisible(true);
 	}
 	
 	public void setListener(eventListener e) {
