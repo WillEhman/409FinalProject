@@ -6,19 +6,23 @@ import java.awt.FlowLayout;
 
 import javax.swing.*;
 
+import shared.Course;
+
 public class PageNavigator {
 
 	private JFrame frame;
 	private JPanel pageHolder;
+	private JPanel coursePanel;
 	private JList<String> courses;
-	private JButton add;
 	private JLabel courseName;
 	private JComboBox<String> selection;
+	private JButton add;
+	private Course course;
 
 	public PageNavigator() {
 		//Initialize the panels and frame
 		frame = new JFrame("Course Manager 2018");
-		JPanel coursePanel = new JPanel();
+		coursePanel = new JPanel();
 		JPanel infoPanel = new JPanel();
 		JPanel title = new JPanel();
 		JPanel infoTitle = new JPanel();
@@ -36,16 +40,16 @@ public class PageNavigator {
 		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
 		JScrollPane cScroll = new JScrollPane(courses);
-		add = new JButton("Add");
+		add = new JButton("add");
 		add.setAlignmentX(Component.CENTER_ALIGNMENT);
 		cTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		coursePanel.add(cTitle);
 		coursePanel.add(cScroll);
-		coursePanel.add(add);
+		//coursePanel.add(add);
 		
 		//Setup Info Panel
 		courseName = new JLabel("TEMP TITLE");
-		String[] options = {"Students","Assignments","Grades"};
+		String[] options = {"Home","Students","Assignments"};
 		selection = new JComboBox<String>(options);
 		infoTitle.add("West", selection);
 		infoTitle.add("Center", courseName);
@@ -59,12 +63,19 @@ public class PageNavigator {
 		frame.setSize(1000,600);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
 		
+	}
+	
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
 	}
 	
 	public void displayPage(JPanel p) {
 		pageHolder = p;
+	}
+
+	public JPanel getCoursePanel() {
+		return coursePanel;
 	}
 
 	public void showPage(String page) {
@@ -87,11 +98,7 @@ public class PageNavigator {
 		return pageHolder;
 	}
 
-	public void setPageHolder(JPanel pageHolder) {
-		this.pageHolder = pageHolder;
-	}
-
-	public static void main(String[] args) {
-		PageNavigator n = new PageNavigator();
-	}
+//	public static void main(String[] args) {
+//		PageNavigator n = new PageNavigator();
+//	}
 }
