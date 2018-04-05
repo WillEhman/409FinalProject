@@ -127,7 +127,7 @@ public class DatabaseHelper {
 			System.out.println("Users:");
 			while (course.next()) {
 				System.out.println(course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
-						+ (char) course.getInt("TYPE"));
+						+ course.getString("TYPE"));
 			}
 			course.close();
 		} catch (SQLException e) {
@@ -135,8 +135,7 @@ public class DatabaseHelper {
 		}
 	}
 
-	// ~~~~~~~~~~~~~FOR
-	// TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~FORTESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	public static void main(String args[]) {
 		DatabaseHelper masterDB = new DatabaseHelper();
 
@@ -151,7 +150,7 @@ public class DatabaseHelper {
 		else
 			System.out.println("Search Result: " + searchResult.getCourseName());
 
-		System.out.println("\nSearching table for tool 441: should fail to find a tool");
+		System.out.println("\nSearching table for tool 441: should fail to find a course");
 		courseID = 441;
 		searchResult = masterDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
@@ -160,18 +159,6 @@ public class DatabaseHelper {
 			System.out.println("Search Result: " + searchResult.toString());
 
 		System.out.println("\nThe program is finished running through the courses");
-
-		// try {
-		// coursesDB.statement.close();
-		// coursesDB.connection.close();
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// } finally {
-		// System.out.println("\nThe program is finished running through the courses");
-		// }
-		//
-
-		// DatabaseHelper usersDB = new DatabaseHelper();
 
 		System.out.println("Reading all users from the table:");
 		masterDB.preparedprintUsers();

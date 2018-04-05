@@ -1,14 +1,104 @@
 package backend;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
-public class Server {
-	
+public class Server{
+
+	private ServerSocket serverSocket;
+	private Socket commSocket;
+
+	protected boolean isStopped = false;
+	protected Thread runningThread = null;
+
 	private ExecutorService threadPool;
 	private FileHelper fileManager;
 	private DatabaseHelper database;
 	private EmailHelper emailService;
 	private int uniqueID;
+
+	public Server() {
+		try {
+			serverSocket = new ServerSocket(9090);
+
+		} catch (IOException e) {
+		}
+		System.out.println("Server now running.");
+	}
+
+	public void run(Server server) {
+		
+		
+		try {
+			for(;;) {
+				threadPool.execute(new Worker(serverSocket.accept(),server));
+			}
+		}catch(IOException e) {
+			threadPool.shutdown();
+		}
+//		synchronized(this){
+//            this.runningThread = Thread.currentThread();
+//        }
+//        openServerSocket();
+//        while(! isStopped()){
+//            Socket clientSocket = null;
+//            try {
+//                clientSocket = this.serverSocket.accept();
+//            } catch (IOException e) {
+//                if(isStopped()) {
+//                    System.out.println("Server Stopped.") ;
+//                    break;
+//                }
+//                throw new RuntimeException(
+//                    "Error accepting client connection", e);
+//            }
+//            try {
+//				this.threadPool.execute(new Worker(clientSocket));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//        }
+//        this.threadPool.shutdown();
+//        System.out.println("Server Stopped.") ;
+	}
+	
+//	private void openServerSocket() {
+//        try {
+//            this.serverSocket = new ServerSocket(9090);
+//        } catch (IOException e) {
+//            throw new RuntimeException("Cannot open port 9090", e);
+//        }
+//    }
+	
+	int generateUniqueID() {
+		return 0;
+	}
+	
+	public static void main(String[] args){
+		Server server = new Server();
+		DatabaseHelper database = new DatabaseHelper();
+		FileHelper fileManager = new FileHelper();
+		EmailHelper emailService = new EmailHelper();
+		
+		server.run(server);
+	}
+	
+	void shutdown(Server server) {
+		// Close all sockets
+		try {
+			threadPool.shutdown();
+			server.commSocket.close();
+			server.serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	public ExecutorService getThreadPool() {
 		return threadPool;
@@ -17,6 +107,10 @@ public class Server {
 	public void setThreadPool(ExecutorService threadPool) {
 		this.threadPool = threadPool;
 	}
+	
+	private synchronized boolean isStopped() {
+        return this.isStopped;
+    }
 
 	public FileHelper getFileManager() {
 		return fileManager;
@@ -49,24 +143,5 @@ public class Server {
 	public void setUniqueID(int uniqueID) {
 		this.uniqueID = uniqueID;
 	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-	
-	void run() {
-		
-	}
-	
-	int generateUniqueID() {
-		return 0;
-	}
-	
-	void shutdown(){
-		
-	}
-	
-	
 
 }
