@@ -2,6 +2,7 @@ package backend;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.*;
 
 import shared.LoginInfo;
 
@@ -10,6 +11,7 @@ public class Worker implements Runnable {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private Server server;
+	private Clock clock;
 
 	public Worker(Socket commSocket, Server server) throws IOException {
 		System.out.println("Created Worker");
@@ -31,23 +33,24 @@ public class Worker implements Runnable {
 	@Override
 	public void run() {
 			LoginInfo login = null;
-			System.out.println("Running...");
+			System.out.println("Running");
 			try {
-				
+				System.out.println("Running login sequence");
 				try {
 					login = (LoginInfo) in.readObject();
-//					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
-//					System.out.println(server.getDatabase());
+					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
+					System.out.println(server.getDatabase());
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
 						out.writeObject("LOGIN SUCCESSFUL");
+						System.out.println("Successful login at: " + clock.instant());
 					}
 					else {
 						out.writeObject("UH OH! LOGIN UNSUCCESSFUL");
+						System.out.println("Unsuccessful login at: " + clock.instant());
 					}
-				}catch(Exception e) {
-					System.err.println("Exception");
-					System.out.println(e.getMessage());
-					e.printStackTrace();
+				}catch(IOException e) {
+					System.err.println("Client Disconnected");
+					System.err.println();
 				}
 				
 				

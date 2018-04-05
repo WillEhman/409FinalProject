@@ -34,14 +34,12 @@ public class Server{
 	}
 
 	public void run(Server server) {
-		
-		System.out.println("got into run");
 		try {
 			for(;;) {
 				threadPool.execute(new Worker(serverSocket.accept(),server));
 			}
 		}catch(IOException e) {
-			System.out.println("Shutting Down");
+			System.out.println("Exception in server run: Shutting Down");
 			threadPool.shutdown();
 		}
 	}
@@ -55,7 +53,6 @@ public class Server{
 		server.database = new DatabaseHelper();
 		server.fileManager = new FileHelper();
 		server.emailService = new EmailHelper();
-		
 		
 		server.run(server);
 	}

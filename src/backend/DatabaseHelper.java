@@ -10,7 +10,8 @@ public class DatabaseHelper {
 	private Connection connection;
 	private String sql;
 	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses";
-	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master", login = "student", password = "student";
+	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
+			login = "student", password = "student";
 
 	public DatabaseHelper() {
 		try {
@@ -20,7 +21,7 @@ public class DatabaseHelper {
 
 			// If this fails make sure your connectionInfo and login/password are correct
 			connection = DriverManager.getConnection(connectionInfo, login, password);
-			System.out.println("Connected to: " + connectionInfo + "\n");
+			System.out.println("Connected to: " + databaseName + "\n");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -97,9 +98,8 @@ public class DatabaseHelper {
 		return false;
 	}
 
-
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
+
 	public static void main(String args[]) {
 		DatabaseHelper masterDB = new DatabaseHelper();
 
@@ -169,7 +169,6 @@ public class DatabaseHelper {
 		}
 
 	}
-	
 
 	/**
 	 * prints all items in database to console
