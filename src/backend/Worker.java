@@ -58,10 +58,15 @@ public class Worker implements Runnable {
 				// System.out.println(server.getDatabase());
 				
 				if (database.isValidStudentLogin(login.getUsername(), login.getPassword())) {
-					Message<?> outMessage = new Message<User>(user, null);
+					Message<?> outMessage = new Message<User>(user, "STUDENTLOGIN");
 					out.writeObject(outMessage);
-					System.out.println("|---Successful login");
-				} else {
+					System.out.println("|---Successful login of Student");
+				}
+				else if (database.isValidProfLogin(login.getUsername(), login.getPassword())) {
+					Message<?> outMessage = new Message<User>(user, "PROFLOGIN");
+					out.writeObject(outMessage);
+					System.out.println("|---Successful login of Professor");
+				}else {
 					user = null;
 					Message<?> outMessage = new Message<User>(user, null);
 					out.writeObject(outMessage);
