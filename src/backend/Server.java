@@ -25,6 +25,9 @@ public class Server{
 
 	public Server() {
 		threadPool = Executors.newCachedThreadPool();
+		database = new DatabaseHelper();
+		fileManager = new FileHelper();
+		emailService = new EmailHelper();
 		try {
 			serverSocket = new ServerSocket(9090);
 
@@ -36,10 +39,10 @@ public class Server{
 	public void run(Server server) {
 		try {
 			for(;;) {
-				threadPool.execute(new Worker(serverSocket.accept(),server));
+				threadPool.execute(new Worker(serverSocket.accept(),fileManager,database,emailService));
 			}
 		}catch(IOException e) {
-			System.out.println("Exception in server run: Shutting Down");
+			System.err.println("Exception in server run: Shutting Down");
 			threadPool.shutdown();
 		}
 	}
@@ -50,9 +53,7 @@ public class Server{
 	
 	public static void main(String[] args){
 		Server server = new Server();
-		server.database = new DatabaseHelper();
-		server.fileManager = new FileHelper();
-		server.emailService = new EmailHelper();
+
 		
 		server.run(server);
 	}

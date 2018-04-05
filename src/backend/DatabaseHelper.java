@@ -1,6 +1,8 @@
 package backend;
 
 import shared.Course;
+import shared.LoginInfo;
+import shared.User;
 
 import java.sql.*;
 
@@ -57,6 +59,25 @@ public class DatabaseHelper {
 		return null;
 	}
 
+	public User Login(LoginInfo login) {
+		String sql = "SELECT * FROM users WHERE USERNAME= ?";
+		ResultSet user;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, login.getUsername());
+			user = statement.executeQuery();
+
+			if (user.next()) {
+				return new User(user.getInt("ID"), user.getString("FIRSTNAME"), user.getString("LASTNAME"),user.getString("TYPE"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public boolean isValidStudentLogin(String username, String password) {
 		String sql = "SELECT * FROM users WHERE USERNAME= ?";
 		ResultSet user;
@@ -200,7 +221,7 @@ public class DatabaseHelper {
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Users:");
 			while (course.next()) {
-				System.out.println(course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
+				System.out.println(course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
 						+ course.getString("TYPE"));
 			}
 			course.close();

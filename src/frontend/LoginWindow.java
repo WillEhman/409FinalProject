@@ -81,11 +81,19 @@ public class LoginWindow extends JFrame {
     	User user = (User) recieve.getObject();
     	if(user == null)
     	{
-    		JOptionPane.showMessageDialog(this,"Incorrect Login Info");
+    		JOptionPane.showMessageDialog(this,"Login failed to authenticate");
     	}
-    	else if(user.getType() == 'P')
+    	else if(user.getType().equals("P")
     	{
-            //Create professor
+    		//TODO
+            //Create professor gui
+    		System.out.println("Professor Login confirmed");
+    	}
+    	else if(user.getType().equals("S"))
+    	{
+    		//TODO
+            //Create student gui
+    		System.out.println("Student Login confirmed");
     	}
     	else
     	{

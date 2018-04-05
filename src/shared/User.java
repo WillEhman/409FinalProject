@@ -8,19 +8,20 @@ public class User implements Serializable {
 	private int id;
 	private String firstName;
 	private String lastName;
-	private char type;
+	private String type;
 
-	public User(int id, String firstName, String lastName) {
+	public User(int id, String firstName, String lastName, String type) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.type = type;
 	}
 
-	public char getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(char type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
