@@ -1,7 +1,7 @@
 package frontend.components;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 
 import javax.swing.*;
@@ -10,22 +10,18 @@ public class PageNavigator {
 
 	private JFrame frame;
 	private JPanel pageHolder;
-	private JPanel coursePanel;
-	private JPanel infoPanel;
-	private JPanel title;
 	private JList<String> courses;
 	private JButton add;
-	private JPanel infoTitle;
 	private JLabel courseName;
 	private JComboBox<String> selection;
 
 	public PageNavigator() {
 		//Initialize the panels and frame
-		frame = new JFrame("Welcome");
-		coursePanel = new JPanel();
-		infoPanel = new JPanel();
-		title = new JPanel();
-		infoTitle = new JPanel();
+		frame = new JFrame("Course Manager 2018");
+		JPanel coursePanel = new JPanel();
+		JPanel infoPanel = new JPanel();
+		JPanel title = new JPanel();
+		JPanel infoTitle = new JPanel();
 		pageHolder = new JPanel();
 		
 		//Set layouts
@@ -37,12 +33,15 @@ public class PageNavigator {
 		pageHolder.setLayout(new FlowLayout());
 		
 		//Setup Courses Panel
+		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
 		JScrollPane cScroll = new JScrollPane(courses);
 		add = new JButton("Add");
+		add.setAlignmentX(Component.CENTER_ALIGNMENT);
+		cTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+		coursePanel.add(cTitle);
 		coursePanel.add(cScroll);
 		coursePanel.add(add);
-		//coursePanel.setp;
 		
 		//Setup Info Panel
 		courseName = new JLabel("TEMP TITLE");
@@ -51,7 +50,9 @@ public class PageNavigator {
 		infoTitle.add("West", selection);
 		infoTitle.add("Center", courseName);
 		infoPanel.add("North", infoTitle);
+		infoPanel.add("Center", pageHolder);
 		
+		//Display the frame
 		frame.add("North", title);
 		frame.add("West", coursePanel);
 		frame.add("Center", infoPanel);
@@ -60,6 +61,10 @@ public class PageNavigator {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
+	}
+	
+	public void displayPage(JPanel p) {
+		pageHolder = p;
 	}
 
 	public void showPage(String page) {
