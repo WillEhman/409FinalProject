@@ -21,4 +21,9 @@ public class Client {
 		// TODO
 		return null;
 	}
+	
+	public static void main(String[] args) throws IOException {
+		Client client = new Client("localHost", 9090);
+		client.communicate();
+	}
 }
