@@ -6,12 +6,16 @@ import shared.Student;
 import shared.User;
 
 import java.sql.*;
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 public class DatabaseHelper {
 
 	private PreparedStatement statement;
 	private Connection connection;
-	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses", assignmentsTable = "assignments";
+	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses",
+			assignmentsTable = "assignments";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
 			login = "student", password = "student";
 
@@ -68,16 +72,17 @@ public class DatabaseHelper {
 			user = statement.executeQuery();
 
 			if (user.next()) {
-				return new User(user.getInt("ID"), user.getString("FIRSTNAME"), user.getString("LASTNAME"),user.getString("TYPE"),user.getString("EMAIL"));
+				return new User(user.getInt("ID"), user.getString("FIRSTNAME"), user.getString("LASTNAME"),
+						user.getString("TYPE"), user.getString("EMAIL"));
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 	public boolean isValidStudentLogin(String username, String password) {
 		String sql = "SELECT * FROM users WHERE USERNAME= ?";
 		ResultSet user;
@@ -119,46 +124,195 @@ public class DatabaseHelper {
 
 		return false;
 	}
-	
-	/**
-	 * Adds a user to the database table
-	 * @param user to be added
-	 */
 
-		public void preparedAdd(User user, String username, String password) {
-			String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?, ?, ?)";
-			try {
-				statement =  connection.prepareStatement(sql);
-				statement.setInt(1,user.getId());
-				statement.setString(2,username);
-				statement.setString(3,password);
-				statement.setString(4,user.getType());
-				statement.setString(5,user.getFirstName());
-				statement.setString(6,user.getLastName());
-				statement.setString(7,user.getEmailAddress());
+	public void preparedAdd(User user, String username, String password) {
+		String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, user.getId());
+			statement.setString(2, username);
+			statement.setString(3, password);
+			statement.setString(4, user.getType());
+			statement.setString(5, user.getFirstName());
+			statement.setString(6, user.getLastName());
+			statement.setString(7, user.getEmailAddress());
 
-				statement.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		
-		/**
-		 * Adds a user to the database table
-		 * @param user to be added
-		 */
+	}
 
-			public void preparedRemove(User user) {
-				String sql = "DELETE FROM users WHERE ID=?";
-				try {
-					statement =  connection.prepareStatement(sql);
-					statement.setInt(1,user.getId());
+	public void preparedAdd(Course course) {
+		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+			statement.setInt(2, course.getProfId());
+			statement.setString(3, course.getCourseName());
+			statement.setBoolean(4, course.isActive());
 
-					statement.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void preparedSetActive(int id, boolean active) {
+		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setBoolean(1, active);
+			statement.setInt(2, id);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void preparedRemove(User user) {
+		String sql = "DELETE FROM users WHERE ID=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, user.getId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void preparedRemove(Course course) {
+		String sql = "DELETE FROM courses WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Vector<User> preparedSearchUsers(int id) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND ID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setInt(2, id);
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+	
+	public Vector<User> preparedSearchUsersinCourse(int id, int coursenumber) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND ID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setInt(2, id);
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+				sql = "SELECT * FROM enrolment WHERE USERID = ? AND COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, uset.getInt("ID"));
+				statement.setInt(2, coursenumber);
+				ResultSet eset = statement.executeQuery();
+				if (eset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
 				}
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
+	public Vector<User> preparedSearchUsers(String lastname) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND LASTNAME = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setString(2, lastname);
+
+			ResultSet rset = statement.executeQuery();
+			while (rset.next()) {
+				results.add(new User(rset.getInt("ID"), rset.getString("firstname"), rset.getString("lastname"),
+						rset.getString("type"), rset.getString("email")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+	
+	public Vector<User> preparedSearchUsersinCourse(String lastname, int coursenumber) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND LASTNAME = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setString(2, lastname);
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+				sql = "SELECT * FROM enrolment WHERE USERID = ? AND COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, uset.getInt("ID"));
+				statement.setInt(2, coursenumber);
+				ResultSet eset = statement.executeQuery();
+				if (eset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+	
+	public void preparedEnrol(int userid, int courseid) {
+		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, userid);
+			statement.setInt(2, courseid);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void preparedUnenrol(int userid, int courseid) {
+		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, courseid);
+			statement.setInt(2, userid);
+			
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -185,6 +339,25 @@ public class DatabaseHelper {
 		else
 			System.out.println("Search Result: " + searchResult.getCourseName());
 		System.out.println();
+
+		System.out.println();
+		System.out.println("Trying to add course 200.");
+		Course design = new Course(200, 3, "EnggDesign", false);
+		masterDB.preparedAdd(design);
+		masterDB.preparedprintCourses();
+		System.out.println();
+		System.out.println("Trying to remove course 200.");
+		masterDB.preparedRemove(design);
+		masterDB.preparedprintCourses();
+
+		System.out.println();
+		System.out.println("Trying to set 225 active");
+		masterDB.preparedSetActive(225, true);
+		masterDB.preparedprintCourses();
+		System.out.println();
+		System.out.println("Trying to set 225 inactive");
+		masterDB.preparedSetActive(225, false);
+		masterDB.preparedprintCourses();
 
 		System.out.println("\nThe program is finished running through the courses");
 		System.out.println();
@@ -226,7 +399,7 @@ public class DatabaseHelper {
 		}
 		System.out.println();
 		System.out.println("Trying to add user David.");
-		User dave = new User(10,"David", "Parkin","S","dparkin@test.com");
+		User dave = new User(10, "David", "Parkin", "S", "dparkin@test.com");
 		masterDB.preparedAdd(dave, "dparkin", "pass");
 		masterDB.preparedprintUsers();
 		System.out.println();
@@ -234,15 +407,49 @@ public class DatabaseHelper {
 		masterDB.preparedRemove(dave);
 		masterDB.preparedprintUsers();
 
+		System.out.println();
+		System.out.println("Searching for Student 2. Should Return Will Ehman");
+		Vector<User> result = masterDB.preparedSearchUsers(2);
+		System.out.println(result.get(0).toString());
+		System.out.println();
+		System.out.println("Searching for Students with last name Ehman. Should return 2 results");
+		result = masterDB.preparedSearchUsers("Ehman");
+		for (int i = 0; i < result.size(); i++) {
+			System.out.println(result.get(i).toString());
+		}
+		System.out.println("Searching for Students with last name Ehman in 409. Should return 2 results");
+		result = masterDB.preparedSearchUsersinCourse("Ehman",409);
+		for (int i = 0; i < result.size(); i++) {
+			System.out.println(result.get(i).toString());
+		}
+		System.out.println("Searching for Students with last name Ehman in 453. Should return 1 result");
+		result = masterDB.preparedSearchUsersinCourse("Ehman",453);
+		for (int i = 0; i < result.size(); i++) {
+			System.out.println(result.get(i).toString());
+		}
+
 		System.out.println("\nThe program is finished running through the users");
+
+		System.out.println();
+		
+		System.out.println("Reading all enrolments from the table:");
+		masterDB.preparedprintEnrolments();
+		
+		System.out.println("Enrolling Will in 453");
+		masterDB.preparedEnrol(2,453);
+		masterDB.preparedprintEnrolments();
+		
+		System.out.println("Unenrolling Will in 453");
+		masterDB.preparedUnenrol(2,453);
+		masterDB.preparedprintEnrolments();
+		
+		
 		
 		System.out.println();
 
 		System.out.println("Reading all assignments from the table:");
 		masterDB.preparedprintAssignments();
-		
-		
-		
+
 		try {
 			masterDB.statement.close();
 			masterDB.connection.close();
@@ -283,15 +490,17 @@ public class DatabaseHelper {
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Users:");
 			while (course.next()) {
-				System.out.println(course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
-						+ course.getString("TYPE")  + " " + course.getString("FIRSTNAME") + " "  + course.getString("LASTNAME") + " " + course.getString("EMAIL"));
+				System.out.println(
+						course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD")
+								+ " " + course.getString("TYPE") + " " + course.getString("FIRSTNAME") + " "
+								+ course.getString("LASTNAME") + " " + course.getString("EMAIL"));
 			}
 			course.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * prints all items in database to console
 	 */
@@ -302,9 +511,29 @@ public class DatabaseHelper {
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Assignments:");
 			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("ASSIGNMENTID") + " " + course.getString("FILEPATH"));
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("ASSIGNMENTID") + " "
+						+ course.getString("FILEPATH"));
 			}
 			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintEnrolments() {
+		try {
+			String sql = "SELECT * FROM enrolment";
+			statement = connection.prepareStatement(sql);
+			ResultSet rset = statement.executeQuery(sql);
+			System.out.println("Enrolments:");
+			while (rset.next()) {
+				System.out.println(rset.getInt("ENROLMENTID") + " " + rset.getInt("USERID") + " "
+						+ rset.getString("COURSENUMBER"));
+			}
+			rset.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

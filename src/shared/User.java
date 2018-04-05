@@ -101,5 +101,9 @@ public class User implements Serializable {
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
+	
+	public String toString() {
+		return this.id + " " + this.firstName + " " + this.lastName + " " + this.emailAddress;
+	}
 
 }

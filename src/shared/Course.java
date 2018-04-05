@@ -63,7 +63,7 @@ public class Course implements Serializable {
 		this.courseId = courseId;
 	}
 
-	public int getProfName() {
+	public int getProfId() {
 		return profId;
 	}
 
