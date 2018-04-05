@@ -15,7 +15,7 @@ public class LoginWindow {
 	private JTextField username;
 	private JTextField password;
 
-	private void login() {
+	private LoginWindow() {
 		JFrame frame = new JFrame("Login");
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
@@ -46,6 +46,10 @@ public class LoginWindow {
 		frame.setResizable(false);
 		frame.setSize(300,200);
 		frame.setVisible(true);
+	}
+	
+	public void login() {
+		System.out.println("TEST");
 	}
 
 	public String getUsername() {
