@@ -2,7 +2,9 @@ package backend;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Vector;
 
+import shared.Course;
 import shared.LoginInfo;
 import shared.Message;
 import shared.User;
@@ -49,31 +51,37 @@ public class Worker implements Runnable {
 		try {
 			Message<?> inMessage = (Message<?>) in.readObject();
 			
-			if (inMessage.getQuery().equals("LOGIN") && inMessage.getObject().getClass().toString().contains("LoginInfo"))
-			System.out.println("|---Logging in...");
-			try {
-				login = (LoginInfo) inMessage.getObject();
-				User user = database.Login(login);
-				// System.out.print(login.getPassword() + " " + login.getUsername() + "\n");
-				// System.out.println(server.getDatabase());
-				
-				if (database.isValidStudentLogin(login.getUsername(), login.getPassword())) {
-					Message<?> outMessage = new Message<User>(user, "STUDENTLOGIN");
-					out.writeObject(outMessage);
-					System.out.println("|---Successful login of Student");
+			if (inMessage.getQuery().equals("LOGIN") && inMessage.getObject().getClass().toString().contains("LoginInfo")) {
+				System.out.println("|---Logging in...");
+				try {
+					login = (LoginInfo) inMessage.getObject();
+					User user = database.Login(login);
+					// System.out.print(login.getPassword() + " " + login.getUsername() + "\n");
+					// System.out.println(server.getDatabase());
+					
+					if (database.isValidStudentLogin(login.getUsername(), login.getPassword())) {
+						Message<?> outMessage = new Message<User>(user, "STUDENTLOGIN");
+						out.writeObject(outMessage);
+						System.out.println("|---Successful login of Student");
+					}
+					else if (database.isValidProfLogin(login.getUsername(), login.getPassword())) {
+						Message<?> outMessage = new Message<User>(user, "PROFLOGIN");
+						out.writeObject(outMessage);
+						System.out.println("|---Successful login of Professor");
+					}else {
+						user = null;
+						Message<?> outMessage = new Message<User>(user, null);
+						out.writeObject(outMessage);
+						System.err.println("|---Unsuccessful login");
+					}
+				} catch (IOException e) {
+					System.err.println("|---Client Disconnected---|" + "\n");
 				}
-				else if (database.isValidProfLogin(login.getUsername(), login.getPassword())) {
-					Message<?> outMessage = new Message<User>(user, "PROFLOGIN");
-					out.writeObject(outMessage);
-					System.out.println("|---Successful login of Professor");
-				}else {
-					user = null;
-					Message<?> outMessage = new Message<User>(user, null);
-					out.writeObject(outMessage);
-					System.err.println("|---Unsuccessful login");
-				}
-			} catch (IOException e) {
-				System.err.println("|---Client Disconnected---|" + "\n");
+			}
+			
+			if (inMessage.getQuery().equals("COURSE")) {
+//				Message<?> outMessage = new Message<Course>(course, "PROFLOGIN");
+//				out.writeObject(outMessage);
 			}
 
 			// } catch (IOException e) {

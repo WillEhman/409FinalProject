@@ -44,6 +44,20 @@ public class Course implements Serializable {
 	 * @param courseName
 	 * @param active
 	 */
+	public Course() {
+		this.courseId = 0;
+		this.profId = 0;
+		this.courseName = null;
+		this.active = false;
+	}
+	/**
+	 * Constructor for course
+	 * 
+	 * @param courseId
+	 * @param profName
+	 * @param courseName
+	 * @param active
+	 */
 	public Course(int courseId, int profId, String courseName, boolean active) {
 		this.courseId = courseId;
 		this.profId = profId;
