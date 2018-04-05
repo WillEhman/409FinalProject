@@ -2,6 +2,7 @@ package frontend;
 
 import shared.*;
 import java.awt.Component;
+import java.util.Vector;
 
 import javax.swing.*;
 import frontend.components.*;
@@ -12,10 +13,15 @@ public class ProfessorGUI extends PageNavigator {
 	private Professor professor;
 	private boolean isProfessor;
 
-	public ProfessorGUI() {
+	public ProfessorGUI(User user, Client client) {
 		super();
-	    JButton add = new JButton("add");
+		professor = new Professor(user);
+		isProfessor = true;
+		Message<Professor> message = new Message<Professor>(professor, "COURSE");
+		Message<?> recieve = client.communicate(message);
+		JButton add = new JButton("add");
 	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    super.setCourses((Vector) recieve.getObject());
 	    super.getCoursePanel().add(add);
 	    super.setVisible(true);
 	}
@@ -45,7 +51,7 @@ public class ProfessorGUI extends PageNavigator {
 	}
 	
 	public static void main(String[] args) {
-		ProfessorGUI n = new ProfessorGUI();
+		ProfessorGUI n = new ProfessorGUI(new Professor(0, null, null, null), null);
 	}
 
 }

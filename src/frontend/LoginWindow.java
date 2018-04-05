@@ -25,7 +25,7 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() throws IOException {
 
-//		client = new Client("localhost", 9090);
+		// client = new Client("localhost", 9090);
 		client = new Client("10.13.181.19", 9090);
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
@@ -65,58 +65,35 @@ public class LoginWindow extends JFrame {
 		frame.setVisible(true);
 	}
 
-	
-	private void login()
-    {
+	private void login() {
 		System.out.println("Logging in");
-    	LoginInfo info = new LoginInfo(username.getText(), password.getText());
-    	Message<LoginInfo> message = new Message<LoginInfo>(info, "LOGIN");
-    	Message<?> recieve = client.communicate(message);
-    	User user = (User) recieve.getObject();
-//    	System.out.println(user);
-//    	System.out.println(user.getType());
-    	
-    	
-    	if(user == null)
-    	{
-    		JOptionPane.showMessageDialog(this,"Login failed to authenticate");
-    	}
-    	else if(user.getType().equalsIgnoreCase("P"))
-    	{
-    		//TODO
-            //Create professor gui
-    		JOptionPane.showMessageDialog(this,"Professor Login confirmed");
-    		frame.dispose();
-    		System.out.println("Professor Login confirmed");
-    	}
-    	else if(user.getType().equalsIgnoreCase("S"))
-    	{
-    		//TODO
-            //Create student gui
-    		JOptionPane.showMessageDialog(this,"Student Login confirmed");
-    		frame.dispose();
-    		System.out.println("Student Login confirmed");
+		LoginInfo info = new LoginInfo(username.getText(), password.getText());
+		Message<LoginInfo> message = new Message<LoginInfo>(info, "LOGIN");
+		Message<?> recieve = client.communicate(message);
+		User user = (User) recieve.getObject();
 
-    	}
-    	else
-    	{
-    		//close window
-    	}
-    }
-	
-	public static void main(String [] args) throws IOException{
-        LoginWindow l= new LoginWindow();
-    }
-	// public LoginInfo getLoginInfo() {
-	// return l;
-	// }
+		if (user == null) {
+			JOptionPane.showMessageDialog(this, "Login failed to authenticate");
+		} else if (user.getType().equalsIgnoreCase("P")) {
+			JOptionPane.showMessageDialog(this, "Professor Login confirmed");
+			frame.dispose();
+			System.out.println("Professor Login confirmed");
+			System.out.println("Professor ID: " + user.getId());
+			ProfessorGUI p = new ProfessorGUI(user, client);
+		} else if (user.getType().equalsIgnoreCase("S")) {
+			// TODO
+			// Create student gui
+			JOptionPane.showMessageDialog(this, "Student Login confirmed");
+			frame.dispose();
+			System.out.println("Student Login confirmed");
+			System.out.println("Student ID: " + user.getId());
 
-//	public void disposeFrame() {
-//		frame.dispose();
-//	}
+		} else {
+			// close window
+		}
+	}
 
-	// public static void main(String[] args) {
-	// LoginWindow l = new LoginWindow();
-	// }
-
+	public static void main(String[] args) throws IOException {
+		LoginWindow l = new LoginWindow();
+	}
 }

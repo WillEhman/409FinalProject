@@ -27,5 +27,9 @@ public class Professor extends User implements Serializable {
 	public Professor(int id, String firstName, String lastName, String email) {
 		super(id, firstName, lastName, "P", email);
 	}
+	
+	public Professor(User user) {
+		super(user.getId(), user.getFirstName(), user.getLastName(), "P", user.getEmailAddress());
+	}
 
 }

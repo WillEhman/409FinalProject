@@ -1,8 +1,10 @@
 package frontend.components;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -16,7 +18,6 @@ public class PageNavigator {
 	private JList<String> courses;
 	private JLabel courseName;
 	private JComboBox<String> selection;
-	private JButton add;
 	private Course course;
 
 	public PageNavigator() {
@@ -40,14 +41,13 @@ public class PageNavigator {
 		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
 		JScrollPane cScroll = new JScrollPane(courses);
-		add = new JButton("add");
-		add.setAlignmentX(Component.CENTER_ALIGNMENT);
 		cTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		coursePanel.add(cTitle);
 		coursePanel.add(cScroll);
-		//coursePanel.add(add);
+		coursePanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		
 		//Setup Info Panel
+		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		courseName = new JLabel("TEMP TITLE");
 		String[] options = {"Home","Students","Assignments"};
 		selection = new JComboBox<String>(options);
@@ -55,6 +55,7 @@ public class PageNavigator {
 		infoTitle.add("Center", courseName);
 		infoPanel.add("North", infoTitle);
 		infoPanel.add("Center", pageHolder);
+		infoPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		
 		//Display the frame
 		frame.add("North", title);
@@ -76,6 +77,10 @@ public class PageNavigator {
 
 	public JPanel getCoursePanel() {
 		return coursePanel;
+	}
+	
+	public void setCourses(Vector v) {
+		courses.setListData(v);
 	}
 
 	public void showPage(String page) {

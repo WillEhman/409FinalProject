@@ -34,10 +34,8 @@ public class Client implements Serializable {
 
 	public Message<?> communicate(Message<?> message) {
 		try {
-			System.out.println(message);
 			out.writeObject(message);
 			if ((message = (Message<?>) in.readObject()) != null) {
-				System.out.println(message);
 				return message;
 			}
 			return null;
