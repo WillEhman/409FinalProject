@@ -2,7 +2,7 @@ package frontend.pages;
 
 import shared.*;
 
-public class SubmissionPage {
+public class SubmissionPage extends Page {
 	private Submission submission;
 	private Assignment assignment;
 	private Course course;

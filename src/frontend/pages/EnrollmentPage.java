@@ -3,7 +3,7 @@ package frontend.pages;
 import java.util.*;
 import shared.*;
 
-public class EnrollmentPage {
+public class EnrollmentPage extends Page {
 	private ArrayList<Student> enrolledStudentList;
 	private Course course;
 

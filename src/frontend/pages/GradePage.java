@@ -2,7 +2,7 @@ package frontend.pages;
 
 import shared.*;
 
-public class GradePage {
+public class GradePage extends Page {
 	private Course course;
 
 	public Course getCourse() {
