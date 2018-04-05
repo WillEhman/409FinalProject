@@ -42,7 +42,9 @@ public class Worker implements Runnable {
 					login = (LoginInfo) in.readObject();
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
 						out.writeObject("LOGIN SUCCESSFUL");
+						System.out.println("HOLY SHIT");
 					}
+					System.out.println("HOLY SHIT AS WELL");
 				}catch(Exception e) {}
 				
 				

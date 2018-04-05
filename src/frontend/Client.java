@@ -2,6 +2,8 @@ package frontend;
 import java.io.*;
 import java.net.*;
 
+import shared.LoginInfo;
+
 public class Client {
 	public Socket socket;
 	public ObjectInputStream in;
@@ -9,12 +11,16 @@ public class Client {
 	
 	public Client(String serverIp, int port) throws IOException {
 		socket = new Socket(serverIp, port);
-		out = new ObjectOutputStream(socket.getOutputStream());
 		in = new ObjectInputStream(socket.getInputStream());
+		out = new ObjectOutputStream(socket.getOutputStream());
+
 	}
 	
-	public void communicate() {
+	public void communicate() throws IOException {
 		// TODO
+		LoginInfo login = new LoginInfo("will", "pw");
+		out.writeObject(login);
+		out.close();
 	}
 	
 	public File getFile(String path) {
@@ -23,7 +29,8 @@ public class Client {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		Client client = new Client("localHost", 9090);
+		Client client = new Client("localhost", 9090);
+		System.out.println("Client now Running");
 		client.communicate();
 	}
 }
