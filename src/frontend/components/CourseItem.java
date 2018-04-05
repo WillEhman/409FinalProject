@@ -15,7 +15,8 @@ public class CourseItem {
 	}
 	
 	public void changetextColor() {
-		// TODO
+		// TODO: something to do with whether or not course is active?
+		// No clue what this is used for
 	}
 
 	public Course getCourse() {
