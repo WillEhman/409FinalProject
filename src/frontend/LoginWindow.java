@@ -18,7 +18,7 @@ public class LoginWindow {
 	private JTextField password;
 	private LoginInfo loginInfo;
 
-	private LoginWindow() {
+	public LoginWindow() {
 		JFrame frame = new JFrame("Login");
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
@@ -64,6 +64,7 @@ public class LoginWindow {
 	
 	public static void main(String[] args) {
 		LoginWindow l = new LoginWindow();
+		System.out.println(l.getLoginInfo());
 	}
 
 }

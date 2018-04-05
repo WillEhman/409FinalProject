@@ -26,11 +26,13 @@ public class Client implements Serializable {
 
 	}
 
-	public void communicate(){
-		LoginInfo login = new LoginInfo("will", "pw");
+	public void communicate(LoginWindow gui){
+//		LoginInfo login = new LoginInfo("will", "pw");
 
 		try {
-			out.writeObject(login);
+			if (gui.getLoginInfo() != null) {
+			out.writeObject(gui.getLoginInfo());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -52,9 +54,10 @@ public class Client implements Serializable {
 
 	public static void main(String[] args) throws IOException {
 		Client client = new Client("localhost", 9090);
+		LoginWindow gui = new LoginWindow();
 		while(true) {
 		try {
-		client.communicate();
+		client.communicate(gui);
 		}catch (Exception e) {
 			e.printStackTrace();
 			break;

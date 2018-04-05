@@ -10,7 +10,7 @@ public class EmailHelper {
 		// TODO Auto-generated constructor stub
 	}
 	
-	void sendEMail(Email mail) {
+	void sendEmail(Email mail) {
 		
 	}
 
