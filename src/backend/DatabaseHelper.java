@@ -10,8 +10,7 @@ public class DatabaseHelper {
 
 	private PreparedStatement statement;
 	private Connection connection;
-	private String sql;
-	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses";
+	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses", assignmentsTable = "assignments";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
 			login = "student", password = "student";
 
@@ -125,6 +124,7 @@ public class DatabaseHelper {
 	public static void main(String args[]) {
 		DatabaseHelper masterDB = new DatabaseHelper();
 
+		System.out.println();
 		System.out.println("Reading all courses from the table:");
 		masterDB.preparedprintCourses();
 
@@ -136,15 +136,18 @@ public class DatabaseHelper {
 		else
 			System.out.println("Search Result: " + searchResult.getCourseName());
 
-		System.out.println("\nSearching table for tool 441: should fail to find a course");
+		System.out.println("Searching table for course 441: should fail to find a course");
 		courseID = 441;
 		searchResult = masterDB.preparedsearchCourses(courseID);
 		if (searchResult == null)
 			System.out.println("Search Failed to find a course matching ID: " + courseID);
 		else
-			System.out.println("Search Result: " + searchResult.toString());
+			System.out.println("Search Result: " + searchResult.getCourseName());
+		System.out.println();
 
 		System.out.println("\nThe program is finished running through the courses");
+		System.out.println();
+		System.out.println();
 
 		System.out.println("Reading all users from the table:");
 		masterDB.preparedprintUsers();
@@ -162,7 +165,7 @@ public class DatabaseHelper {
 		if (masterDB.isValidStudentLogin("dave", "asdf")) {
 			System.out.println("Successful login");
 		} else {
-			System.err.println("Failed login");
+			System.out.println("Failed login");
 		}
 
 		System.out.println();
@@ -171,23 +174,32 @@ public class DatabaseHelper {
 		if (masterDB.isValidProfLogin("will", "pw")) {
 			System.out.println("Successful login");
 		} else {
-			System.err.println("Failed login");
+			System.out.println("Failed login");
 		}
 
 		System.out.println("Trying to login as Norm. Should Succeed:");
 		if (masterDB.isValidProfLogin("norm", "42")) {
 			System.out.println("Successful login");
 		} else {
-			System.err.println("Failed login");
+			System.out.println("Failed login");
 		}
 
+		System.out.println("\nThe program is finished running through the users");
+		
+		System.out.println();
+
+		System.out.println("Reading all assignments from the table:");
+		masterDB.preparedprintAssignments();
+		
+		
+		
 		try {
 			masterDB.statement.close();
 			masterDB.connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("\nThe program is finished running through the users");
+			System.out.println("\nThe program is finished running through the Database");
 		}
 
 	}
@@ -202,7 +214,7 @@ public class DatabaseHelper {
 			ResultSet course = statement.executeQuery(sql);
 			System.out.println("Courses:");
 			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " "
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("PROFESSORID") + " "
 						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
 			}
 			course.close();
@@ -223,6 +235,24 @@ public class DatabaseHelper {
 			while (course.next()) {
 				System.out.println(course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
 						+ course.getString("TYPE"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintAssignments() {
+		try {
+			String sql = "SELECT * FROM " + assignmentsTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Assignments:");
+			while (course.next()) {
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("ASSIGNMENTID") + " " + course.getString("FILEPATH"));
 			}
 			course.close();
 		} catch (SQLException e) {
