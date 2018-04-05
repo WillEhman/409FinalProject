@@ -8,10 +8,11 @@ public class SubmitItem {
 
 	public SubmitItem(Submission submission) {
 		this.submission = submission;
+		// TODO
 	}
 	
 	public void changeBoxColor() {
-		
+		// TODO
 	}
 
 }

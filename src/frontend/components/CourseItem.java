@@ -15,7 +15,24 @@ public class CourseItem {
 	}
 	
 	public void changetextColor() {
-		
+		// TODO
 	}
 
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	public JLabel getTitle() {
+		return title;
+	}
+
+	public void setTitle(JLabel title) {
+		this.title = title;
+	}
+
+	
 }

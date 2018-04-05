@@ -8,14 +8,15 @@ public class BoxList <E> {
 
 	public BoxList(JPanel scrollBox) {
 		this.scrollBox = scrollBox;
+		// TODO: What's the difference between this and setScrollBox?
 	}
 	
 	public <T> void addItem(T boxItem) {
-		
+		// TODO
 	}
 	
 	public void setItems(ArrayList boxItems) {
-		
+		// TODO
 	}
 
 	public JPanel getScrollBox() {
