@@ -1,7 +1,6 @@
 package frontend;
 import java.io.*;
 import java.net.*;
-import shared.*;
 
 public class Client {
 	public Socket socket;

@@ -52,16 +52,8 @@ public class LoginWindow {
 		return username.getText();
 	}
 
-	public void setUsername(JTextField username) {
-		this.username = username;
-	}
-
 	public String getPassword() {
 		return password.getText();
-	}
-
-	public void setPassword(JTextField password) {
-		this.password = password;
 	}
 	
 	public static void main(String[] args) {
