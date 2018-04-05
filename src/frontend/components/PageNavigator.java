@@ -13,7 +13,7 @@ public class PageNavigator {
 	private JPanel coursePanel;
 	private JPanel infoPanel;
 	private JPanel title;
-	private JScrollPane courses;
+	private JList<String> courses;
 	private JButton add;
 	private JPanel infoTitle;
 	private JLabel courseName;
@@ -32,23 +32,24 @@ public class PageNavigator {
 		frame.setLayout(new BorderLayout());
 		title.setLayout(new FlowLayout());
 		infoPanel.setLayout(new BorderLayout());
-		infoTitle.setLayout(new FlowLayout());
+		infoTitle.setLayout(new BorderLayout());
 		coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 		pageHolder.setLayout(new FlowLayout());
 		
 		//Setup Courses Panel
-		courses = new JScrollPane();
+		courses = new JList();
+		JScrollPane cScroll = new JScrollPane(courses);
 		add = new JButton("Add");
-		coursePanel.add(courses);
+		coursePanel.add(cScroll);
 		coursePanel.add(add);
 		//coursePanel.setp;
 		
 		//Setup Info Panel
-		courseName = new JLabel("");
+		courseName = new JLabel("TEMP TITLE");
 		String[] options = {"Students","Assignments","Grades"};
 		selection = new JComboBox<String>(options);
-		infoTitle.add(selection);
-		infoTitle.add(courseName);
+		infoTitle.add("West", selection);
+		infoTitle.add("Center", courseName);
 		infoPanel.add("North", infoTitle);
 		
 		frame.add("North", title);
