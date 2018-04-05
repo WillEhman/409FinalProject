@@ -11,6 +11,10 @@ public class LoginInfo implements Serializable{
 
 	private String password;
 	
+	public LoginInfo() {
+		this.username = null;
+		this.password = null;
+	}
 	public LoginInfo(String username, String password) {
 		this.username = username;
 		this.password = password;
