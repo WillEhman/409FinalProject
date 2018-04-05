@@ -10,54 +10,67 @@ import java.io.Serializable;
  *          Contains Submission Class
  */
 
-public class Submission implements Serializable{
-	
+public class Submission implements Serializable {
+
 	/**
 	 * Serial ID
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * id of submission
 	 */
 	private int id;
-	
+
 	/**
 	 * id of assignment associated with the submission
 	 */
 	private int assignId;
-	
+
 	/**
 	 * id of student submitting
 	 */
 	private int studentId;
-	
+
 	/**
 	 * path of submitted file
 	 */
 	private String path;
-	
+
 	/**
 	 * grade of submission
 	 */
 	private int grade;
-	
+
 	/**
 	 * comment on submission
 	 */
 	private String comment;
-	
+
 	/**
 	 * title of submission
 	 */
 	private String title;
-	
+
 	/**
 	 * time of submission
 	 */
 	private String timeStamp;
-	
-	public Submission(int id, int assignId, int studentId, String path, int grade, String comment, String title, String timeStamp) {
+
+	/**
+	 * Constructor for submission
+	 * 
+	 * @param id
+	 * @param assignId
+	 * @param studentId
+	 * @param path
+	 * @param grade
+	 * @param comment
+	 * @param title
+	 * @param timeStamp
+	 */
+	public Submission(int id, int assignId, int studentId, String path, int grade, String comment, String title,
+			String timeStamp) {
 		this.id = id;
 		this.assignId = assignId;
 		this.studentId = studentId;
@@ -68,6 +81,10 @@ public class Submission implements Serializable{
 		this.timeStamp = timeStamp;
 	}
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public int getId() {
 		return id;
 	}
@@ -131,7 +148,5 @@ public class Submission implements Serializable{
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
-	
 
 }
