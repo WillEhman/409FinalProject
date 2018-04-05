@@ -14,7 +14,7 @@ public class Worker implements Runnable {
 	private Clock clock;
 
 	public Worker(Socket commSocket, Server server) throws IOException {
-		System.out.println("Created Worker");
+		System.out.println("|----Created Worker----|");
 		in = new ObjectInputStream(commSocket.getInputStream());
 		out = new ObjectOutputStream(commSocket.getOutputStream());
 		this.server = server;
@@ -42,14 +42,15 @@ public class Worker implements Runnable {
 					System.out.println(server.getDatabase());
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
 						out.writeObject("LOGIN SUCCESSFUL");
-						System.out.println("Successful login at: " + clock.instant());
+						System.out.println("Successful login");
+						System.out.println("Successful login at: " + clock.instant().toString());
 					}
 					else {
 						out.writeObject("UH OH! LOGIN UNSUCCESSFUL");
-						System.out.println("Unsuccessful login at: " + clock.instant());
+						System.out.println("Unsuccessful login");
 					}
 				}catch(IOException e) {
-					System.err.println("Client Disconnected");
+					System.err.println("|---Client Disconnected---|");
 					System.err.println();
 				}
 				

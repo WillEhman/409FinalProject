@@ -30,7 +30,7 @@ public class Server{
 
 		} catch (IOException e) {
 		}
-		System.out.println("Server now running.");
+		System.out.println("|-------------------Server now running-------------------|");
 	}
 
 	public void run(Server server) {
