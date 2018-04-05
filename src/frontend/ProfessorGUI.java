@@ -12,7 +12,6 @@ public class ProfessorGUI extends PageNavigator {
 	private boolean isProfessor;
 
 	public ProfessorGUI(JPanel pageHolder, CardLayout cardLayout) {
-		super(pageHolder, cardLayout);
 		// TODO Auto-generated constructor stub
 	}
 
