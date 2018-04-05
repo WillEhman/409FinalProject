@@ -15,7 +15,7 @@ public class BoxList <E> {
 		// TODO
 	}
 	
-	public void setItems(ArrayList boxItems) {
+	public void setItems(ArrayList<?> boxItems) {
 		// TODO
 	}
 
