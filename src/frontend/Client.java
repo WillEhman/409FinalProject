@@ -37,6 +37,7 @@ public class Client implements Serializable {
 			System.out.println(message);
 			out.writeObject(message);
 			if ((message = (Message<?>) in.readObject()) != null) {
+				System.out.println(message);
 				return message;
 			}
 			return null;

@@ -24,7 +24,7 @@ public class DatabaseHelper {
 			// If this fails make sure your connectionInfo and login/password are correct
 			connection = DriverManager.getConnection(connectionInfo, login, password);
 			System.out.println("|---Successfully connected to Database: " + databaseName + "----|");
-			System.out.println("|--------------------------------------------------------|" + "\n");
+			System.out.println("|--------------------------------------------------------|");
 
 		} catch (SQLException e) {
 			e.printStackTrace();

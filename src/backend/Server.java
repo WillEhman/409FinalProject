@@ -24,6 +24,7 @@ public class Server{
 	private int uniqueID;
 
 	public Server() {
+		System.out.println("|------------------Server being created------------------|");
 		threadPool = Executors.newCachedThreadPool();
 		database = new DatabaseHelper();
 		fileManager = new FileHelper();
@@ -34,6 +35,7 @@ public class Server{
 		} catch (IOException e) {
 		}
 		System.out.println("|-------------------Server now running-------------------|");
+		
 	}
 
 	public void run(Server server) {

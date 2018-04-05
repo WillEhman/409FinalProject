@@ -75,25 +75,33 @@ public class LoginWindow extends JFrame {
 	
 	private void login()
     {
+		System.out.println("Logging in");
     	LoginInfo info = new LoginInfo(username.getText(), password.getText());
     	Message<LoginInfo> message = new Message<LoginInfo>(info, "LOGIN");
     	Message<?> recieve = client.communicate(message);
     	User user = (User) recieve.getObject();
+//    	System.out.println(user);
+//    	System.out.println(user.getType());
+    	
+    	
     	if(user == null)
     	{
     		JOptionPane.showMessageDialog(this,"Login failed to authenticate");
     	}
-    	else if(user.getType().equals("P")
+    	else if(user.getType().equalsIgnoreCase("P"))
     	{
     		//TODO
             //Create professor gui
+    		JOptionPane.showMessageDialog(this,"Professor Login confirmed");
     		System.out.println("Professor Login confirmed");
     	}
-    	else if(user.getType().equals("S"))
+    	else if(user.getType().equalsIgnoreCase("S"))
     	{
     		//TODO
             //Create student gui
+    		JOptionPane.showMessageDialog(this,"Student Login confirmed");
     		System.out.println("Student Login confirmed");
+
     	}
     	else
     	{
