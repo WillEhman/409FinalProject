@@ -30,10 +30,11 @@ public class Client implements Serializable {
 
 	public void communicate(LoginInfo l) {
 		try {
-//			if (gui.getLoginInfo().getUsername() != null && gui.getLoginInfo().getPassword() != null) {
-				System.out.println("Its not NULL");
-				out.writeObject(l);
-//			}
+			// if (gui.getLoginInfo().getUsername() != null &&
+			// gui.getLoginInfo().getPassword() != null) {
+//			System.out.println("Its not NULL");
+			out.writeObject(l);
+			// }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,17 +47,11 @@ public class Client implements Serializable {
 		}
 
 	}
+
 	public void communicate(LoginWindow l) {
-//		 LoginInfo login = new LoginInfo("will", "pw");
-//		LoginInfo l = new LoginInfo(null, null);
-//		LoginWindow gui = new LoginWindow(l);
-//		System.out.println(l.getUsername());
-//		System.out.println(l.getPassword());
+
 		try {
-			if (l.getLoginInfo().getUsername() != null && l.getLoginInfo().getPassword() != null) {
-				System.out.println("Its not NULL");
-				out.writeObject(l.getLoginInfo());
-			}
+			out.writeObject(l.getLoginInfo());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,16 +71,21 @@ public class Client implements Serializable {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Client client = new Client("10.13.166.195", 9090);
+		Client client = new Client("localhost", 9090);
+		// Client client = new Client("10.13.166.195", 9090);
 		LoginWindow l = new LoginWindow();
-//		while (true) {
-//			System.out.println(l.getLoginInfo().getUsername());
-//			try {
-//				client.communicate();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				break;
-//			}
-//		}
+		while (true) {
+//			System.out.println("In while");
+			if (l.getLoginInfo().getUsername() != null && l.getLoginInfo().getPassword() != null) {
+//				System.out.println("Not null UN and PW");
+//				System.out.println(l.getLoginInfo().getUsername());
+				client.communicate(l.getLoginInfo());
+
+				break;
+			}
+		}
+
+		System.out.println("WE ESCAPED");
+
 	}
 }

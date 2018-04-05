@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.swing.*;
 
@@ -14,10 +15,11 @@ import shared.LoginInfo;
  * Should username and password have setters?
  */
 
-public class LoginWindow {
+public class LoginWindow{
+
 	private JTextField username;
 	private JTextField password;
-	private LoginInfo loginInfo;
+	public LoginInfo loginInfo;
 
 	public LoginWindow() {
 		loginInfo = new LoginInfo(null,null);
@@ -48,13 +50,24 @@ public class LoginWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				loginInfo.setUsername(username.getText());
 				loginInfo.setPassword(password.getText());
-				System.out.println("Pressed");
 				try {
-					Client client = new Client("10.13.166.195", 9090);
-					client.communicate(loginInfo);
-				} catch (IOException e) {
+					wait(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				frame.dispose();
+//				System.out.println("Pressed");
+//				System.out.println(loginInfo.getUsername());
+//				System.out.println(loginInfo.getPassword());
+				
+//				try {
+//					Client client = new Client("localhost", 9090);
+////					Client client = new Client("10.13.166.195", 9090);
+//					client.communicate(loginInfo);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 //				System.out.println(l.getUsername());
 //				System.out.println(l.getPassword());
 			}
@@ -66,6 +79,9 @@ public class LoginWindow {
 		frame.add("South", buttons);
 		frame.setResizable(false);
 		frame.setSize(300,200);
+//		while (username.getText() != null) {
+//			frame.dispose();
+//		}
 		frame.setVisible(true);
 	}
 	
@@ -73,8 +89,9 @@ public class LoginWindow {
 		return loginInfo;
 	}
 	
-	public static void main(String[] args) {
-		LoginWindow l = new LoginWindow();
-	}
+	
+//	public static void main(String[] args) {
+//		LoginWindow l = new LoginWindow();
+//	}
 
 }

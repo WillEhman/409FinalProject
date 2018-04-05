@@ -41,7 +41,7 @@ public class Worker implements Runnable {
 //					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
 //					System.out.println(server.getDatabase());
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
-						out.writeObject("Login Succesful");
+						out.writeObject("Login Successful");
 						System.out.println("|---Successful login");
 					}
 					else {
