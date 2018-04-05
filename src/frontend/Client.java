@@ -27,22 +27,18 @@ public class Client implements Serializable {
 	}
 
 	public void communicate(){
-		// TODO
 		LoginInfo login = new LoginInfo("will", "pw");
 
 		try {
 			out.writeObject(login);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			System.out.println(in.readObject());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -60,7 +56,6 @@ public class Client implements Serializable {
 		try {
 		client.communicate();
 		}catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			break;
 		}

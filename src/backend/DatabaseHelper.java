@@ -97,45 +97,9 @@ public class DatabaseHelper {
 		return false;
 	}
 
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintCourses() {
-		try {
-			String sql = "SELECT * FROM " + coursesTable;
-			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
-			System.out.println("Courses:");
-			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " "
-						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
-			}
-			course.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintUsers() {
-		try {
-			String sql = "SELECT * FROM " + usersTable;
-			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
-			System.out.println("Users:");
-			while (course.next()) {
-				System.out.println(course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
-						+ course.getString("TYPE"));
-			}
-			course.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// ~~~~~~~~~~~~~FORTESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
 	public static void main(String args[]) {
 		DatabaseHelper masterDB = new DatabaseHelper();
 
@@ -204,5 +168,44 @@ public class DatabaseHelper {
 			System.out.println("\nThe program is finished running through the users");
 		}
 
+	}
+	
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintCourses() {
+		try {
+			String sql = "SELECT * FROM " + coursesTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Courses:");
+			while (course.next()) {
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getString("PROFESSORNAME") + " "
+						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintUsers() {
+		try {
+			String sql = "SELECT * FROM " + usersTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Users:");
+			while (course.next()) {
+				System.out.println(course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
+						+ course.getString("TYPE"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

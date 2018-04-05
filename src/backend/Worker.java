@@ -36,14 +36,13 @@ public class Worker implements Runnable {
 				
 				try {
 					login = (LoginInfo) in.readObject();
-					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
-					System.out.println(server.getDatabase());
+//					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
+//					System.out.println(server.getDatabase());
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
 						out.writeObject("LOGIN SUCCESSFUL");
-						System.out.println("HOLY SHIT");
 					}
 					else {
-					System.out.println("HOLY SHIT AS WELL");
+						out.writeObject("UH OH! LOGIN UNSUCCESSFUL");
 					}
 				}catch(Exception e) {
 					System.err.println("Exception");
