@@ -48,10 +48,7 @@ public class Server{
 			threadPool.shutdown();
 		}
 	}
-	
-	int generateUniqueID() {
-		return 0;
-	}
+
 	
 	public static void main(String[] args){
 		Server server = new Server();
