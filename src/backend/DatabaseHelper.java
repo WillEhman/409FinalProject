@@ -7,8 +7,6 @@ import shared.User;
 
 import java.sql.*;
 
-import lab8ex1.Tool;
-
 public class DatabaseHelper {
 
 	private PreparedStatement statement;
@@ -70,7 +68,7 @@ public class DatabaseHelper {
 			user = statement.executeQuery();
 
 			if (user.next()) {
-				return new User(user.getInt("ID"), user.getString("FIRSTNAME"), user.getString("LASTNAME"),user.getString("TYPE"));
+				return new User(user.getInt("ID"), user.getString("FIRSTNAME"), user.getString("LASTNAME"),user.getString("TYPE"),user.getString("EMAIL"));
 			}
 
 		} catch (SQLException e) {
@@ -128,7 +126,7 @@ public class DatabaseHelper {
 	 */
 
 		public void preparedAdd(User user, String username, String password) {
-			String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 			try {
 				statement =  connection.prepareStatement(sql);
 				statement.setInt(1,user.getId());
@@ -137,13 +135,30 @@ public class DatabaseHelper {
 				statement.setString(4,user.getType());
 				statement.setString(5,user.getFirstName());
 				statement.setString(6,user.getLastName());
-				statement.setString(7,user.getEmail());
+				statement.setString(7,user.getEmailAddress());
 
 				statement.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		/**
+		 * Adds a user to the database table
+		 * @param user to be added
+		 */
+
+			public void preparedRemove(User user) {
+				String sql = "DELETE FROM users WHERE ID=?";
+				try {
+					statement =  connection.prepareStatement(sql);
+					statement.setInt(1,user.getId());
+
+					statement.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -209,6 +224,15 @@ public class DatabaseHelper {
 		} else {
 			System.out.println("Failed login");
 		}
+		System.out.println();
+		System.out.println("Trying to add user David.");
+		User dave = new User(10,"David", "Parkin","S","dparkin@test.com");
+		masterDB.preparedAdd(dave, "dparkin", "pass");
+		masterDB.preparedprintUsers();
+		System.out.println();
+		System.out.println("Trying to remove user David.");
+		masterDB.preparedRemove(dave);
+		masterDB.preparedprintUsers();
 
 		System.out.println("\nThe program is finished running through the users");
 		
@@ -260,7 +284,7 @@ public class DatabaseHelper {
 			System.out.println("Users:");
 			while (course.next()) {
 				System.out.println(course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD") + " "
-						+ course.getString("TYPE"));
+						+ course.getString("TYPE")  + " " + course.getString("FIRSTNAME") + " "  + course.getString("LASTNAME") + " " + course.getString("EMAIL"));
 			}
 			course.close();
 		} catch (SQLException e) {

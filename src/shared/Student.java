@@ -24,8 +24,8 @@ public class Student extends User implements Serializable {
 	 * @param firstName
 	 * @param lastName
 	 */
-	public Student(int id, String firstName, String lastName) {
-		super(id, firstName, lastName, "S");
+	public Student(int id, String firstName, String lastName, String email) {
+		super(id, firstName, lastName, "S", email);
 	}
 
 }
