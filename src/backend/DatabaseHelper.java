@@ -2,9 +2,12 @@ package backend;
 
 import shared.Course;
 import shared.LoginInfo;
+import shared.Student;
 import shared.User;
 
 import java.sql.*;
+
+import lab8ex1.Tool;
 
 public class DatabaseHelper {
 
@@ -118,6 +121,29 @@ public class DatabaseHelper {
 
 		return false;
 	}
+	
+	/**
+	 * Adds a user to the database table
+	 * @param user to be added
+	 */
+
+		public void preparedAdd(User user, String username, String password) {
+			String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?)";
+			try {
+				statement =  connection.prepareStatement(sql);
+				statement.setInt(1,user.getId());
+				statement.setString(2,username);
+				statement.setString(3,password);
+				statement.setString(4,user.getType());
+				statement.setString(5,user.getFirstName());
+				statement.setString(6,user.getLastName());
+				statement.setString(7,user.getEmail());
+
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
