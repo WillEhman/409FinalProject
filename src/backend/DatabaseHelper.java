@@ -48,7 +48,7 @@ public class DatabaseHelper {
 			statement.setInt(1, courseID);
 			course = statement.executeQuery();
 			if (course.next()) {
-				return new Course(course.getInt("COURSENUMBER"), course.getString("PROFESSORNAME"),
+				return new Course(course.getInt("COURSENUMBER"), course.getInt("PROFESSORID"),
 						course.getString("COURSENAME"), course.getBoolean("ACTIVE"));
 			}
 
