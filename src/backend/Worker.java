@@ -68,8 +68,8 @@ public class Worker implements Runnable {
 			}
 
 		try {
-			in.close();
-			out.close();
+//			in.close();
+//			out.close();
 		} catch (Exception e) {
 			System.out.println("Ending Exception: " + e.getMessage());
 		}
