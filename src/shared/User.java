@@ -38,6 +38,11 @@ public class User implements Serializable {
 	private String type;
 
 	/**
+	 * email address of the user
+	 */
+	private String emailAddress;
+
+	/**
 	 * Constructor for user
 	 * 
 	 * @param id
@@ -86,6 +91,14 @@ public class User implements Serializable {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 }
