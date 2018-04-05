@@ -1,17 +1,14 @@
 package shared;
 
-<<<<<<< HEAD
-public class LoginInfo {
-	
-	private String username;
-=======
+
+
 import java.io.Serializable;
 
 public class LoginInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	private int username;
->>>>>>> origin/master
+	private String username;
+
 	private String password;
 	
 	public LoginInfo(String username, String password) {
