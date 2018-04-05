@@ -25,8 +25,7 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() throws IOException {
 
-		client = new Client("localhost", 9090);
-		// Client client = new Client("10.13.166.195", 9090);
+		client = new Client("10.13.184.80", 9090);
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
 		JPanel buttons = new JPanel();
@@ -93,6 +92,7 @@ public class LoginWindow extends JFrame {
     		//TODO
             //Create professor gui
     		JOptionPane.showMessageDialog(this,"Professor Login confirmed");
+    		frame.dispose();
     		System.out.println("Professor Login confirmed");
     	}
     	else if(user.getType().equalsIgnoreCase("S"))
@@ -100,6 +100,7 @@ public class LoginWindow extends JFrame {
     		//TODO
             //Create student gui
     		JOptionPane.showMessageDialog(this,"Student Login confirmed");
+    		frame.dispose();
     		System.out.println("Student Login confirmed");
 
     	}
