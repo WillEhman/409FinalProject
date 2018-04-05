@@ -36,6 +36,15 @@ public class Client implements Serializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			System.out.println(in.readObject());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		
 	}
@@ -47,11 +56,14 @@ public class Client implements Serializable {
 
 	public static void main(String[] args) throws IOException {
 		Client client = new Client("localhost", 9090);
+		while(true) {
 		try {
 		client.communicate();
 		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			break;
+		}
 		}
 	}
 }

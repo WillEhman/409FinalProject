@@ -12,7 +12,7 @@ public class Worker implements Runnable {
 	private Server server;
 
 	public Worker(Socket commSocket, Server server) throws IOException {
-
+		System.out.println("Created Worker");
 		in = new ObjectInputStream(commSocket.getInputStream());
 		out = new ObjectOutputStream(commSocket.getOutputStream());
 		this.server = server;
@@ -31,21 +31,25 @@ public class Worker implements Runnable {
 	@Override
 	public void run() {
 			LoginInfo login = null;
-
+			System.out.println("Running...");
 			try {
-				
-				
-				
-				
 				
 				try {
 					login = (LoginInfo) in.readObject();
+					System.out.print(login.getPassword() + "  " + login.getUsername() + "\n");
+					System.out.println(server.getDatabase());
 					if(server.getDatabase().isValidStudentLogin(login.getUsername(),login.getPassword())){
 						out.writeObject("LOGIN SUCCESSFUL");
 						System.out.println("HOLY SHIT");
 					}
+					else {
 					System.out.println("HOLY SHIT AS WELL");
-				}catch(Exception e) {}
+					}
+				}catch(Exception e) {
+					System.err.println("Exception");
+					System.out.println(e.getMessage());
+					e.printStackTrace();
+				}
 				
 				
 				
