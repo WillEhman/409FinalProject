@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import shared.LoginInfo;
+
 /*
  * Should username and password have setters?
  */
@@ -14,6 +16,7 @@ import javax.swing.*;
 public class LoginWindow {
 	private JTextField username;
 	private JTextField password;
+	private LoginInfo loginInfo;
 
 	private LoginWindow() {
 		JFrame frame = new JFrame("Login");
@@ -38,7 +41,14 @@ public class LoginWindow {
 		main.add(passLabel);
 		main.add(password);
 		
-		buttons.add(new JButton("Submit")); //TODO: add action listener to send username and pass to server
+		JButton b = new JButton("Submit");
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				loginInfo.setUsername(username.getText());
+				loginInfo.setPassword(password.getText());
+			}
+		});
+		buttons.add(b); //TODO: add action listener to send username and pass to server
 		
 		frame.add("North", title);
 		frame.add("Center", main);
@@ -47,22 +57,13 @@ public class LoginWindow {
 		frame.setSize(300,200);
 		frame.setVisible(true);
 	}
-	
-	public void login() {
-		System.out.println("TEST");
-	}
 
-	public String getUsername() {
-		return username.getText();
-	}
-
-	public String getPassword() {
-		return password.getText();
+	public LoginInfo getLoginInfo() {
+		return loginInfo;
 	}
 	
 	public static void main(String[] args) {
 		LoginWindow l = new LoginWindow();
-		l.login();
 	}
 
 }
