@@ -1,7 +1,10 @@
 package shared;
 
-public class Course {
-	
+import java.io.Serializable;
+
+public class Course implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private int courseId;
 	private String profName;
 	private String courseName;
