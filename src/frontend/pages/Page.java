@@ -5,7 +5,7 @@ import java.util.*;
 import frontend.*;
 import frontend.components.*;
 
-// T extends Box U????
+// TODO: T extends Box U????
 
 public class Page <T, U> {
 	protected boolean isProfessor;
