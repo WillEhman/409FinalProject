@@ -80,8 +80,10 @@ public class Worker implements Runnable {
 			}
 			
 			if (inMessage.getQuery().equals("COURSE")) {
-//				Message<?> outMessage = new Message<Course>(course, "PROFLOGIN");
-//				out.writeObject(outMessage);
+				Vector<Course> cVector = new Vector<Course>();
+				
+				Message<?> outMessage = new Message<Vector>(cVector, "PROFLOGIN");
+				out.writeObject(outMessage);
 			}
 
 			// } catch (IOException e) {

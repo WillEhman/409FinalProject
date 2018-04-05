@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.util.EventListener;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ public class PageNavigator {
 	private JFrame frame;
 	private JPanel pageHolder;
 	private JPanel coursePanel;
+	private JPanel infoPanel;
 	private JList<String> courses;
 	private JLabel courseName;
 	private JComboBox<String> selection;
@@ -24,7 +26,7 @@ public class PageNavigator {
 		//Initialize the panels and frame
 		frame = new JFrame("Course Manager 2018");
 		coursePanel = new JPanel();
-		JPanel infoPanel = new JPanel();
+		infoPanel = new JPanel();
 		JPanel title = new JPanel();
 		JPanel infoTitle = new JPanel();
 		pageHolder = new JPanel();
@@ -48,7 +50,7 @@ public class PageNavigator {
 		
 		//Setup Info Panel
 		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-		courseName = new JLabel("TEMP TITLE");
+		courseName = new JLabel("Select a Course");
 		String[] options = {"Home","Students","Assignments"};
 		selection = new JComboBox<String>(options);
 		infoTitle.add("West", selection);
@@ -72,7 +74,15 @@ public class PageNavigator {
 	}
 	
 	public void displayPage(JPanel p) {
+		infoPanel.remove(pageHolder);
+		pageHolder.removeAll();
 		pageHolder = p;
+		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
+		infoPanel.add(pageHolder);
+	}
+	
+	public void setListener(eventListener e) {
+		
 	}
 
 	public JPanel getCoursePanel() {
@@ -81,6 +91,10 @@ public class PageNavigator {
 	
 	public void setCourses(Vector v) {
 		courses.setListData(v);
+	}
+
+	public JList<String> getCourses() {
+		return courses;
 	}
 
 	public void showPage(String page) {

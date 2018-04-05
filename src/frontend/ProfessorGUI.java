@@ -1,7 +1,12 @@
 package frontend;
 
 import shared.*;
+
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -18,12 +23,28 @@ public class ProfessorGUI extends PageNavigator {
 		professor = new Professor(user);
 		isProfessor = true;
 		Message<Professor> message = new Message<Professor>(professor, "COURSE");
-		Message<?> recieve = client.communicate(message);
+		//Message<?> recieve = client.communicate(message);
 		JButton add = new JButton("add");
 	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    super.setCourses((Vector) recieve.getObject());
+	    //super.setCourses((Vector) recieve.getObject());
 	    super.getCoursePanel().add(add);
 	    super.setVisible(true);
+	    
+	    JPanel p = new JPanel();
+	    JPanel buttons = new JPanel();
+	    buttons.setLayout(new FlowLayout());
+	    p.setLayout(new BorderLayout());
+	    JTextArea info = new JTextArea();
+	    JScrollPane scroll = new JScrollPane(info);
+	    JButton enroll = new JButton("Enroll");
+	    JButton search = new JButton("Search");
+	    JTextField searchBar = new JTextField(20);
+	    buttons.add(searchBar);
+	    buttons.add(search);
+	    buttons.add(enroll);
+	    p.add("South", buttons);
+	    p.add("Center", scroll);
+	    super.displayPage(p);
 	}
 
 	public Client getClient() {
