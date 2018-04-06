@@ -6,9 +6,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Vector;
-
 import javax.swing.*;
 import frontend.components.*;
 
@@ -28,10 +26,12 @@ public class ProfessorGUI extends PageNavigator {
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
-		refreshCourses((Vector<Course>) recieve.getObject());
+		Vector<Course> v = (Vector<Course>) recieve.getObject();
+		currentCourse = v.firstElement();
+		refreshCourses(v);
 		System.out.println("Got Message");
 		add = new JButton("Add");
-	    add.addActionListener(new ActionListener() {
+		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame options = new JFrame("New Course");
 				JTextField cidF = new JTextField(5);
@@ -52,15 +52,20 @@ public class ProfessorGUI extends PageNavigator {
 				confirm.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						try {
-							Course newCourse = new Course(Integer.parseInt(cidF.getText()), professor.getId(), cNameF.getText(),true);
-							Message<Course> message = new Message<Course>(newCourse, "ADDCOURSE");
-							Message<?> recieve = client.communicate(message);
-							refreshCourses((Vector<Course>) recieve.getObject());
-							options.dispose();
+							if (cidF.getText().length() == 3) {
+								Course newCourse = new Course(Integer.parseInt(cidF.getText()), professor.getId(),
+										cNameF.getText(), true);
+								Message<Course> message = new Message<Course>(newCourse, "ADDCOURSE");
+								Message<?> recieve = client.communicate(message);
+								refreshCourses((Vector<Course>) recieve.getObject());
+								options.dispose();
+							} else {
+								JOptionPane.showMessageDialog(null, "Invalid Course ID");
+							}
 						} catch (NumberFormatException e) {
-							//TODO: warning message
+							JOptionPane.showMessageDialog(null, "Invalid Course ID");
 						}
-						
+
 					}
 				});
 				JButton cancel = new JButton("Cancel");
@@ -73,43 +78,50 @@ public class ProfessorGUI extends PageNavigator {
 				buttons.add(confirm);
 				buttons.add(cancel);
 				options.add("South", buttons);
-				options.setSize(300,200);
+				options.setSize(300, 200);
 				options.setResizable(false);
 				options.setLocationByPlatform(true);
 				options.setVisible(true);
 			}
 		});
-	    remove = new JButton("Remove");
-	    remove.addActionListener(new ActionListener() {
+		remove = new JButton("Remove");
+		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				currentCourse();
-				int dialogButton = JOptionPane.YES_NO_OPTION;
-				int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + currentCourse.toString() + "?", "Remove Course", dialogButton);
-				if(dialogResult == 0) {
-					Message<Course> message = new Message<Course>(currentCourse, "REMOVECOURSE");
-					Message<?> recieve = client.communicate(message);
-					refreshCourses((Vector<Course>) recieve.getObject());
-				} 
+				try {
+					currentCourse();
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + currentCourse.toString() + "?",
+							"Remove Course", dialogButton);
+					if (dialogResult == 0) {
+						Message<Course> message = new Message<Course>(currentCourse, "REMOVECOURSE");
+						Message<?> receive = client.communicate(message);
+						refreshCourses((Vector<Course>) receive.getObject());
+					}
+				} catch(NullPointerException e) {
+					JOptionPane.showMessageDialog(null, "No Course Selected");
+				} catch (ArrayIndexOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(null, "No Course Selected");
+				}
 			}
 		});
-	    remove.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    super.getCoursePanel().add(add);  
-	    super.getCoursePanel().add(remove);
-	    super.setVisible(true);
-	    StudentPage p = new StudentPage();
-	    super.displayPage(p);
-	    AssignmentPage p1 = new AssignmentPage();
-	    super.displayPage(p1);
-	    HomePage p2 = new HomePage();
-	    super.displayPage(p2);
+		remove.setAlignmentX(Component.CENTER_ALIGNMENT);
+		add.setAlignmentX(Component.CENTER_ALIGNMENT);
+		super.getCoursePanel().add(add);
+		super.getCoursePanel().add(remove);
+		super.setVisible(true);
+		StudentPage p = new StudentPage();
+		super.displayPage(p);
+		AssignmentPage p1 = new AssignmentPage();
+		super.displayPage(p1);
+		HomePage p2 = new HomePage();
+		super.displayPage(p2);
 	}
-	
+
 	public Course currentCourse() {
 		currentCourse = super.currentCourse();
 		return currentCourse;
 	}
-	
+
 	public void refreshCourses(Vector<Course> v) {
 		super.setCourses(v);
 	}
@@ -138,65 +150,72 @@ public class ProfessorGUI extends PageNavigator {
 		this.isProfessor = isProfessor;
 	}
 
-	private class StudentPage extends JPanel{
-		
-		private static final long serialVersionUID = 1L;
-		JPanel buttons;
-		JTextArea info;
-	    JScrollPane scroll;
-	    JButton enroll;
-	    JButton search;
-	    JTextField searchBar;
-		
-		public StudentPage() {
-		    buttons = new JPanel();
-		    buttons.setLayout(new FlowLayout());
-		    this.setLayout(new BorderLayout());
-		    info = new JTextArea();
-		    scroll = new JScrollPane(info);
-		    enroll = new JButton("Enroll");
-		    search = new JButton("Search");
-		    searchBar = new JTextField(20);
-		    buttons.add(searchBar);
-		    buttons.add(search);
-		    buttons.add(enroll);
-		    this.add("South", buttons);
-		    this.add("Center", scroll);
-		}
-	}
-	
-	private class AssignmentPage extends JPanel{
-		
-		private static final long serialVersionUID = 1L;
-		JPanel buttons;
-		JTextArea info;
-	    JScrollPane scroll;
-	    JButton download;
-	    
-		public AssignmentPage() {
-		    buttons = new JPanel();
-		    buttons.setLayout(new FlowLayout());
-		    this.setLayout(new BorderLayout());
-		    info = new JTextArea();
-		    scroll = new JScrollPane(info);
-		    download = new JButton("Download");
-		    buttons.add(download);
-		    this.add("South", buttons);
-		    this.add("Center", scroll);
-		}
-	}
-	
-	private class HomePage extends JPanel{
+	private class StudentPage extends JPanel {
 
 		private static final long serialVersionUID = 1L;
+		JPanel buttons;
 		JTextArea info;
-	    JScrollPane scroll;
-	    
+		JScrollPane scroll;
+		JButton enroll;
+		JButton search;
+		JTextField searchBar;
+
+		public StudentPage() {
+			buttons = new JPanel();
+			buttons.setLayout(new FlowLayout());
+			this.setLayout(new BorderLayout());
+			info = new JTextArea();
+			scroll = new JScrollPane(info);
+			enroll = new JButton("Enroll");
+			search = new JButton("Search");
+			searchBar = new JTextField(20);
+			buttons.add(searchBar);
+			buttons.add(search);
+			buttons.add(enroll);
+			this.add("South", buttons);
+			this.add("Center", scroll);
+		}
+	}
+
+	private class AssignmentPage extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+		JPanel buttons;
+		JTextArea info;
+		JScrollPane scroll;
+		JButton download;
+
+		public AssignmentPage() {
+			buttons = new JPanel();
+			buttons.setLayout(new FlowLayout());
+			this.setLayout(new BorderLayout());
+			info = new JTextArea();
+			scroll = new JScrollPane(info);
+			download = new JButton("Download");
+			buttons.add(download);
+			this.add("South", buttons);
+			this.add("Center", scroll);
+		}
+	}
+
+	private class HomePage extends JPanel {
+
+		private static final long serialVersionUID = 1L;
+		JPanel buttons;
+		JTextArea info;
+		JScrollPane scroll;
+		JButton active;
+
 		public HomePage() {
-		    this.setLayout(new BorderLayout());
-		    info = new JTextArea();
-		    scroll = new JScrollPane(info);
-		    this.add("Center", scroll);
+			buttons = new JPanel();
+			buttons.setLayout(new FlowLayout());
+			this.setLayout(new BorderLayout());
+			info = new JTextArea();
+			scroll = new JScrollPane(info);
+			active = new JButton("Set Active");
+			buttons.add(active);
+			this.add("South", buttons);
+			this.add("Center", scroll);
 		}
 	}
 }
