@@ -203,7 +203,10 @@ public class Worker implements Runnable {
 					Assignment a = (Assignment) inMessage.getObject();
 					database.preparedSetActive(a, true);
 
-					Message<?> outMessage = null;
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignments((Course) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
 
