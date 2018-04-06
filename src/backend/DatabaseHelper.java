@@ -1,5 +1,6 @@
 package backend;
 
+import shared.Assignment;
 import shared.Course;
 import shared.LoginInfo;
 import shared.Professor;
@@ -15,7 +16,7 @@ public class DatabaseHelper {
 
 	private PreparedStatement statement;
 	private Connection connection;
-	//TODO format this
+	// TODO format this
 	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses",
 			assignmentsTable = "assignments";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
@@ -39,7 +40,7 @@ public class DatabaseHelper {
 		}
 	}
 
-	//TODO FOR ALL fix try catch statements for proper handling and output
+	// TODO FOR ALL fix try catch statements for proper handling and output
 	/**
 	 * Selects and searches for a course id
 	 * 
@@ -174,6 +175,18 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	public void preparedSetActive(Assignment a, boolean active) {
+		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setBoolean(1, active);
+			statement.setInt(2, a.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void preparedRemove(User user) {
 		String sql = "DELETE FROM users WHERE ID=?";
@@ -290,6 +303,84 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	public Vector<User> preparedSearchUsersinCourse(String lastname, Course object) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND LASTNAME = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setString(2, lastname);
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+				sql = "SELECT * FROM enrolment WHERE USERID = ? AND COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, uset.getInt("ID"));
+				statement.setInt(2, object.getCourseId());
+				ResultSet eset = statement.executeQuery();
+				if (eset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
+	public Vector<User> preparedSearchUsersinCourse(Course object) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+				sql = "SELECT * FROM enrolment WHERE USERID = ? AND COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, uset.getInt("ID"));
+				statement.setInt(2, object.getCourseId());
+				ResultSet eset = statement.executeQuery();
+//				System.out.println(eset);
+				if (eset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
+	public Vector<User> preparedSearchUsersinCourse(int id, Course object) {
+		Vector<User> results = new Vector<User>();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND ID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "s");
+			statement.setInt(2, id);
+			ResultSet uset = statement.executeQuery();
+
+			while (uset.next()) {
+				sql = "SELECT * FROM enrolment WHERE USERID = ? AND COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, uset.getInt("ID"));
+				statement.setInt(2, object.getCourseId());
+				ResultSet eset = statement.executeQuery();
+				if (eset.next()) {
+					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
+							uset.getString("type"), uset.getString("email")));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
+	}
+
 	public void preparedEnrol(int userid, int courseid) {
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
@@ -297,6 +388,19 @@ public class DatabaseHelper {
 
 			statement.setInt(1, userid);
 			statement.setInt(2, courseid);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	public void preparedEnrol(int userid, Course course) {
+		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, userid);
+			statement.setInt(2, course.getCourseId());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -316,21 +420,34 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	public void preparedUnenrol(int userid, Course course) {
+		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+			statement.setInt(2, userid);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	Vector<Course> listCourses(Professor prof) {
-		String sql = "SELECT * FROM courses WHERE PROFESSORID = "+prof.getId();
+		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + prof.getId();
 		try {
 			Vector<Course> listofCourses = new Vector<Course>();
-			
+
 			statement = connection.prepareStatement(sql);
-//			statement.setInt(1, prof.getId());
+			// statement.setInt(1, prof.getId());
 			ResultSet course = statement.executeQuery(sql);
-			
+
 			while (course.next()) {
 				Course temp = new Course();
 				temp.setActive(course.getBoolean("ACTIVE"));
 				temp.setCourseId(course.getInt("COURSENUMBER"));
-				temp.setCourseName(course.getString("COURSENAME") );
+				temp.setCourseName(course.getString("COURSENAME"));
 				temp.setProfId(course.getInt("PROFESSORID"));
 				listofCourses.add(temp);
 			}
@@ -342,22 +459,68 @@ public class DatabaseHelper {
 		return null;
 
 	}
+
+	Vector<Assignment> listAssignments(Course course) {
+		String sql = "SELECT * FROM assignments WHERE COURSEID = " + course.getCourseId();
+		try {
+			Vector<Assignment> listofAssignments = new Vector<Assignment>();
+
+			statement = connection.prepareStatement(sql);
+			// statement.setInt(1, prof.getId());
+			ResultSet assigns = statement.executeQuery(sql);
+
+			while (assigns.next()) {
+				Assignment temp = new Assignment();
+				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setPath(assigns.getString("FILEPATH"));
+				temp.setActive(assigns.getBoolean("ACTIVE"));
+				listofAssignments.add(temp);
+			}
+			assigns.close();
+			return listofAssignments;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 	
-	//TODO make prepared statement
+//	void preparedActivate(Assignment assignment) {
+//		String sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
+//		try {
+//			statement = connection.prepareStatement(sql);
+//			// statement.setInt(1, prof.getId());
+//			statement.executeQuery(sql);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
+//		try {
+//			statement = connection.prepareStatement(sql);
+//			// statement.setInt(1, prof.getId());
+//			statement.executeQuery(sql);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//
+//	}
+
+	// TODO make prepared statement
 	Vector<Course> listCourses(int profid) {
-		String sql = "SELECT * FROM courses WHERE PROFESSORID = "+profid;
+		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + profid;
 		try {
 			Vector<Course> listofCourses = new Vector<Course>();
-			
+
 			statement = connection.prepareStatement(sql);
-//			statement.setInt(1, prof.getId());
+			// statement.setInt(1, prof.getId());
 			ResultSet course = statement.executeQuery(sql);
-			
+
 			while (course.next()) {
 				Course temp = new Course();
 				temp.setActive(course.getBoolean("ACTIVE"));
 				temp.setCourseId(course.getInt("COURSENUMBER"));
-				temp.setCourseName(course.getString("COURSENAME") );
+				temp.setCourseName(course.getString("COURSENAME"));
 				temp.setProfId(course.getInt("PROFESSORID"));
 				listofCourses.add(temp);
 			}

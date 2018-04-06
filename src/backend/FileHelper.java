@@ -30,38 +30,38 @@ public class FileHelper {
 	// }
 	// return 0;
 	// }
-	Message<Assignment> readFileContent(byte[] input, String query) throws IOException {
-		String[] path = query.split(".SPLITTER.");
-		String fileName = path[path.length - 2];
-		String fileExt = path[path.length - 1];
+//	Message<Assignment> readFileContent(byte[] input, String query) throws IOException {
+//		String[] path = query.split(".SPLITTER.");
+//		String fileName = path[path.length - 2];
+//		String fileExt = path[path.length - 1];
+//
+//		File newFile = new File(fileName + fileExt);
+//		try {
+//			if (!newFile.exists()) {
+//				newFile.createNewFile();
+//			}
+//
+//			FileOutputStream fos = new FileOutputStream(newFile);
+//			BufferedOutputStream bos = new BufferedOutputStream(fos);
+//			bos.write(input);
+//			bos.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 
-		File newFile = new File(fileName + fileExt);
-		try {
-			if (!newFile.exists()) {
-				newFile.createNewFile();
-			}
-			
-			FileOutputStream fos = new FileOutputStream(newFile);
-			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			bos.write(input);
-			bos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
 	void writeFileContent(byte[] input, String query) throws IOException {
 		String[] path = query.split(".SPLITTER.");
 		String fileName = path[path.length - 2];
 		String fileExt = path[path.length - 1];
 
-		File newFile = new File(fileName + fileExt);
+		File newFile = new File(fileName + "." + fileExt);
 		try {
 			if (!newFile.exists()) {
 				newFile.createNewFile();
 			}
-			
+
 			FileOutputStream fos = new FileOutputStream(newFile);
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			bos.write(input);
@@ -70,114 +70,53 @@ public class FileHelper {
 			e.printStackTrace();
 		}
 	}
-		// OutputStream output = null;s
-		// try {
-		// byte[] bytesArray = a.getFileData().getBytes();
-		// File outputFile = new File(a.getPath());
-		//
-		// output = new FileOutputStream(outputFile);
-		//
-		// output.write(bytesArray);
-		//
-		// output.flush();
-		//
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// } finally {
-		// try {
-		// if (output != null) {
-		// output.close();
-		// }
-		// } catch (IOException ioe) {
-		// System.out.println("Error in closing the Stream");
-		// }
-		// }
-//	}
 
-	Assignment readFileContent(Assignment a) throws IOException {
-		Assignment local = a;
-		// This will reference one line at a time
-		String data = null;
+	byte[] readFileContent(String path) throws IOException {
+		File selectedFile = new File(path);
+		long length = selectedFile.length();
+		byte[] content = new byte[(int) length];
 
 		try {
-			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(a.getPath());
-
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			while ((data = bufferedReader.readLine()) != null) {
-				local.setFileData(data);
-			}
-
-			// Always close files.
-			bufferedReader.close();
-		} catch (FileNotFoundException ex) {
-			System.out.println("Unable to open file '" + path + "'");
-		} catch (IOException ex) {
-			System.out.println("Error reading file '" + path + "'");
-			// Or we could just do this:
-			// ex.printStackTrace();
+			FileInputStream fis = new FileInputStream(selectedFile);
+			BufferedInputStream bos = new BufferedInputStream(fis);
+			bos.read(content, 0, (int) length);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return local;
-	}
-	// InputStream f = new FileInputStream(fileData);
-	// for(int x = 0; x < f.available() ; x++) {
-	// os.write( bWrite[x] ); // writes the bytes
-	// }
-	//// BufferedWriter writer = null;
-	// try {
-	//// File newFile = new File(path, name);
-	//// writer = new BufferedWriter(new OutputStreamWriter(new
-	// FileOutputStream(newFile)));
-	//// byte[] byteData = fileData.getBytes();
-	////// newFile.
-	////
-	//// writer.write(fileData);
-	////
-	////
-	//// FileOutputStream outputStream = new FileOutputStream(fileName);
-	//// byte[] strToBytes = str.getBytes();
-	//// outputStream.write(strToBytes);
-	// } finally {
-	// writer.close();
-	// }
-
-	// void writeFileContent(Assignment a) throws IOException {
-	// writeFileContent(a.getTitle(), a.getFile());
-	//
-	// }
-
-	// void writeFileContent(Submission s, byte[] content) throws IOException {
-	// writeFileContent(s.getTitle(),content);
-	// }
-
-	void setFilePath(Assignment a) {
+		return content;
 
 	}
 
-	void setFilePath(Submission s) {
 
-	}
+//	void setFilePath(Assignment a) {
+//
+//	}
+//
+//	void setFilePath(Submission s) {
+//		
+//	}
 
 	// FOR TESTING
 	public static void main(String args[]) {
 		FileHelper fh = new FileHelper();
 		Assignment test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday",
 				"Take me down to the paradise city where the grass is green and the girls are pretty");
-//		try {
-//			fh.writeFileContent(test,"");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday", null);
 		try {
-			fh.readFileContent(test);
+			fh.writeFileContent(test.getFileData().getBytes(), test.getFileQuery());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(test.getFileData());
+		//test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday", null);
+		String receivedString = null;
+		try {
+			receivedString = new String(fh.readFileContent("test.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(receivedString);
 	}
 }
