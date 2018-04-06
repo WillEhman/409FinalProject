@@ -23,7 +23,7 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() throws IOException {
 
-		// client = new Client("localhost", 9090);
+//		 client = new Client("localhost", 9090);
 		client = new Client("10.13.170.186", 9090);
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();

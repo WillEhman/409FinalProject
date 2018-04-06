@@ -545,28 +545,6 @@ public class DatabaseHelper {
 
 	}
 
-	// void preparedActivate(Assignment assignment) {
-	// String sql = "DELETE FROM assignments WHERE COURSEID = " +
-	// assignment.getCourseId();
-	// try {
-	// statement = connection.prepareStatement(sql);
-	// // statement.setInt(1, prof.getId());
-	// statement.executeQuery(sql);
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// }
-	// sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
-	// try {
-	// statement = connection.prepareStatement(sql);
-	// // statement.setInt(1, prof.getId());
-	// statement.executeQuery(sql);
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// }
-	//
-	//
-	// }
-
 	// TODO make prepared statement
 	Vector<Course> listCourses(int profid) {
 		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + profid;
