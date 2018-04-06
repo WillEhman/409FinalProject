@@ -159,7 +159,7 @@ public class DatabaseHelper {
 	}
 	
 	public void preparedAdd(Assignment assignment) {
-		String sql = "INSERT INTO assignments VALUES ( ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO assignments VALUES (Default, ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, assignment.getCourseId());
@@ -189,13 +189,15 @@ public class DatabaseHelper {
 	}
 
 	public void preparedSetActive(Assignment a, boolean active) {
-		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
+		String sql = "UPDATE assignments SET ACTIVE = ? WHERE COURSENUMBER = ? AND ASSIGNMENTID = ?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setBoolean(1, active);
 			statement.setInt(2, a.getCourseId());
+			statement.setInt(3, a.getAssignId());
 
 			statement.executeUpdate();
+			System.out.println("Activated Assignment: "+ active);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -499,6 +501,7 @@ public class DatabaseHelper {
 			while (assigns.next()) {
 				Assignment temp = new Assignment();
 				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setAssignId(assigns.getInt("ASSIGNMENTID"));
 				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
 				temp.setPath(assigns.getString("FILEPATH"));
 				temp.setDueDate(assigns.getString("DUEDATE"));
@@ -526,6 +529,7 @@ public class DatabaseHelper {
 			while (assigns.next()) {
 				Assignment temp = new Assignment();
 				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setAssignId(assigns.getInt("ASSIGNMENTID"));
 				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
 				temp.setPath(assigns.getString("FILEPATH"));
 				temp.setDueDate(assigns.getString("DUEDATE"));

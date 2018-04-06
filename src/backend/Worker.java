@@ -216,7 +216,7 @@ public class Worker implements Runnable {
 					database.preparedSetActive(a, a.isActive());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments((Course) inMessage.getObject());
+					aVector = database.listAssignments(a.getCourseId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ACTIVATEASSIGNMENT");
 					out.writeObject(outMessage);
