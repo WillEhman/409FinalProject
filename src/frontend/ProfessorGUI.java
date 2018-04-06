@@ -346,7 +346,7 @@ public class ProfessorGUI extends PageNavigator {
 			assignVector = v;
 			String[] temp = new String[v.size()];
 			for (int i = 0; i < temp.length; i++) {
-				temp[i] = v.get(i).getTitle();
+				temp[i] = v.get(i).toString();
 				System.out.println(temp[i]);
 			}
 			info.setListData(temp);
@@ -427,6 +427,13 @@ public class ProfessorGUI extends PageNavigator {
 			setComboBox(0);
 			HomePage p = new HomePage(display.getClient());
 			displayPage(p);
+			if (getCurrentCourse().isActive()) {
+				String[] options = {"Home","Students","Assignments"};
+				setSelections(options);
+			} else {
+				String[] options = {"Home"};
+				setSelections(options);
+			}
 		}
 	}
 

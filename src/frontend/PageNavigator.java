@@ -132,6 +132,11 @@ public class PageNavigator {
 	public void setComboBox(int i) {
 		selection.setSelectedIndex(i);
 	}
+	
+	public void setSelections(String[] s) {
+		DefaultComboBoxModel model = new DefaultComboBoxModel(s);
+		selection.setModel(model);
+	}
 
 	public void showPage(String page) {
 		// TODO

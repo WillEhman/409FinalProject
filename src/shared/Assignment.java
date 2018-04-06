@@ -157,5 +157,9 @@ public class Assignment implements Serializable {
 	public void setBytes(byte[] file) {
 		this.fileData = file;
 	}
+	
+	public String toString() {
+		return title + "-----" + dueDate;
+	}
 
 }
