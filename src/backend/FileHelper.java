@@ -88,7 +88,6 @@ public class FileHelper {
 			e.printStackTrace();
 		}
 		return content;
-
 	}
 
 	// void setFilePath(Assignment a) {
