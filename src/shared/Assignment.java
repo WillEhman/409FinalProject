@@ -47,6 +47,9 @@ public class Assignment implements Serializable {
 	 */
 	private String dueDate;
 
+	/**
+	 * data of the file
+	 */
 	private String fileData;
 
 	public Assignment() {
