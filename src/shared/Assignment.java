@@ -50,7 +50,7 @@ public class Assignment implements Serializable {
 	/**
 	 * data of the file
 	 */
-	private String fileData;
+	private byte[] fileData;
 
 	public Assignment() {
 		assignId = 0;
@@ -77,7 +77,7 @@ public class Assignment implements Serializable {
 	 * @param date
 	 *            due date for assignment
 	 */
-	public Assignment(int aid, int cid, String title, String path, boolean a, String date, String file) {
+	public Assignment(int aid, int cid, String title, String path, boolean a, String date, byte[] file) {
 		assignId = aid;
 		courseId = cid;
 		this.title = title;
@@ -151,11 +151,11 @@ public class Assignment implements Serializable {
 		this.dueDate = dueDate;
 	}
 
-	public String getFileData() {
+	public byte[] getBytes() {
 		return fileData;
 	}
 
-	public void setFileData(String file) {
+	public void setBytes(byte[] file) {
 		this.fileData = file;
 	}
 

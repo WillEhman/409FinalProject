@@ -6,15 +6,15 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.EventListener;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import frontend.components.*;
 
 public class ProfessorGUI extends PageNavigator {
 
@@ -253,20 +253,66 @@ public class ProfessorGUI extends PageNavigator {
 
 		private static final long serialVersionUID = 1L;
 		JPanel buttons;
-		JTextArea info;
+		JList<String> info;
 		JScrollPane scroll;
 		JButton upload;
+		private Assignment currentAssignment;
+		private Vector<Assignment> assignVector;
 
 		public AssignmentPage(Client c) {
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
-			info = new JTextArea();
+			info = new JList();
 			scroll = new JScrollPane(info);
 			upload = new JButton("Upload");
+			upload.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO do a thing
+				}
+			});
+			info.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+					if (info.getSelectedIndex() >= 0) {
+						currentAssignment = assignVector.get(info.getSelectedIndex());
+					}
+				}
+			});
 			buttons.add(upload);
 			this.add("South", buttons);
 			this.add("Center", scroll);
+			Message<Course> message = new Message<Course>(getCurrentCourse(), "ASSIGNMENTLIST");
+			Message<?> receive = c.communicate(message);
+			setAssignments((Vector<Assignment>) receive.getObject());
+		}
+		
+		public void setAssignments(Vector<Assignment> v) {
+			assignVector = v;
+			String[] temp = new String[v.size()];
+			for (int i = 0; i < temp.length; i++) {
+				temp[i] = v.get(i).getTitle();
+				System.out.println(temp[i]);
+			}
+			info.setListData(temp);
+			currentAssignment = v.get(0);
+		}
+		
+		public byte[] readFileContent(String path) throws IOException {
+			File selectedFile = new File(path);
+			long length = selectedFile.length();
+			byte[] content = new byte[(int) length];
+
+			try {
+				FileInputStream fis = new FileInputStream(selectedFile);
+				BufferedInputStream bos = new BufferedInputStream(fis);
+				bos.read(content, 0, (int) length);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return content;
+
 		}
 	}
 
