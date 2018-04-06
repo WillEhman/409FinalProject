@@ -37,12 +37,13 @@ public class Worker implements Runnable {
 	}
 
 	@Override
-	//TODO implement proper outputs for catch statements. Possibly convert to switch case
+	// TODO implement proper outputs for catch statements. Possibly convert to
+	// switch case
 	public void run() {
 		LoginInfo login = null;
 		System.out.println("|---Running...");
 		while (true) {
-			
+
 			try {
 				Message<?> inMessage = (Message<?>) in.readObject();
 				System.out.println("\nInput received: ");
@@ -85,55 +86,51 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "COURSELIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("ADDCOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
-					
+
 					Course newcourse = (Course) inMessage.getObject();
 					database.preparedAdd(newcourse);
-					
+
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses(newcourse.getProfId());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "ADDCOURSE");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("UPDATECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
-					
+
 					Course courseToUpdate = (Course) inMessage.getObject();
 					database.preparedRemove(courseToUpdate);
 					database.preparedAdd(courseToUpdate);
-					
+
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses(courseToUpdate.getProfId());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "UPDATECOURSE");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("REMOVECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
-					
+
 					Course removedcourse = (Course) inMessage.getObject();
 					database.preparedRemove(removedcourse);
-					
+
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses(removedcourse.getProfId());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "REMOVECOURSE");
 					out.writeObject(outMessage);
 				}
-				
-				if (inMessage.getQuery().equals("CREATEFILE")
-						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
-					
-					Assignment assignmentToUp = (Assignment) inMessage.getObject();
-					fileManager.writeFileContent(assignmentToUp);
-					
-					Message<?> outMessage = new Message<Assignment>(assignmentToUp, "CREATEFILE");
-					out.writeObject(outMessage);
+
+				if (inMessage.getQuery().contains("CREATEFILE")) {
+					byte[] input = (byte[]) inMessage.getObject();
+					fileManager.writeFileContent(input, inMessage.getQuery());
+					out.writeObject(null);
 				}
 
 				// } catch (IOException e) {
@@ -158,7 +155,7 @@ public class Worker implements Runnable {
 
 	}
 
-	//TODO see if necessary
+	// TODO see if necessary
 	void closeConnection() {
 
 	}

@@ -30,31 +30,69 @@ public class FileHelper {
 	// }
 	// return 0;
 	// }
+	Message<Assignment> readFileContent(byte[] input, String query) throws IOException {
+		String[] path = query.split(".SPLITTER.");
+		String fileName = path[path.length - 2];
+		String fileExt = path[path.length - 1];
 
-	void writeFileContent(Assignment a) throws IOException {
-		OutputStream output = null;
+		File newFile = new File(fileName + fileExt);
 		try {
-			byte[] bytesArray = a.getFileData().getBytes();
-			File outputFile = new File(a.getPath());
-
-			output = new FileOutputStream(outputFile);
-
-			output.write(bytesArray);
-
-			output.flush();
+			if (!newFile.exists()) {
+				newFile.createNewFile();
+			}
 			
+			FileOutputStream fos = new FileOutputStream(newFile);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			bos.write(input);
+			bos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				if (output != null) {
-					output.close();
-				}
-			} catch (IOException ioe) {
-				System.out.println("Error in closing the Stream");
+		}
+		return null;
+	}
+	
+	void writeFileContent(byte[] input, String query) throws IOException {
+		String[] path = query.split(".SPLITTER.");
+		String fileName = path[path.length - 2];
+		String fileExt = path[path.length - 1];
+
+		File newFile = new File(fileName + fileExt);
+		try {
+			if (!newFile.exists()) {
+				newFile.createNewFile();
 			}
+			
+			FileOutputStream fos = new FileOutputStream(newFile);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			bos.write(input);
+			bos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
+		// OutputStream output = null;s
+		// try {
+		// byte[] bytesArray = a.getFileData().getBytes();
+		// File outputFile = new File(a.getPath());
+		//
+		// output = new FileOutputStream(outputFile);
+		//
+		// output.write(bytesArray);
+		//
+		// output.flush();
+		//
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// } finally {
+		// try {
+		// if (output != null) {
+		// output.close();
+		// }
+		// } catch (IOException ioe) {
+		// System.out.println("Error in closing the Stream");
+		// }
+		// }
+//	}
 
 	Assignment readFileContent(Assignment a) throws IOException {
 		Assignment local = a;
@@ -122,17 +160,18 @@ public class FileHelper {
 
 	}
 
+	// FOR TESTING
 	public static void main(String args[]) {
 		FileHelper fh = new FileHelper();
-		Assignment test = new Assignment(1, 409, "Final Project", "test.txt", true, "Someday",
-				"Don't Take me down to the paradise city where the grass is green and the girls are pretty");
-		try {
-			fh.writeFileContent(test);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		test = new Assignment(1, 409, "Final Project", "test.txt", true, "Someday",null);
+		Assignment test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday",
+				"Take me down to the paradise city where the grass is green and the girls are pretty");
+//		try {
+//			fh.writeFileContent(test,"");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday", null);
 		try {
 			fh.readFileContent(test);
 		} catch (IOException e) {
