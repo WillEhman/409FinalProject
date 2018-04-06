@@ -1,16 +1,11 @@
 package backend;
 
 import shared.Assignment;
-import shared.Course;
-import shared.LoginInfo;
-import shared.Professor;
-import shared.Student;
-import shared.User;
+import shared.*;
 
 import java.sql.*;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
 
 public class DatabaseHelper {
 
@@ -463,7 +458,7 @@ public class DatabaseHelper {
 	}
 
 	Vector<Assignment> listAssignments(Course course) {
-		String sql = "SELECT * FROM assignments WHERE COURSEID = " + course.getCourseId();
+		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + course.getCourseId();
 		try {
 			Vector<Assignment> listofAssignments = new Vector<Assignment>();
 
@@ -474,6 +469,7 @@ public class DatabaseHelper {
 			while (assigns.next()) {
 				Assignment temp = new Assignment();
 				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
 				temp.setPath(assigns.getString("FILEPATH"));
 				temp.setActive(assigns.getBoolean("ACTIVE"));
 				listofAssignments.add(temp);

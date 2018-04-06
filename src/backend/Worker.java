@@ -112,7 +112,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().contains("UNENROLLSTUDENT")
+				if (inMessage.getQuery().contains("REMOVESTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
 
@@ -121,8 +121,8 @@ public class Worker implements Runnable {
 
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
-					System.out.println(uVector);
-					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLLSTUDENT");
+					System.out.println("to be returned:" + uVector);
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "REMOVESTUDENT");
 					out.writeObject(outMessage);
 				}
 
@@ -203,20 +203,28 @@ public class Worker implements Runnable {
 					Assignment a = (Assignment) inMessage.getObject();
 					database.preparedSetActive(a, true);
 
-					Message<?> outMessage = null;
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignments((Course) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
 
+				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.txt
+				// Should contain data in object in form byte[]
 				if (inMessage.getQuery().contains("CREATEFILE")) {
 					byte[] input = (byte[]) inMessage.getObject();
 					fileManager.writeFileContent(input, inMessage.getQuery());
-					out.writeObject(null);
+					Message<?> outMessage = new Message<String>("File created successfully", "CREATEFILE");
+					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().contains("READFILE")) {
-					String input = (String) inMessage.getObject();// Should contain path i.e (test.txt)
-					byte[] data = fileManager.readFileContent(input);
-					Message<?> outMessage = new Message<byte[]>(data, null);
+				if (inMessage.getQuery().contains("READFILE")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+					Assignment a = (Assignment) inMessage.getObject();// Should contain path i.e (test.txt)
+					String path = a.getPath();
+					byte[] data = fileManager.readFileContent(path);
+					Message<?> outMessage = new Message<byte[]>(data, "READFILE");
 					out.writeObject(outMessage);
 				}
 
