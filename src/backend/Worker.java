@@ -215,8 +215,13 @@ public class Worker implements Runnable {
 				if (inMessage.getQuery().contains("CREATEFILE")) {
 					Assignment a = (Assignment) inMessage.getObject();
 					byte[] input = a.getBytes();
+					database.preparedAdd(a);
 					fileManager.writeFileContent(input, inMessage.getQuery());
-					Message<?> outMessage = new Message<String>("File created successfully", "CREATEFILE");
+					
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignments((Course) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
 

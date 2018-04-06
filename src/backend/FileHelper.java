@@ -102,9 +102,9 @@ public class FileHelper {
 	public static void main(String args[]) {
 		FileHelper fh = new FileHelper();
 		Assignment test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday",
-				"Take me down to the paradise city where the grass is green and the girls are pretty");
+				"Take me down to the paradise city where the grass is green and the girls are pretty".getBytes());
 		try {
-			fh.writeFileContent(test.getFileData().getBytes(), test.getFileQuery());
+			fh.writeFileContent(test.getBytes(), test.getFileQuery());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

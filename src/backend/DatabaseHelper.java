@@ -157,6 +157,22 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	public void preparedAdd(Assignment assignment) {
+		String sql = "INSERT INTO assignments VALUES ( ?, ?, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, assignment.getCourseId());
+			statement.setInt(2, assignment.getAssignId());
+			statement.setString(3, assignment.getTitle());
+			statement.setString(4, assignment.getPath());
+			statement.setBoolean(5, assignment.isActive());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void preparedSetActive(int id, boolean active) {
 		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
