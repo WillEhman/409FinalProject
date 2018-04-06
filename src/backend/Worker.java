@@ -96,13 +96,13 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<User>>(uVector, "STUDENTLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().contains("ENROLSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
-					
-//					Course courseToUpdate = (Course) inMessage.getObject();
-					database.preparedEnrol(Integer.parseInt(split[split.length-1]),(Course)inMessage.getObject());
+
+					// Course courseToUpdate = (Course) inMessage.getObject();
+					database.preparedEnrol(Integer.parseInt(split[split.length - 1]), (Course) inMessage.getObject());
 
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
@@ -110,13 +110,13 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLSTUDENT");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().contains("UNENROLSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
-					
-//					Course courseToUpdate = (Course) inMessage.getObject();
-					database.preparedUnenrol(Integer.parseInt(split[split.length-1]),(Course)inMessage.getObject());
+
+					// Course courseToUpdate = (Course) inMessage.getObject();
+					database.preparedUnenrol(Integer.parseInt(split[split.length - 1]), (Course) inMessage.getObject());
 
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
@@ -186,7 +186,7 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "REMOVECOURSE");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("ASSIGNMENTLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Assignment> aVector = new Vector<Assignment>();
@@ -195,12 +195,12 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("ACTIVATEASSIGNMENT")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 
 					Assignment a = (Assignment) inMessage.getObject();
-					database.preparedSetActive(a,true);
+					database.preparedSetActive(a, true);
 
 					Message<?> outMessage = null;
 					out.writeObject(outMessage);

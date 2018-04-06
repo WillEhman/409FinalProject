@@ -46,7 +46,7 @@ public class Assignment implements Serializable {
 	 * due date of assignment
 	 */
 	private String dueDate;
-	
+
 	private String fileData;
 
 	public Assignment() {
@@ -58,6 +58,7 @@ public class Assignment implements Serializable {
 		dueDate = null;
 		this.fileData = null;
 	}
+
 	/**
 	 * constructor for assignment
 	 * 
@@ -83,16 +84,18 @@ public class Assignment implements Serializable {
 		this.fileData = file;
 	}
 
-	//This code for splitting inspired by https://stackoverflow.com/questions/4545937/splitting-the-filename-into-a-base-and-extension
+	// This code for splitting inspired by
+	// https://stackoverflow.com/questions/4545937/splitting-the-filename-into-a-base-and-extension
 	public String getFileQuery() {
-//		System.out.println(path);
+		// System.out.println(path);
 		String[] split = path.split("\\.(?=[^\\.]+$)");
-//		System.out.println(split[0]);
-//		System.out.println(split[1]);
-		String returnString = fileData+".SPLITTER."+split[0]+".SPLITTER."+split[1];
-//		System.out.println(returnString);
+		// System.out.println(split[0]);
+		// System.out.println(split[1]);
+		String returnString = fileData + ".SPLITTER." + split[0] + ".SPLITTER." + split[1];
+		// System.out.println(returnString);
 		return returnString;
 	}
+
 	/**
 	 * getters and setters
 	 * 
@@ -144,7 +147,7 @@ public class Assignment implements Serializable {
 	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
 	}
-	
+
 	public String getFileData() {
 		return fileData;
 	}
