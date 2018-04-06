@@ -15,6 +15,7 @@ public class DatabaseHelper {
 
 	private PreparedStatement statement;
 	private Connection connection;
+	//TODO format this
 	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses",
 			assignmentsTable = "assignments";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
@@ -38,6 +39,7 @@ public class DatabaseHelper {
 		}
 	}
 
+	//TODO FOR ALL fix try catch statements for proper handling and output
 	/**
 	 * Selects and searches for a course id
 	 * 
@@ -145,6 +147,7 @@ public class DatabaseHelper {
 	}
 
 	public void preparedAdd(Course course) {
+		System.out.println("Adding Course");
 		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -316,6 +319,33 @@ public class DatabaseHelper {
 
 	Vector<Course> listCourses(Professor prof) {
 		String sql = "SELECT * FROM courses WHERE PROFESSORID = "+prof.getId();
+		try {
+			Vector<Course> listofCourses = new Vector<Course>();
+			
+			statement = connection.prepareStatement(sql);
+//			statement.setInt(1, prof.getId());
+			ResultSet course = statement.executeQuery(sql);
+			
+			while (course.next()) {
+				Course temp = new Course();
+				temp.setActive(course.getBoolean("ACTIVE"));
+				temp.setCourseId(course.getInt("COURSENUMBER"));
+				temp.setCourseName(course.getString("COURSENAME") );
+				temp.setProfId(course.getInt("PROFESSORID"));
+				listofCourses.add(temp);
+			}
+			course.close();
+			return listofCourses;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	//TODO make prepared statement
+	Vector<Course> listCourses(int profid) {
+		String sql = "SELECT * FROM courses WHERE PROFESSORID = "+profid;
 		try {
 			Vector<Course> listofCourses = new Vector<Course>();
 			

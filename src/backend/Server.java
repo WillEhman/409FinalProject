@@ -40,7 +40,7 @@ public class Server{
 
 	public void run(Server server) {
 		try {
-			while(true) {
+			for(;;) {
 				threadPool.execute(new Worker(serverSocket.accept(),fileManager,database,emailService));
 			}
 		}catch(IOException e) {
@@ -52,13 +52,12 @@ public class Server{
 	
 	public static void main(String[] args){
 		Server server = new Server();
-
-		
 		server.run(server);
 		
 	}
 	
 	void shutdown(Server server) {
+		//TODO see if necessary
 		// Close all sockets
 		try {
 			threadPool.shutdown();
@@ -71,6 +70,7 @@ public class Server{
 	}
 
 	public ExecutorService getThreadPool() {
+		//TODO see if necessary
 		return threadPool;
 	}
 
@@ -78,6 +78,9 @@ public class Server{
 //		this.threadPool = threadPool;
 //	}
 	
+	
+	//FOR ALL FOLLOWING
+	//TODO see if necessary
 	private synchronized boolean isStopped() {
         return this.isStopped;
     }
