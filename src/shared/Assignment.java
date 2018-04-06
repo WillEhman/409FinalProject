@@ -1,5 +1,6 @@
 package shared;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -45,6 +46,8 @@ public class Assignment implements Serializable {
 	 * due date of assignment
 	 */
 	private String dueDate;
+	
+	private String fileData;
 
 	/**
 	 * constructor for assignment
@@ -61,13 +64,14 @@ public class Assignment implements Serializable {
 	 * @param date
 	 *            due date for assignment
 	 */
-	public Assignment(int aid, int cid, String title, String path, boolean a, String date) {
+	public Assignment(int aid, int cid, String title, String path, boolean a, String date, String file) {
 		assignId = aid;
 		courseId = cid;
 		this.title = title;
 		this.path = path;
 		active = a;
 		dueDate = date;
+		this.fileData = file;
 	}
 
 	/**
@@ -120,6 +124,14 @@ public class Assignment implements Serializable {
 
 	public void setDueDate(String dueDate) {
 		this.dueDate = dueDate;
+	}
+	
+	public String getFileData() {
+		return fileData;
+	}
+
+	public void setFileData(String file) {
+		this.fileData = file;
 	}
 
 }

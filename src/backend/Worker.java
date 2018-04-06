@@ -99,6 +99,20 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 				
+				if (inMessage.getQuery().equals("UPDATECOURSE")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					
+					Course courseToUpdate = (Course) inMessage.getObject();
+					database.preparedRemove(courseToUpdate);
+					database.preparedAdd(courseToUpdate);
+					
+					Vector<Course> cVector = new Vector<Course>();
+					cVector = database.listCourses(courseToUpdate.getProfId());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Course>>(cVector, "UPDATECOURSE");
+					out.writeObject(outMessage);
+				}
+				
 				if (inMessage.getQuery().equals("REMOVECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					
@@ -116,7 +130,7 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					
 					Assignment assignmentToUp = (Assignment) inMessage.getObject();
-					fileManager.writeFileContent(assignmentToUp, "TEST".getBytes());
+					fileManager.writeFileContent(assignmentToUp);
 					
 					Message<?> outMessage = new Message<Assignment>(assignmentToUp, "CREATEFILE");
 					out.writeObject(outMessage);
