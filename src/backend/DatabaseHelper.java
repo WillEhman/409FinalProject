@@ -159,14 +159,15 @@ public class DatabaseHelper {
 	}
 	
 	public void preparedAdd(Assignment assignment) {
-		String sql = "INSERT INTO assignments VALUES ( ?, ?, ?, ?)";
+		String sql = "INSERT INTO assignments VALUES ( ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, assignment.getCourseId());
 			statement.setInt(2, assignment.getAssignId());
 			statement.setString(3, assignment.getTitle());
 			statement.setString(4, assignment.getPath());
-			statement.setBoolean(5, assignment.isActive());
+			statement.setString(5, assignment.getDueDate());
+			statement.setBoolean(6, assignment.isActive());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -192,6 +193,19 @@ public class DatabaseHelper {
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setBoolean(1, active);
+			statement.setInt(2, a.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void preparedSetDue(Assignment a, String date) {
+		String sql = "UPDATE courses SET DUEDATE = ? WHERE COURSENUMBER = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, date);
 			statement.setInt(2, a.getCourseId());
 
 			statement.executeUpdate();
@@ -487,6 +501,34 @@ public class DatabaseHelper {
 				temp.setCourseId(assigns.getInt("COURSENUMBER"));
 				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
 				temp.setPath(assigns.getString("FILEPATH"));
+				temp.setDueDate(assigns.getString("DUEDATE"));
+				temp.setActive(assigns.getBoolean("ACTIVE"));
+				listofAssignments.add(temp);
+			}
+			assigns.close();
+			return listofAssignments;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	Vector<Assignment> listAssignments(int courseId) {
+		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + courseId;
+		try {
+			Vector<Assignment> listofAssignments = new Vector<Assignment>();
+
+			statement = connection.prepareStatement(sql);
+			// statement.setInt(1, prof.getId());
+			ResultSet assigns = statement.executeQuery(sql);
+
+			while (assigns.next()) {
+				Assignment temp = new Assignment();
+				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
+				temp.setPath(assigns.getString("FILEPATH"));
+				temp.setDueDate(assigns.getString("DUEDATE"));
 				temp.setActive(assigns.getBoolean("ACTIVE"));
 				listofAssignments.add(temp);
 			}

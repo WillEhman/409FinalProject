@@ -196,17 +196,29 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
+				
+				if (inMessage.getQuery().equals("ASSIGNMENTDUE")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+					Assignment a = (Assignment) inMessage.getObject();
+					database.preparedSetDue(a, a.getDueDate());
+					
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignments(a.getCourseId());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTDUE");
+					out.writeObject(outMessage);
+				}
 
 				if (inMessage.getQuery().equals("ACTIVATEASSIGNMENT")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 
 					Assignment a = (Assignment) inMessage.getObject();
-					database.preparedSetActive(a, true);
+					database.preparedSetActive(a, a.isActive());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignments((Course) inMessage.getObject());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ACTIVATEASSIGNMENT");
 					out.writeObject(outMessage);
 				}
 
@@ -219,7 +231,7 @@ public class Worker implements Runnable {
 					fileManager.writeFileContent(input, inMessage.getQuery());
 					
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments((Course) inMessage.getObject());
+					aVector = database.listAssignments(a.getCourseId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
