@@ -343,6 +343,7 @@ public class DatabaseHelper {
 				statement.setInt(1, uset.getInt("ID"));
 				statement.setInt(2, object.getCourseId());
 				ResultSet eset = statement.executeQuery();
+//				System.out.println(eset);
 				if (eset.next()) {
 					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
 							uset.getString("type"), uset.getString("email")));
@@ -393,12 +394,38 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	public void preparedEnrol(int userid, Course course) {
+		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+
+			statement.setInt(1, userid);
+			statement.setInt(2, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void preparedUnenrol(int userid, int courseid) {
 		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, courseid);
+			statement.setInt(2, userid);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void preparedUnenrol(int userid, Course course) {
+		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
 			statement.setInt(2, userid);
 
 			statement.executeUpdate();
