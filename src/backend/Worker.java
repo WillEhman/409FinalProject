@@ -94,6 +94,15 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "PROFLOGIN");
 					out.writeObject(outMessage);
 				}
+				
+				if (inMessage.getQuery().equals("ADDCOURSE")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					Vector<Course> cVector = new Vector<Course>();
+					cVector = database.listCourses((Professor) inMessage.getObject());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Course>>(cVector, "PROFLOGIN");
+					out.writeObject(outMessage);
+				}
 
 				// } catch (IOException e) {
 				// System.out.println("Client Disconnected");
