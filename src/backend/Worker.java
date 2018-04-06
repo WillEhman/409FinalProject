@@ -97,21 +97,22 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().contains("ENROLSTUDENT")
+				if (inMessage.getQuery().contains("ENROLLSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
 
 					// Course courseToUpdate = (Course) inMessage.getObject();
+					// System.out.println(split);
 					database.preparedEnrol(Integer.parseInt(split[split.length - 1]), (Course) inMessage.getObject());
 
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
 					System.out.println(uVector);
-					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLSTUDENT");
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLLSTUDENT");
 					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().contains("UNENROLSTUDENT")
+				if (inMessage.getQuery().contains("UNENROLLSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
 
@@ -121,7 +122,7 @@ public class Worker implements Runnable {
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
 					System.out.println(uVector);
-					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLSTUDENT");
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLLSTUDENT");
 					out.writeObject(outMessage);
 				}
 
@@ -214,32 +215,26 @@ public class Worker implements Runnable {
 
 				if (inMessage.getQuery().contains("READFILE")) {
 					String input = (String) inMessage.getObject();// Should contain path i.e (test.txt)
-					fileManager.readFileContent(input);
-					Assignment a = null;
-					Message<?> outMessage = new Message<Assignment>(a, null);
+					byte[] data = fileManager.readFileContent(input);
+					Message<?> outMessage = new Message<byte[]>(data, null);
 					out.writeObject(outMessage);
 				}
 
-				// } catch (IOException e) {
-				// System.out.println("Client Disconnected");
-				// break;
-				// } catch (ClassNotFoundException e) {
-				// System.out.println(e.getMessage());
-				// break;
-				// }
-
-			} catch (Exception e) {
-
-			}
-
-			try {
-				// in.close();
-				// out.close();
-			} catch (Exception e) {
-				System.out.println("Ending Exception: " + e.getMessage());
+			} catch (IOException e) {
+				System.out.println("Client Disconnected");
+				break;
+			} catch (ClassNotFoundException e) {
+				System.out.println(e.getMessage());
+				break;
 			}
 		}
 
+		try {
+			in.close();
+			out.close();
+		} catch (Exception e) {
+			System.out.println("Ending Exception: " + e.getMessage());
+		}
 	}
 
 	// TODO see if necessary

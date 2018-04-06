@@ -148,7 +148,7 @@ public class DatabaseHelper {
 	}
 
 	public void preparedAdd(Course course) {
-		System.out.println("Adding Course");
+//		System.out.println("Adding Course");
 		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
