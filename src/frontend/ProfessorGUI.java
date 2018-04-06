@@ -245,7 +245,11 @@ public class ProfessorGUI extends PageNavigator {
 				System.out.println(temp[i]);
 			}
 			info.setListData(temp);
-			currentStudent = v.get(0);
+			try {
+				currentStudent = v.get(0);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				currentStudent = null;
+			}
 		}
 	}
 
@@ -255,7 +259,7 @@ public class ProfessorGUI extends PageNavigator {
 		JPanel buttons;
 		JList<String> info;
 		JScrollPane scroll;
-		JButton upload;
+		JButton upload, active;
 		private Assignment currentAssignment;
 		private Vector<Assignment> assignVector;
 
@@ -272,6 +276,7 @@ public class ProfessorGUI extends PageNavigator {
 					JTextField aidF = new JTextField(5);
 					JTextField titleF = new JTextField(5);
 					JTextField pathF = new JTextField(5);
+					JTextField dueF = new JTextField(5);
 					JPanel title = new JPanel();
 					JPanel info = new JPanel();
 					JPanel buttons = new JPanel();
@@ -282,6 +287,8 @@ public class ProfessorGUI extends PageNavigator {
 					info.add(aidF);
 					info.add(new JLabel("Assignment Title:"));
 					info.add(titleF);
+					info.add(new JLabel("Due Date:"));
+					info.add(dueF);
 					info.add(new JLabel("File Path:"));
 					info.add(pathF);
 					options.add("North", title);
@@ -293,10 +300,11 @@ public class ProfessorGUI extends PageNavigator {
 								if (aidF.getText().length() <= 10) {
 									Assignment newAssign = new Assignment(Integer.parseInt(aidF.getText()),
 											getCurrentCourse().getCourseId(), titleF.getText(), pathF.getText(), true,
-											null, readFileContent(pathF.getText()));
+											dueF.getText(), readFileContent(pathF.getText()));
 									String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
 									Message<Assignment> message = new Message<Assignment>(newAssign,
-											"CREATEFILE.SPLITTER." + path[path.length - 2]+".SPLITTER."+path[path.length-1]);
+											"CREATEFILE.SPLITTER." + path[path.length - 2] + ".SPLITTER."
+													+ path[path.length - 1]);
 									Message<?> receive = c.communicate(message);
 									setAssignments((Vector<Assignment>) receive.getObject());
 									options.dispose();
@@ -307,6 +315,8 @@ public class ProfessorGUI extends PageNavigator {
 								JOptionPane.showMessageDialog(null, "Invalid Course ID");
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(null, "Invalid File Path");
+							} catch (NullPointerException e) {
+								JOptionPane.showMessageDialog(null, "Invalid Input");
 							}
 
 						}
@@ -321,7 +331,7 @@ public class ProfessorGUI extends PageNavigator {
 					buttons.add(confirm);
 					buttons.add(cancel);
 					options.add("South", buttons);
-					options.setSize(300, 250);
+					options.setSize(300, 300);
 					options.setResizable(false);
 					options.setLocationByPlatform(true);
 					options.setVisible(true);
@@ -331,10 +341,32 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
 						currentAssignment = assignVector.get(info.getSelectedIndex());
+						System.out.println("------Assign ID: " + currentAssignment.getAssignId());
+						System.out.println("------Assign Course ID: " + currentAssignment.getCourseId());
+					}
+				}
+			});
+			active = new JButton("Toggle Active");
+			active.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							"Change Assignment Active State to " + !currentAssignment.isActive(), "Toggle Active State", dialogButton);
+					if (dialogResult == 0) {
+						currentAssignment.setActive(!currentAssignment.isActive());
+						Message<Assignment> message = new Message<Assignment>(currentAssignment, "ACTIVATEASSIGNMENT");
+						try {
+							Message<?> receive = c.communicate(message);
+							setAssignments((Vector<Assignment>) receive.getObject());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			});
 			buttons.add(upload);
+			buttons.add(active);
 			this.add("South", buttons);
 			this.add("Center", scroll);
 			Message<Course> message = new Message<Course>(getCurrentCourse(), "ASSIGNMENTLIST");
@@ -350,10 +382,14 @@ public class ProfessorGUI extends PageNavigator {
 				System.out.println(temp[i]);
 			}
 			info.setListData(temp);
-			currentAssignment = v.get(0);
+			try {
+				currentAssignment = v.get(0);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				currentAssignment = null;
+			}
 		}
 
-		public byte[] readFileContent(String path) throws IOException {
+		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
 			File selectedFile = new File(path);
 			long length = selectedFile.length();
 			byte[] content = new byte[(int) length];
@@ -388,13 +424,13 @@ public class ProfessorGUI extends PageNavigator {
 			info.setText("Course: " + getCurrentCourse().getCourseName() + "\n" + "Course ID: "
 					+ getCurrentCourse().getCourseId() + "\n" + "Active: " + getCurrentCourse().isActive());
 			scroll = new JScrollPane(info);
-			active = new JButton("Set Active");
+			active = new JButton("Toggle Active");
 			active.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					Course temp = getCurrentCourse();
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					int dialogResult = JOptionPane.showConfirmDialog(null,
-							"Change Course Active to " + !temp.isActive(), "Set Active", dialogButton);
+							"Change Course Active State to " + !temp.isActive(), "Toggle Active State", dialogButton);
 					if (dialogResult == 0) {
 						temp.setActive(!temp.isActive());
 						Message<Course> message = new Message<Course>(temp, "UPDATECOURSE");
@@ -428,10 +464,10 @@ public class ProfessorGUI extends PageNavigator {
 			HomePage p = new HomePage(display.getClient());
 			displayPage(p);
 			if (getCurrentCourse().isActive()) {
-				String[] options = {"Home","Students","Assignments"};
+				String[] options = { "Home", "Students", "Assignments" };
 				setSelections(options);
 			} else {
-				String[] options = {"Home"};
+				String[] options = { "Home" };
 				setSelections(options);
 			}
 		}

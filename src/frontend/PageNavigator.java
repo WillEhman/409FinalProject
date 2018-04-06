@@ -57,7 +57,7 @@ public class PageNavigator {
 		//Setup Info Panel
 		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		courseName = new JLabel("Select a Course");
-		String[] options = {"Home","Students","Assignments"};
+		String[] options = {"Home"};
 		selection = new JComboBox<String>(options);
 		infoTitle.add("West", selection);
 		infoTitle.add("Center", courseName);

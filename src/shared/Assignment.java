@@ -159,7 +159,12 @@ public class Assignment implements Serializable {
 	}
 	
 	public String toString() {
-		return title + "-----" + dueDate;
+		if (active) {
+			return title + " ----- Due: " + dueDate;
+		} else {
+			return title + " ----- INACTIVE";
+		}
+		
 	}
 
 }
