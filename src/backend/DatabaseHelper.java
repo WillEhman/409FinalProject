@@ -1,16 +1,11 @@
 package backend;
 
 import shared.Assignment;
-import shared.Course;
-import shared.LoginInfo;
-import shared.Professor;
-import shared.Student;
-import shared.User;
+import shared.*;
 
 import java.sql.*;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
 
 public class DatabaseHelper {
 

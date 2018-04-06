@@ -1,12 +1,12 @@
 package backend;
 
 import java.io.*;
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import shared.*;
 
 public class FileHelper {
-	private String path;
+//	private String path;
 
 	public FileHelper() {
 		// TODO Auto-generated constructor stub
@@ -81,6 +81,7 @@ public class FileHelper {
 			FileInputStream fis = new FileInputStream(selectedFile);
 			BufferedInputStream bos = new BufferedInputStream(fis);
 			bos.read(content, 0, (int) length);
+			bos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
