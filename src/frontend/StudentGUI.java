@@ -3,7 +3,7 @@ package frontend;
 import shared.*;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
-import frontend.components.*;
+//import frontend.components.*;
 
 public class StudentGUI extends PageNavigator {
 
