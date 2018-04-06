@@ -469,6 +469,7 @@ public class DatabaseHelper {
 			while (assigns.next()) {
 				Assignment temp = new Assignment();
 				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
 				temp.setPath(assigns.getString("FILEPATH"));
 				temp.setActive(assigns.getBoolean("ACTIVE"));
 				listofAssignments.add(temp);
