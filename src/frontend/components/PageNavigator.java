@@ -81,10 +81,6 @@ public class PageNavigator {
 		infoPanel.add(pageHolder);
 		frame.setVisible(true);
 	}
-	
-	public void setListener(eventListener e) {
-		
-	}
 
 	public JPanel getCoursePanel() {
 		return coursePanel;
