@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class ProfessorGUI extends PageNavigator {
 	private Professor professor;
 	private boolean isProfessor;
 	private Vector<Course> courses;
-	private JButton add;
+	private JButton add, remove;
 
 	public ProfessorGUI(User user, Client client) {
 		super();
@@ -30,10 +31,62 @@ public class ProfessorGUI extends PageNavigator {
 		Message<?> recieve = client.communicate(message);
 		courses = (Vector<Course>) recieve.getObject();
 		System.out.println("Got Message");
-		add = new JButton("add");
+		add = new JButton("Add");
+	    add.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame options = new JFrame("New Course");
+				JTextField cidF = new JTextField(5);
+				JTextField cNameF = new JTextField(5);
+				JPanel title = new JPanel();
+				JPanel info = new JPanel();
+				JPanel buttons = new JPanel();
+				options.setLayout(new BorderLayout());
+				title.add(new JLabel("Create a New Course"));
+				info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+				info.add(new JLabel("Course ID:"));
+				info.add(cidF);
+				info.add(new JLabel("Course Name:"));
+				info.add(cNameF);
+				options.add("North", title);
+				options.add("Center", info);
+				JButton confirm = new JButton("Confirm");
+				confirm.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						try {
+							Course newCourse = new Course(Integer.parseInt(cidF.getText()), professor.getId(), cNameF.getText(),true);
+							Message message = new Message<Course>(newCourse, "ADDCOURSE");
+							Message recieve = client.communicate(message);
+							courses = (Vector<Course>) recieve.getObject();
+							refreshCourses(courses);
+							options.dispose();
+						} catch (NumberFormatException e) {
+							//TODO: warning message
+						}
+						
+					}
+				});
+				JButton cancel = new JButton("Cancel");
+				cancel.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						options.dispose();
+					}
+				});
+				buttons.setLayout(new FlowLayout());
+				buttons.add(confirm);
+				buttons.add(cancel);
+				options.add("South", buttons);
+				options.setSize(300,200);
+				options.setResizable(false);
+				options.setLocationByPlatform(true);
+				options.setVisible(true);
+			}
+		});
+	    remove = new JButton("Remove");
+	    remove.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    super.setCourses(courses);
+	    refreshCourses(courses);
 	    super.getCoursePanel().add(add);  
+	    super.getCoursePanel().add(remove);
 	    super.setVisible(true);
 	    StudentPage p = new StudentPage();
 	    super.displayPage(p);
@@ -41,6 +94,10 @@ public class ProfessorGUI extends PageNavigator {
 	    super.displayPage(p1);
 	    HomePage p2 = new HomePage();
 	    super.displayPage(p2);
+	}
+	
+	public void refreshCourses(Vector<Course> v) {
+		super.setCourses(v);
 	}
 
 	public Client getClient() {
@@ -65,10 +122,6 @@ public class ProfessorGUI extends PageNavigator {
 
 	public void setProfessor(boolean isProfessor) {
 		this.isProfessor = isProfessor;
-	}
-	
-	public static void main(String[] args) {
-		ProfessorGUI n = new ProfessorGUI(new Professor(0, null, null, null), null);
 	}
 
 	private class StudentPage extends JPanel{

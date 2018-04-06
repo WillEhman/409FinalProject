@@ -90,8 +90,13 @@ public class PageNavigator {
 		return coursePanel;
 	}
 	
-	public void setCourses(Vector v) {
-		courses.setListData(v);
+	public void setCourses(Vector<Course> v) {
+		String[] temp = new String[v.size()];
+		for (int i = 0; i < temp.length; i++) {
+			temp[i] = v.get(i).toString();
+			System.out.println(temp[i]);
+		}
+		courses.setListData(temp);
 	}
 
 	public JList<String> getCourses() {

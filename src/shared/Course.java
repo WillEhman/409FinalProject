@@ -102,7 +102,7 @@ public class Course implements Serializable {
 	}
 	
 	public String toString() {
-		return this.courseId + ": " + this.courseName + ". Active:" + this.active;
+		return this.courseId + ": " + this.courseName;
 	}
 
 }
