@@ -17,16 +17,22 @@ public class ProfessorGUI extends PageNavigator {
 	private Client client;
 	private Professor professor;
 	private boolean isProfessor;
+	private Vector<Course> courses;
+	private JButton add;
 
 	public ProfessorGUI(User user, Client client) {
 		super();
 		professor = new Professor(user);
 		isProfessor = true;
-		Message<Professor> message = new Message<Professor>(professor, "COURSE");
-		//Message<?> recieve = client.communicate(message);
-		JButton add = new JButton("add");
+		System.out.println("Creating Message");
+		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
+		System.out.println("Sending Message");
+		Message<?> recieve = client.communicate(message);
+		courses = (Vector<Course>) recieve.getObject();
+		System.out.println("Got Message");
+		add = new JButton("add");
 	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    //super.setCourses((Vector) recieve.getObject());
+	    super.setCourses(courses);
 	    super.getCoursePanel().add(add);  
 	    super.setVisible(true);
 	    StudentPage p = new StudentPage();

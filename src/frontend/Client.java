@@ -33,11 +33,16 @@ public class Client implements Serializable {
 	}
 
 	public Message<?> communicate(Message<?> message) {
+		System.out.println("Starting Communication");
 		try {
+			System.out.println(message.getQuery());
 			out.writeObject(message);
+			System.out.println("Message Sent");
 			if ((message = (Message<?>) in.readObject()) != null) {
+				System.out.println("Got the Message");
 				return message;
 			}
+			System.out.println("got null Message");
 			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
