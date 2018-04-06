@@ -87,6 +87,38 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				if (inMessage.getQuery().contains("STUDENTLIST")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					// String [] split = inMessage.getQuery().split(".SPLITTER.");
+					Vector<User> uVector = new Vector<User>();
+					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
+					System.out.println(uVector);
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "STUDENTLIST");
+					out.writeObject(outMessage);
+				}
+
+				if (inMessage.getQuery().contains("SEARCHSTUDENTSID")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					String[] split = inMessage.getQuery().split(".SPLITTER.");
+					Vector<User> uVector = new Vector<User>();
+					uVector = database.preparedSearchUsersinCourse(Integer.parseInt(split[split.length - 1]),
+							(Course) inMessage.getObject());
+					System.out.println(uVector);
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "STUDENTLIST");
+					out.writeObject(outMessage);
+				}
+
+				if (inMessage.getQuery().contains("SEARCHSTUDENTSLN")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					String[] split = inMessage.getQuery().split(".SPLITTER.");
+					Vector<User> uVector = new Vector<User>();
+					uVector = database.preparedSearchUsersinCourse(split[split.length - 1],
+							(Course) inMessage.getObject());
+					System.out.println(uVector);
+					Message<?> outMessage = new Message<Vector<User>>(uVector, "STUDENTLIST");
+					out.writeObject(outMessage);
+				}
+
 				if (inMessage.getQuery().equals("ADDCOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -126,11 +158,38 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "REMOVECOURSE");
 					out.writeObject(outMessage);
 				}
+				
+				if (inMessage.getQuery().equals("ASSIGNMENTLIST")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignments((Course) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("ACTIVATEASSIGNMENT")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+
+					Assignment a = (Assignment) inMessage.getObject();
+					database.preparedSetActive(a,true);
+
+					Message<?> outMessage = null;
+					out.writeObject(outMessage);
+				}
 
 				if (inMessage.getQuery().contains("CREATEFILE")) {
 					byte[] input = (byte[]) inMessage.getObject();
 					fileManager.writeFileContent(input, inMessage.getQuery());
 					out.writeObject(null);
+				}
+
+				if (inMessage.getQuery().contains("READFILE")) {
+					String input = (String) inMessage.getObject();// Should contain path i.e (test.txt)
+					fileManager.readFileContent(input);
+					Assignment a = null;
+					Message<?> outMessage = new Message<Assignment>(a, null);
+					out.writeObject(outMessage);
 				}
 
 				// } catch (IOException e) {
