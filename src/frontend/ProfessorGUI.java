@@ -128,12 +128,11 @@ public class ProfessorGUI extends PageNavigator {
 		JPanel buttons;
 		JList<String> info;
 		JScrollPane scroll;
-		JButton enroll, unenroll, search;
+		JButton enroll, unenroll, search, refresh;
 		JTextField searchBar;
 		JRadioButton id, lName;
 		private Vector<User> studentVector;
 		private String command;
-		
 
 		public StudentPage(Client c) {
 			command = "ID";
@@ -143,7 +142,44 @@ public class ProfessorGUI extends PageNavigator {
 			info = new JList();
 			scroll = new JScrollPane(info);
 			enroll = new JButton("Enroll");
+			unenroll = new JButton("Unenroll");
 			search = new JButton("Search");
+			search.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (id.isSelected()) {
+						try {
+							Integer.parseInt(searchBar.getText());
+							if (searchBar.getText() != null) {
+								Message<Course> message = new Message<Course>(getCurrentCourse(),
+										"SEARCHSTUDENTSID.SPLITTER." + searchBar.getText());
+								Message<?> receive = c.communicate(message);
+								setStudents((Vector<User>) receive.getObject());
+							}
+						} catch (NumberFormatException e) {
+							// TODO: handle exception
+						}
+					} else if (lName.isSelected()) {
+						try {
+							if (searchBar.getText() != null) {
+								Message<Course> message = new Message<Course>(getCurrentCourse(),
+										"SEARCHSTUDENTSLN.SPLITTER." + searchBar.getText());
+								Message<?> receive = c.communicate(message);
+								setStudents((Vector<User>) receive.getObject());
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+				}
+			});
+			refresh = new JButton("Show All");
+			refresh.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Message<Course> message = new Message<Course>(getCurrentCourse(), "STUDENTLIST");
+					Message<?> receive = c.communicate(message);
+					setStudents((Vector<User>) receive.getObject());
+				}
+			});
 			searchBar = new JTextField(20);
 			id = new JRadioButton("ID");
 			lName = new JRadioButton("LastName");
@@ -152,14 +188,16 @@ public class ProfessorGUI extends PageNavigator {
 			buttons.add(lName);
 			buttons.add(searchBar);
 			buttons.add(search);
+			buttons.add(refresh);
 			buttons.add(enroll);
+			buttons.add(unenroll);
 			this.add("South", buttons);
 			this.add("Center", scroll);
 			Message<Course> message = new Message<Course>(getCurrentCourse(), "STUDENTLIST");
 			Message<?> receive = c.communicate(message);
 			setStudents((Vector<User>) receive.getObject());
 		}
-		
+
 		public void setStudents(Vector<User> v) {
 			studentVector = v;
 			String[] temp = new String[v.size()];
@@ -169,8 +207,8 @@ public class ProfessorGUI extends PageNavigator {
 			}
 			info.setListData(temp);
 		}
-		
-		public void setCommand(String s){
+
+		public void setCommand(String s) {
 			command = s;
 		}
 	}
@@ -253,18 +291,18 @@ public class ProfessorGUI extends PageNavigator {
 			displayPage(p);
 		}
 	}
-	
-	private class BoxListener implements ActionListener{
-		
+
+	private class BoxListener implements ActionListener {
+
 		PageNavigator display;
-		
-		public BoxListener(PageNavigator disp){
+
+		public BoxListener(PageNavigator disp) {
 			display = disp;
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			JComboBox c = (JComboBox) e.getSource();
-			String selected = (String)c.getSelectedItem();
+			String selected = (String) c.getSelectedItem();
 			if (selected.equals("Home")) {
 				HomePage p = new HomePage(display.getClient());
 				displayPage(p);
@@ -276,6 +314,6 @@ public class ProfessorGUI extends PageNavigator {
 				displayPage(p);
 			}
 		}
-		
+
 	}
 }

@@ -38,6 +38,7 @@ public class PageNavigator {
 		
 		//Set layouts
 		frame.setLayout(new BorderLayout());
+//		frame.getContentPane().setBackground(Color.CYAN); TODO make this work maybe
 		title.setLayout(new FlowLayout());
 		infoPanel.setLayout(new BorderLayout());
 		infoTitle.setLayout(new BorderLayout());
