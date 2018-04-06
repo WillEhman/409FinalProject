@@ -1,4 +1,4 @@
-package frontend.components;
+package frontend;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -116,7 +116,7 @@ public class PageNavigator {
 	}
 	
 	public void setCurrentCourse() {
-		if (courses.getSelectedIndex() > 0) {
+		if (courses.getSelectedIndex() >= 0) {
 			currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
 		}
 	}

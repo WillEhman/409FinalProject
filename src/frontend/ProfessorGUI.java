@@ -105,7 +105,7 @@ public class ProfessorGUI extends PageNavigator {
 				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(null, "No Course Selected");
 				} catch (ArrayIndexOutOfBoundsException e) {
-					// JOptionPane.showMessageDialog(null, "No Course Selected");
+					JOptionPane.showMessageDialog(null, "No Course Selected");
 				}
 			}
 		});
@@ -131,18 +131,47 @@ public class ProfessorGUI extends PageNavigator {
 		JButton enroll, unenroll, search, refresh;
 		JTextField searchBar;
 		JRadioButton id, lName;
+		ButtonGroup radios;
 		private Vector<User> studentVector;
-		private String command;
+		private User currentStudent;
 
-		public StudentPage(Client c) {
-			command = "ID";
+		public StudentPage(Client c, PageNavigator display) {
 			buttons = new JPanel();
+			radios = new ButtonGroup();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
 			info = new JList();
 			scroll = new JScrollPane(info);
 			enroll = new JButton("Enroll");
+			enroll.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					String ID;
+					ID = JOptionPane.showInputDialog(null, "Student ID to Enroll?");
+					try {
+						Integer.parseInt(ID);
+						Message<Course> message = new Message<Course>(getCurrentCourse(),
+								"ENROLLSTUDENT.SPLITTER." + ID);
+						Message<?> receive = c.communicate(message);
+						setStudents((Vector<User>) receive.getObject());
+					} catch (NumberFormatException e) {
+						JOptionPane.showMessageDialog(null, "Invalid ID");
+					}
+				}
+			});
 			unenroll = new JButton("Unenroll");
+			unenroll.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							"Unenroll " + currentStudent.toString(), "Unenroll", dialogButton);
+					if (dialogResult == 0) {
+						Message<Course> message = new Message<Course>(getCurrentCourse(),
+								"REMOVESTUDENT.SPLITTER." + currentStudent.getId());
+						Message<?> receive = c.communicate(message);
+						setStudents((Vector<User>) receive.getObject());
+					}
+				}
+			});
 			search = new JButton("Search");
 			search.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -156,7 +185,7 @@ public class ProfessorGUI extends PageNavigator {
 								setStudents((Vector<User>) receive.getObject());
 							}
 						} catch (NumberFormatException e) {
-							// TODO: handle exception
+							JOptionPane.showMessageDialog(null, "Invalid ID");
 						}
 					} else if (lName.isSelected()) {
 						try {
@@ -180,10 +209,20 @@ public class ProfessorGUI extends PageNavigator {
 					setStudents((Vector<User>) receive.getObject());
 				}
 			});
+			info.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+					if (info.getSelectedIndex() >= 0) {
+						currentStudent = studentVector.get(info.getSelectedIndex());
+					}
+				}
+			});
+			;
 			searchBar = new JTextField(20);
 			id = new JRadioButton("ID");
 			lName = new JRadioButton("LastName");
 			id.setSelected(true);
+			radios.add(id);
+			radios.add(lName);
 			buttons.add(id);
 			buttons.add(lName);
 			buttons.add(searchBar);
@@ -206,10 +245,7 @@ public class ProfessorGUI extends PageNavigator {
 				System.out.println(temp[i]);
 			}
 			info.setListData(temp);
-		}
-
-		public void setCommand(String s) {
-			command = s;
+			currentStudent = v.get(0);
 		}
 	}
 
@@ -310,7 +346,7 @@ public class ProfessorGUI extends PageNavigator {
 				AssignmentPage p = new AssignmentPage(display.getClient());
 				displayPage(p);
 			} else if (selected.equals("Students")) {
-				StudentPage p = new StudentPage(display.getClient());
+				StudentPage p = new StudentPage(display.getClient(), display);
 				displayPage(p);
 			}
 		}

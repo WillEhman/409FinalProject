@@ -18,7 +18,7 @@ import shared.*;
 public class LoginWindow extends JFrame {
 
 	private JTextField username;
-	private JTextField password;
+	private JPasswordField password;
 
 	private Client client;
 	JFrame frame = new JFrame("Login");
@@ -26,7 +26,7 @@ public class LoginWindow extends JFrame {
 	public LoginWindow() throws IOException {
 
 		// client = new Client("localhost", 9090);
-		client = new Client("10.13.169.88", 9090);
+		client = new Client("10.13.170.186", 9090);
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
 		JPanel buttons = new JPanel();
@@ -40,7 +40,7 @@ public class LoginWindow extends JFrame {
 		title.add(titleLabel);
 
 		username = new JTextField();
-		password = new JTextField();
+		password = new JPasswordField();
 		JLabel userLabel = new JLabel("Username: ");
 		JLabel passLabel = new JLabel("Password: ");
 		main.add(userLabel);
