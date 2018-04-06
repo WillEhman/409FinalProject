@@ -210,10 +210,11 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.txt
+				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
 				// Should contain data in object in form byte[]
 				if (inMessage.getQuery().contains("CREATEFILE")) {
-					byte[] input = (byte[]) inMessage.getObject();
+					Assignment a = (Assignment) inMessage.getObject();
+					byte[] input = a.getBytes();
 					fileManager.writeFileContent(input, inMessage.getQuery());
 					Message<?> outMessage = new Message<String>("File created successfully", "CREATEFILE");
 					out.writeObject(outMessage);
