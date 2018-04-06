@@ -315,12 +315,14 @@ public class DatabaseHelper {
 	}
 
 	Vector<Course> listCourses(Professor prof) {
+		String sql = "SELECT * FROM courses WHERE PROFESSORID = "+prof.getId();
 		try {
 			Vector<Course> listofCourses = new Vector<Course>();
-			String sql = "SELECT * FROM WHERE PROFESSORID=?" + coursesTable;
+			
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, prof.getId());
+//			statement.setInt(1, prof.getId());
 			ResultSet course = statement.executeQuery(sql);
+			
 			while (course.next()) {
 				Course temp = new Course();
 				temp.setActive(course.getBoolean("ACTIVE"));

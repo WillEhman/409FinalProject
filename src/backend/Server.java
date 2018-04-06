@@ -40,7 +40,7 @@ public class Server{
 
 	public void run(Server server) {
 		try {
-			for(;;) {
+			while(true) {
 				threadPool.execute(new Worker(serverSocket.accept(),fileManager,database,emailService));
 			}
 		}catch(IOException e) {
@@ -55,6 +55,7 @@ public class Server{
 
 		
 		server.run(server);
+		
 	}
 	
 	void shutdown(Server server) {

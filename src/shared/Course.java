@@ -100,5 +100,9 @@ public class Course implements Serializable {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
+	public String toString() {
+		return this.courseId + ": " + this.courseName + ". Active:" + this.active;
+	}
 
 }
