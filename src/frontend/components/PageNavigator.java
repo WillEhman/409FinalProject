@@ -4,17 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.EventListener;
+import java.awt.event.ActionListener;
 import java.util.Vector;
-
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import frontend.Client;
 import shared.Course;
+import shared.User;
 
 public class PageNavigator {
 
@@ -27,9 +24,11 @@ public class PageNavigator {
 	private JComboBox<String> selection;
 	private Vector<Course> vectorOfCourses;
 	private Course currentCourse;
+	private Client client;
 
-	public PageNavigator() {
+	public PageNavigator(Client c) {
 		//Initialize the panels and frame
+		client = c;
 		frame = new JFrame("Course Manager 2018");
 		coursePanel = new JPanel();
 		infoPanel = new JPanel();
@@ -48,7 +47,6 @@ public class PageNavigator {
 		//Setup Courses Panel
 		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
-		courses.addListSelectionListener(new listListener(this));
 		JScrollPane cScroll = new JScrollPane(courses);
 		cTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		coursePanel.add(cTitle);
@@ -76,6 +74,10 @@ public class PageNavigator {
 		
 	}
 	
+	public Client getClient() {
+		return client;
+	}
+	
 	public void setVisible(boolean b) {
 		frame.setVisible(b);
 	}
@@ -101,14 +103,33 @@ public class PageNavigator {
 			System.out.println(temp[i]);
 		}
 		courses.setListData(temp);
+		currentCourse = vectorOfCourses.get(0);
+	}
+	
+	public void setCourseListener(ListSelectionListener l) {
+		courses.addListSelectionListener(l);
+	}
+	
+	public void setBoxListener(ActionListener a) {
+		selection.addActionListener(a);
 	}
 	
 	public void setCurrentCourse() {
-		currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
+		if (courses.getSelectedIndex() > 0) {
+			currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
+		}
 	}
 	
 	public Course getCurrentCourse() {
 		return currentCourse;
+	}
+	
+	public void setCourseName(String name) {
+		courseName.setText(name);
+	}
+	
+	public void setComboBox(int i) {
+		selection.setSelectedIndex(i);
 	}
 
 	public void showPage(String page) {
@@ -129,18 +150,5 @@ public class PageNavigator {
 
 	public JPanel getPageHolder() {
 		return pageHolder;
-	}
-
-	private class listListener implements ListSelectionListener {
-		
-		PageNavigator display;
-
-		public listListener(PageNavigator disp) {
-			display = disp;
-		}
-
-		public void valueChanged(ListSelectionEvent e) {
-			setCurrentCourse();
-		}
 	}
 }

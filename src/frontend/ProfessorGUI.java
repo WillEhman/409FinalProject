@@ -6,8 +6,14 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.EventListener;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import frontend.components.*;
 
 public class ProfessorGUI extends PageNavigator {
@@ -18,14 +24,16 @@ public class ProfessorGUI extends PageNavigator {
 	private JButton add, remove;
 
 	public ProfessorGUI(User user, Client client) {
-		super();
+		super(client);
+		setCourseListener(new CourseListListener(this));
+		setBoxListener(new BoxListener(this));
 		professor = new Professor(user);
 		isProfessor = true;
 		System.out.println("Creating Message");
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
-		refreshCourses((Vector<Course>) recieve.getObject());
+		setCourses((Vector<Course>) recieve.getObject());
 		System.out.println("Got Message");
 		add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
@@ -54,7 +62,7 @@ public class ProfessorGUI extends PageNavigator {
 										cNameF.getText(), true);
 								Message<Course> message = new Message<Course>(newCourse, "ADDCOURSE");
 								Message<?> recieve = client.communicate(message);
-								refreshCourses((Vector<Course>) recieve.getObject());
+								setCourses((Vector<Course>) recieve.getObject());
 								options.dispose();
 							} else {
 								JOptionPane.showMessageDialog(null, "Invalid Course ID");
@@ -92,12 +100,12 @@ public class ProfessorGUI extends PageNavigator {
 					if (dialogResult == 0) {
 						Message<Course> message = new Message<Course>(temp, "REMOVECOURSE");
 						Message<?> receive = client.communicate(message);
-						refreshCourses((Vector<Course>) receive.getObject());
+						setCourses((Vector<Course>) receive.getObject());
 					}
 				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(null, "No Course Selected");
 				} catch (ArrayIndexOutOfBoundsException e) {
-//					JOptionPane.showMessageDialog(null, "No Course Selected");
+					// JOptionPane.showMessageDialog(null, "No Course Selected");
 				}
 			}
 		});
@@ -106,66 +114,64 @@ public class ProfessorGUI extends PageNavigator {
 		super.getCoursePanel().add(add);
 		super.getCoursePanel().add(remove);
 		super.setVisible(true);
-		StudentPage p = new StudentPage();
-		super.displayPage(p);
-		AssignmentPage p1 = new AssignmentPage();
-		super.displayPage(p1);
-		HomePage p2 = new HomePage();
-		super.displayPage(p2);
-	}
-
-	public void refreshCourses(Vector<Course> v) {
-		super.setCourses(v);
-	}
-
-	public Client getClient() {
-		return client;
-	}
-
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	public Professor getProfessor() {
-		return professor;
-	}
-
-	public void setProfessor(Professor professor) {
-		this.professor = professor;
-	}
-
-	public boolean isProfessor() {
-		return isProfessor;
-	}
-
-	public void setProfessor(boolean isProfessor) {
-		this.isProfessor = isProfessor;
+		// StudentPage p = new StudentPage();
+		// super.displayPage(p);
+		// AssignmentPage p1 = new AssignmentPage();
+		// super.displayPage(p1);
+		// HomePage p2 = new HomePage();
+		// super.displayPage(p2);
 	}
 
 	private class StudentPage extends JPanel {
 
 		private static final long serialVersionUID = 1L;
 		JPanel buttons;
-		JTextArea info;
+		JList<String> info;
 		JScrollPane scroll;
-		JButton enroll;
-		JButton search;
+		JButton enroll, unenroll, search;
 		JTextField searchBar;
+		JRadioButton id, lName;
+		private Vector<User> studentVector;
+		private String command;
+		
 
-		public StudentPage() {
+		public StudentPage(Client c) {
+			command = "ID";
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
-			info = new JTextArea();
+			info = new JList();
 			scroll = new JScrollPane(info);
 			enroll = new JButton("Enroll");
 			search = new JButton("Search");
 			searchBar = new JTextField(20);
+			id = new JRadioButton("ID");
+			lName = new JRadioButton("LastName");
+			id.setSelected(true);
+			buttons.add(id);
+			buttons.add(lName);
 			buttons.add(searchBar);
 			buttons.add(search);
 			buttons.add(enroll);
 			this.add("South", buttons);
 			this.add("Center", scroll);
+			Message<Course> message = new Message<Course>(getCurrentCourse(), "STUDENTLIST");
+			Message<?> receive = c.communicate(message);
+			setStudents((Vector<User>) receive.getObject());
+		}
+		
+		public void setStudents(Vector<User> v) {
+			studentVector = v;
+			String[] temp = new String[v.size()];
+			for (int i = 0; i < temp.length; i++) {
+				temp[i] = v.get(i).toString();
+				System.out.println(temp[i]);
+			}
+			info.setListData(temp);
+		}
+		
+		public void setCommand(String s){
+			command = s;
 		}
 	}
 
@@ -175,22 +181,22 @@ public class ProfessorGUI extends PageNavigator {
 		JPanel buttons;
 		JTextArea info;
 		JScrollPane scroll;
-		JButton download;
+		JButton upload;
 
-		public AssignmentPage() {
+		public AssignmentPage(Client c) {
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
 			info = new JTextArea();
 			scroll = new JScrollPane(info);
-			download = new JButton("Download");
-			buttons.add(download);
+			upload = new JButton("Upload");
+			buttons.add(upload);
 			this.add("South", buttons);
 			this.add("Center", scroll);
 		}
 	}
 
-	private class HomePage extends JPanel {
+	public class HomePage extends JPanel {
 
 		private static final long serialVersionUID = 1L;
 		JPanel buttons;
@@ -198,25 +204,30 @@ public class ProfessorGUI extends PageNavigator {
 		JScrollPane scroll;
 		JButton active;
 
-		public HomePage() {
+		public HomePage(Client c) {
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
 			info = new JTextArea();
+			info.setText("Course: " + getCurrentCourse().getCourseName() + "\n" + "Course ID: "
+					+ getCurrentCourse().getCourseId() + "\n" + "Active: " + getCurrentCourse().isActive());
 			scroll = new JScrollPane(info);
 			active = new JButton("Set Active");
 			active.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					Course temp = getCurrentCourse();
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null, "Change Course Active to " + !temp.isActive(),
-							"Set Active", dialogButton);
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							"Change Course Active to " + !temp.isActive(), "Set Active", dialogButton);
 					if (dialogResult == 0) {
 						temp.setActive(!temp.isActive());
 						Message<Course> message = new Message<Course>(temp, "UPDATECOURSE");
-						System.out.println(message);
-						Message<?> receive = client.communicate(message);
-						refreshCourses((Vector<Course>) receive.getObject());
+						try {
+							Message<?> receive = c.communicate(message);
+							setCourses((Vector<Course>) receive.getObject());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			});
@@ -224,5 +235,47 @@ public class ProfessorGUI extends PageNavigator {
 			this.add("South", buttons);
 			this.add("Center", scroll);
 		}
+	}
+
+	private class CourseListListener implements ListSelectionListener {
+
+		PageNavigator display;
+
+		public CourseListListener(PageNavigator disp) {
+			display = disp;
+		}
+
+		public void valueChanged(ListSelectionEvent e) {
+			setCurrentCourse();
+			setCourseName(getCurrentCourse().getCourseName());
+			setComboBox(0);
+			HomePage p = new HomePage(display.getClient());
+			displayPage(p);
+		}
+	}
+	
+	private class BoxListener implements ActionListener{
+		
+		PageNavigator display;
+		
+		public BoxListener(PageNavigator disp){
+			display = disp;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			JComboBox c = (JComboBox) e.getSource();
+			String selected = (String)c.getSelectedItem();
+			if (selected.equals("Home")) {
+				HomePage p = new HomePage(display.getClient());
+				displayPage(p);
+			} else if (selected.equals("Assignments")) {
+				AssignmentPage p = new AssignmentPage(display.getClient());
+				displayPage(p);
+			} else if (selected.equals("Students")) {
+				StudentPage p = new StudentPage(display.getClient());
+				displayPage(p);
+			}
+		}
+		
 	}
 }

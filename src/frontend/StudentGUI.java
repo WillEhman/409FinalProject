@@ -11,8 +11,8 @@ public class StudentGUI extends PageNavigator {
 	private Student student;
 	private boolean isStudent;
 
-	public StudentGUI(JPanel pageHolder, CardLayout cardLayout) {
-		// TODO Auto-generated constructor stub
+	public StudentGUI(Client client) {
+		super(client);
 	}
 
 	public Client getClient() {
