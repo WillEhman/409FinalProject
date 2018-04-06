@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Vector;
 
+import shared.Assignment;
 import shared.Course;
 import shared.LoginInfo;
 import shared.Message;
@@ -108,6 +109,16 @@ public class Worker implements Runnable {
 					cVector = database.listCourses(removedcourse.getProfId());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "REMOVECOURSE");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("CREATEFILE")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+					
+					Assignment assignmentToUp = (Assignment) inMessage.getObject();
+					fileManager.writeFileContent(assignmentToUp, "TEST".getBytes());
+					
+					Message<?> outMessage = new Message<Assignment>(assignmentToUp, "CREATEFILE");
 					out.writeObject(outMessage);
 				}
 
