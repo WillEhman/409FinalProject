@@ -175,6 +175,7 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+
 	public void preparedSetActive(Assignment a, boolean active) {
 		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
 		try {
@@ -343,7 +344,7 @@ public class DatabaseHelper {
 				statement.setInt(1, uset.getInt("ID"));
 				statement.setInt(2, object.getCourseId());
 				ResultSet eset = statement.executeQuery();
-//				System.out.println(eset);
+				// System.out.println(eset);
 				if (eset.next()) {
 					results.add(new User(uset.getInt("ID"), uset.getString("firstname"), uset.getString("lastname"),
 							uset.getString("type"), uset.getString("email")));
@@ -394,6 +395,7 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+
 	public void preparedEnrol(int userid, Course course) {
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
@@ -420,7 +422,7 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preparedUnenrol(int userid, Course course) {
 		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
 		try {
@@ -484,27 +486,28 @@ public class DatabaseHelper {
 		return null;
 
 	}
-	
-//	void preparedActivate(Assignment assignment) {
-//		String sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
-//		try {
-//			statement = connection.prepareStatement(sql);
-//			// statement.setInt(1, prof.getId());
-//			statement.executeQuery(sql);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
-//		try {
-//			statement = connection.prepareStatement(sql);
-//			// statement.setInt(1, prof.getId());
-//			statement.executeQuery(sql);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//
-//
-//	}
+
+	// void preparedActivate(Assignment assignment) {
+	// String sql = "DELETE FROM assignments WHERE COURSEID = " +
+	// assignment.getCourseId();
+	// try {
+	// statement = connection.prepareStatement(sql);
+	// // statement.setInt(1, prof.getId());
+	// statement.executeQuery(sql);
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// }
+	// sql = "DELETE FROM assignments WHERE COURSEID = " + assignment.getCourseId();
+	// try {
+	// statement = connection.prepareStatement(sql);
+	// // statement.setInt(1, prof.getId());
+	// statement.executeQuery(sql);
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// }
+	//
+	//
+	// }
 
 	// TODO make prepared statement
 	Vector<Course> listCourses(int profid) {

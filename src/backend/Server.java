@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server{
+public class Server {
 
 	private ServerSocket serverSocket;
 	private Socket commSocket;
@@ -35,29 +35,28 @@ public class Server{
 		} catch (IOException e) {
 		}
 		System.out.println("|-------------------Server now running-------------------|");
-		
+
 	}
 
 	public void run(Server server) {
 		try {
-			for(;;) {
-				threadPool.execute(new Worker(serverSocket.accept(),fileManager,database,emailService));
+			for (;;) {
+				threadPool.execute(new Worker(serverSocket.accept(), fileManager, database, emailService));
 			}
-		}catch(IOException e) {
+		} catch (IOException e) {
 			System.err.println("Exception in server run: Shutting Down");
 			threadPool.shutdown();
 		}
 	}
 
-	
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		Server server = new Server();
 		server.run(server);
-		
+
 	}
-	
+
 	void shutdown(Server server) {
-		//TODO see if necessary
+		// TODO see if necessary
 		// Close all sockets
 		try {
 			threadPool.shutdown();
@@ -70,20 +69,19 @@ public class Server{
 	}
 
 	public ExecutorService getThreadPool() {
-		//TODO see if necessary
+		// TODO see if necessary
 		return threadPool;
 	}
 
-//	public void setThreadPool(ExecutorService threadPool) {
-//		this.threadPool = threadPool;
-//	}
-	
-	
-	//FOR ALL FOLLOWING
-	//TODO see if necessary
+	// public void setThreadPool(ExecutorService threadPool) {
+	// this.threadPool = threadPool;
+	// }
+
+	// FOR ALL FOLLOWING
+	// TODO see if necessary
 	private synchronized boolean isStopped() {
-        return this.isStopped;
-    }
+		return this.isStopped;
+	}
 
 	public FileHelper getFileManager() {
 		return fileManager;

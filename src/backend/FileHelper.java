@@ -30,26 +30,27 @@ public class FileHelper {
 	// }
 	// return 0;
 	// }
-//	Message<Assignment> readFileContent(byte[] input, String query) throws IOException {
-//		String[] path = query.split(".SPLITTER.");
-//		String fileName = path[path.length - 2];
-//		String fileExt = path[path.length - 1];
-//
-//		File newFile = new File(fileName + fileExt);
-//		try {
-//			if (!newFile.exists()) {
-//				newFile.createNewFile();
-//			}
-//
-//			FileOutputStream fos = new FileOutputStream(newFile);
-//			BufferedOutputStream bos = new BufferedOutputStream(fos);
-//			bos.write(input);
-//			bos.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
+	// Message<Assignment> readFileContent(byte[] input, String query) throws
+	// IOException {
+	// String[] path = query.split(".SPLITTER.");
+	// String fileName = path[path.length - 2];
+	// String fileExt = path[path.length - 1];
+	//
+	// File newFile = new File(fileName + fileExt);
+	// try {
+	// if (!newFile.exists()) {
+	// newFile.createNewFile();
+	// }
+	//
+	// FileOutputStream fos = new FileOutputStream(newFile);
+	// BufferedOutputStream bos = new BufferedOutputStream(fos);
+	// bos.write(input);
+	// bos.close();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// return null;
+	// }
 
 	void writeFileContent(byte[] input, String query) throws IOException {
 		String[] path = query.split(".SPLITTER.");
@@ -89,14 +90,13 @@ public class FileHelper {
 
 	}
 
-
-//	void setFilePath(Assignment a) {
-//
-//	}
-//
-//	void setFilePath(Submission s) {
-//		
-//	}
+	// void setFilePath(Assignment a) {
+	//
+	// }
+	//
+	// void setFilePath(Submission s) {
+	//
+	// }
 
 	// FOR TESTING
 	public static void main(String args[]) {
@@ -109,7 +109,8 @@ public class FileHelper {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday", null);
+		// test = new Assignment(1, 409, "Final Project", "test.jpg", true, "Someday",
+		// null);
 		String receivedString = null;
 		try {
 			receivedString = new String(fh.readFileContent("test.jpg"));
