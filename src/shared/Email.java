@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * 
+ * @author William Ehman
+ * @author David Parkin
  * @author Luke Kushneryk
  * @since April 5 2018
  * @version 1.0

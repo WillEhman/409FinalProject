@@ -1,7 +1,13 @@
 package backend;
 
 import shared.*;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class EmailHelper {
 
 	private String SERVER_EMAIL;

@@ -4,7 +4,13 @@ import java.io.*;
 //import java.util.Scanner;
 
 import shared.*;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class FileHelper {
 //	private String path;
 
@@ -13,45 +19,8 @@ public class FileHelper {
 
 	}
 
-	// byte getFileContent(String path) {
-	// try {
-	// Scanner sc = new Scanner(new FileReader(path));
-	// while (sc.hasNext()) {
-	// // String txtfile[] = sc.nextLine().split("\n");
-	// // preparedaddItem(new byte(Integer.parseInt(txtfile[0]), txtfile[1],
-	// // Integer.parseInt(txtfile[2]),
-	// // Double.parseDouble(txtfile[3]), Integer.parseInt(txtfile[4])));
-	// }
-	// sc.close();
-	// } catch (FileNotFoundException e) {
-	// System.err.println("File " + path + " Not Found!");
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// return 0;
-	// }
-	// Message<Assignment> readFileContent(byte[] input, String query) throws
-	// IOException {
-	// String[] path = query.split(".SPLITTER.");
-	// String fileName = path[path.length - 2];
-	// String fileExt = path[path.length - 1];
-	//
-	// File newFile = new File(fileName + fileExt);
-	// try {
-	// if (!newFile.exists()) {
-	// newFile.createNewFile();
-	// }
-	//
-	// FileOutputStream fos = new FileOutputStream(newFile);
-	// BufferedOutputStream bos = new BufferedOutputStream(fos);
-	// bos.write(input);
-	// bos.close();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// return null;
-	// }
-
+	// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
+	// Should contain data in object in form byte[]
 	void writeFileContent(byte[] input, String query) throws IOException {
 		String[] path = query.split(".SPLITTER.");
 		String fileName = path[path.length - 2];

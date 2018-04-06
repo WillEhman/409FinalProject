@@ -5,10 +5,17 @@ import shared.*;
 
 import java.sql.*;
 import java.util.Vector;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 
 public class DatabaseHelper {
 
+	//Database data members
 	private PreparedStatement statement;
 	private Connection connection;
 	// TODO format this
@@ -17,6 +24,7 @@ public class DatabaseHelper {
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
 			login = "student", password = "student";
 
+	//Establish connection
 	public DatabaseHelper() {
 		try {
 			// If this throws an error, make sure you have added the mySQL connector JAR to

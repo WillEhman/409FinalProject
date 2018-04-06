@@ -5,7 +5,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class Server {
 
 	private ServerSocket serverSocket;

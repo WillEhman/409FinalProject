@@ -10,7 +10,13 @@ import shared.LoginInfo;
 import shared.Message;
 import shared.Professor;
 import shared.User;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class Worker implements Runnable {
 
 	private ObjectInputStream in;

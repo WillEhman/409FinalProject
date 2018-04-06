@@ -12,7 +12,13 @@ import javax.swing.event.ListSelectionListener;
 import frontend.Client;
 import shared.Course;
 import shared.User;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class PageNavigator {
 
 	protected JFrame frame;

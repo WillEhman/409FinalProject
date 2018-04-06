@@ -7,7 +7,13 @@ import com.mysql.jdbc.log.Log;
 
 import shared.LoginInfo;
 import shared.Message;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class Client implements Serializable {
 	public Socket socket;
 	public ObjectInputStream in;

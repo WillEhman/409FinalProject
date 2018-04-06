@@ -15,7 +15,13 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class ProfessorGUI extends PageNavigator {
 
 	private Client client;
@@ -115,12 +121,6 @@ public class ProfessorGUI extends PageNavigator {
 		super.getCoursePanel().add(remove);
 		super.frame.setLocationRelativeTo(null); 
 		super.setVisible(true);
-		// StudentPage p = new StudentPage();
-		// super.displayPage(p);
-		// AssignmentPage p1 = new AssignmentPage();
-		// super.displayPage(p1);
-		// HomePage p2 = new HomePage();
-		// super.displayPage(p2);
 	}
 
 	private class StudentPage extends JPanel {

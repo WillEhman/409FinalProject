@@ -11,7 +11,13 @@ import javax.swing.*;
 
 import shared.*;
 import javax.swing.UIManager.*;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class LoginWindow extends JFrame {
 
 	private static final long serialVersionUID = 1L;

@@ -4,7 +4,13 @@ import shared.*;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
 //import frontend.components.*;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ *
+ */
 public class StudentGUI extends PageNavigator {
 
 	private Client client;
