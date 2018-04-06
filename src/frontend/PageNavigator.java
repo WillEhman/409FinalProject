@@ -15,7 +15,7 @@ import shared.User;
 
 public class PageNavigator {
 
-	private JFrame frame;
+	protected JFrame frame;
 	private JPanel pageHolder;
 	private JPanel coursePanel;
 	private JPanel infoPanel;
@@ -56,7 +56,7 @@ public class PageNavigator {
 		
 		//Setup Info Panel
 		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-		courseName = new JLabel("Select a Course");
+		courseName = new JLabel("      Select a Course");
 		String[] options = {"Home"};
 		selection = new JComboBox<String>(options);
 		infoTitle.add("West", selection);
@@ -126,7 +126,7 @@ public class PageNavigator {
 	}
 	
 	public void setCourseName(String name) {
-		courseName.setText(name);
+		courseName.setText("      "+name);
 	}
 	
 	public void setComboBox(int i) {

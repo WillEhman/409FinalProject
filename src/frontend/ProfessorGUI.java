@@ -113,6 +113,7 @@ public class ProfessorGUI extends PageNavigator {
 		add.setAlignmentX(Component.CENTER_ALIGNMENT);
 		super.getCoursePanel().add(add);
 		super.getCoursePanel().add(remove);
+		super.frame.setLocationRelativeTo(null); 
 		super.setVisible(true);
 		// StudentPage p = new StudentPage();
 		// super.displayPage(p);
@@ -341,8 +342,8 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
 						currentAssignment = assignVector.get(info.getSelectedIndex());
-						System.out.println("------Assign ID: " + currentAssignment.getAssignId());
-						System.out.println("------Assign Course ID: " + currentAssignment.getCourseId());
+//						System.out.println("------Assign ID: " + currentAssignment.getAssignId());
+//						System.out.println("------Assign Course ID: " + currentAssignment.getCourseId());
 					}
 				}
 			});

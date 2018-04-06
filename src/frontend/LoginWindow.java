@@ -10,6 +10,7 @@ import java.io.Serializable;
 import javax.swing.*;
 
 import shared.*;
+import javax.swing.UIManager.*;
 
 public class LoginWindow extends JFrame {
 
@@ -23,8 +24,8 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() throws IOException {
 
-//		 client = new Client("localhost", 9090);
-		client = new Client("10.13.170.186", 9090);
+		 client = new Client("localhost", 9090);
+//		client = new Client("10.13.170.186", 9090);
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
 		JPanel buttons = new JPanel();
@@ -60,6 +61,7 @@ public class LoginWindow extends JFrame {
 		frame.setResizable(false);
 		frame.setSize(300, 200);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null); 
 		frame.setVisible(true);
 	}
 
@@ -92,6 +94,20 @@ public class LoginWindow extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
+            // Set cross-platform Java L&F (also called "Metal")
+		
+
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, you can set the GUI to another look and feel.
+		}
+
 		LoginWindow l = new LoginWindow();
 	}
 }
