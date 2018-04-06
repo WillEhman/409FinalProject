@@ -20,7 +20,7 @@ public class PageNavigator {
 	private JList<String> courses;
 	private JLabel courseName;
 	private JComboBox<String> selection;
-	private Course course;
+	private Vector<Course> vectorOfCourses;
 
 	public PageNavigator() {
 		//Initialize the panels and frame
@@ -91,6 +91,7 @@ public class PageNavigator {
 	}
 	
 	public void setCourses(Vector<Course> v) {
+		vectorOfCourses = v;
 		String[] temp = new String[v.size()];
 		for (int i = 0; i < temp.length; i++) {
 			temp[i] = v.get(i).toString();
@@ -98,9 +99,9 @@ public class PageNavigator {
 		}
 		courses.setListData(temp);
 	}
-
-	public JList<String> getCourses() {
-		return courses;
+	
+	public Course currentCourse() {
+		return vectorOfCourses.get(courses.getSelectedIndex());
 	}
 
 	public void showPage(String page) {

@@ -1,7 +1,6 @@
 package frontend;
 
 import shared.*;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -18,8 +17,8 @@ public class ProfessorGUI extends PageNavigator {
 	private Client client;
 	private Professor professor;
 	private boolean isProfessor;
-	private Vector<Course> courses;
 	private JButton add, remove;
+	private Course currentCourse;
 
 	public ProfessorGUI(User user, Client client) {
 		super();
@@ -29,7 +28,7 @@ public class ProfessorGUI extends PageNavigator {
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
-		courses = (Vector<Course>) recieve.getObject();
+		refreshCourses((Vector<Course>) recieve.getObject());
 		System.out.println("Got Message");
 		add = new JButton("Add");
 	    add.addActionListener(new ActionListener() {
@@ -54,10 +53,9 @@ public class ProfessorGUI extends PageNavigator {
 					public void actionPerformed(ActionEvent arg0) {
 						try {
 							Course newCourse = new Course(Integer.parseInt(cidF.getText()), professor.getId(), cNameF.getText(),true);
-							Message message = new Message<Course>(newCourse, "ADDCOURSE");
-							Message recieve = client.communicate(message);
-							courses = (Vector<Course>) recieve.getObject();
-							refreshCourses(courses);
+							Message<Course> message = new Message<Course>(newCourse, "ADDCOURSE");
+							Message<?> recieve = client.communicate(message);
+							refreshCourses((Vector<Course>) recieve.getObject());
 							options.dispose();
 						} catch (NumberFormatException e) {
 							//TODO: warning message
@@ -82,9 +80,20 @@ public class ProfessorGUI extends PageNavigator {
 			}
 		});
 	    remove = new JButton("Remove");
+	    remove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				currentCourse();
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + currentCourse.toString() + "?", "Remove Course", dialogButton);
+				if(dialogResult == 0) {
+					Message<Course> message = new Message<Course>(currentCourse, "REMOVECOURSE");
+					Message<?> recieve = client.communicate(message);
+					refreshCourses((Vector<Course>) recieve.getObject());
+				} 
+			}
+		});
 	    remove.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    add.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    refreshCourses(courses);
 	    super.getCoursePanel().add(add);  
 	    super.getCoursePanel().add(remove);
 	    super.setVisible(true);
@@ -94,6 +103,11 @@ public class ProfessorGUI extends PageNavigator {
 	    super.displayPage(p1);
 	    HomePage p2 = new HomePage();
 	    super.displayPage(p2);
+	}
+	
+	public Course currentCourse() {
+		currentCourse = super.currentCourse();
+		return currentCourse;
 	}
 	
 	public void refreshCourses(Vector<Course> v) {
