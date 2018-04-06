@@ -458,7 +458,7 @@ public class DatabaseHelper {
 	}
 
 	Vector<Assignment> listAssignments(Course course) {
-		String sql = "SELECT * FROM assignments WHERE COURSEID = " + course.getCourseId();
+		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + course.getCourseId();
 		try {
 			Vector<Assignment> listofAssignments = new Vector<Assignment>();
 
