@@ -16,7 +16,6 @@ public class ProfessorGUI extends PageNavigator {
 	private Professor professor;
 	private boolean isProfessor;
 	private JButton add, remove;
-	private Course currentCourse;
 
 	public ProfessorGUI(User user, Client client) {
 		super();
@@ -26,9 +25,7 @@ public class ProfessorGUI extends PageNavigator {
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
-		Vector<Course> v = (Vector<Course>) recieve.getObject();
-		currentCourse = v.firstElement();
-		refreshCourses(v);
+		refreshCourses((Vector<Course>) recieve.getObject());
 		System.out.println("Got Message");
 		add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
@@ -88,19 +85,19 @@ public class ProfessorGUI extends PageNavigator {
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					currentCourse();
+					Course temp = getCurrentCourse();
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + currentCourse.toString() + "?",
+					int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + temp.toString() + "?",
 							"Remove Course", dialogButton);
 					if (dialogResult == 0) {
-						Message<Course> message = new Message<Course>(currentCourse, "REMOVECOURSE");
+						Message<Course> message = new Message<Course>(temp, "REMOVECOURSE");
 						Message<?> receive = client.communicate(message);
 						refreshCourses((Vector<Course>) receive.getObject());
 					}
-				} catch(NullPointerException e) {
+				} catch (NullPointerException e) {
 					JOptionPane.showMessageDialog(null, "No Course Selected");
 				} catch (ArrayIndexOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(null, "No Course Selected");
+//					JOptionPane.showMessageDialog(null, "No Course Selected");
 				}
 			}
 		});
@@ -115,11 +112,6 @@ public class ProfessorGUI extends PageNavigator {
 		super.displayPage(p1);
 		HomePage p2 = new HomePage();
 		super.displayPage(p2);
-	}
-
-	public Course currentCourse() {
-		currentCourse = super.currentCourse();
-		return currentCourse;
 	}
 
 	public void refreshCourses(Vector<Course> v) {
@@ -213,6 +205,21 @@ public class ProfessorGUI extends PageNavigator {
 			info = new JTextArea();
 			scroll = new JScrollPane(info);
 			active = new JButton("Set Active");
+			active.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Course temp = getCurrentCourse();
+					int dialogButton = JOptionPane.YES_NO_OPTION;
+					int dialogResult = JOptionPane.showConfirmDialog(null, "Change Course Active to " + !temp.isActive(),
+							"Set Active", dialogButton);
+					if (dialogResult == 0) {
+						temp.setActive(!temp.isActive());
+						Message<Course> message = new Message<Course>(temp, "UPDATECOURSE");
+						System.out.println(message);
+						Message<?> receive = client.communicate(message);
+						refreshCourses((Vector<Course>) receive.getObject());
+					}
+				}
+			});
 			buttons.add(active);
 			this.add("South", buttons);
 			this.add("Center", scroll);

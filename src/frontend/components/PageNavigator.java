@@ -4,10 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.EventListener;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import shared.Course;
 
@@ -21,6 +26,7 @@ public class PageNavigator {
 	private JLabel courseName;
 	private JComboBox<String> selection;
 	private Vector<Course> vectorOfCourses;
+	private Course currentCourse;
 
 	public PageNavigator() {
 		//Initialize the panels and frame
@@ -42,6 +48,7 @@ public class PageNavigator {
 		//Setup Courses Panel
 		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
+		courses.addListSelectionListener(new listListener(this));
 		JScrollPane cScroll = new JScrollPane(courses);
 		cTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 		coursePanel.add(cTitle);
@@ -96,8 +103,12 @@ public class PageNavigator {
 		courses.setListData(temp);
 	}
 	
-	public Course currentCourse() {
-		return vectorOfCourses.get(courses.getSelectedIndex());
+	public void setCurrentCourse() {
+		currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
+	}
+	
+	public Course getCurrentCourse() {
+		return currentCourse;
 	}
 
 	public void showPage(String page) {
@@ -120,7 +131,16 @@ public class PageNavigator {
 		return pageHolder;
 	}
 
-//	public static void main(String[] args) {
-//		PageNavigator n = new PageNavigator();
-//	}
+	private class listListener implements ListSelectionListener {
+		
+		PageNavigator display;
+
+		public listListener(PageNavigator disp) {
+			display = disp;
+		}
+
+		public void valueChanged(ListSelectionEvent e) {
+			setCurrentCourse();
+		}
+	}
 }
