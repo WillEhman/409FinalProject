@@ -11,12 +11,10 @@ import javax.swing.*;
 
 import shared.*;
 
-/*
- * Should username and password have setters?
- */
-
 public class LoginWindow extends JFrame {
 
+	private static final long serialVersionUID = 1L;
+	
 	private JTextField username;
 	private JPasswordField password;
 
