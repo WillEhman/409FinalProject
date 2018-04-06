@@ -162,8 +162,8 @@ public class ProfessorGUI extends PageNavigator {
 			unenroll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					int dialogButton = JOptionPane.YES_NO_OPTION;
-					int dialogResult = JOptionPane.showConfirmDialog(null,
-							"Unenroll " + currentStudent.toString(), "Unenroll", dialogButton);
+					int dialogResult = JOptionPane.showConfirmDialog(null, "Unenroll " + currentStudent.toString(),
+							"Unenroll", dialogButton);
 					if (dialogResult == 0) {
 						Message<Course> message = new Message<Course>(getCurrentCourse(),
 								"REMOVESTUDENT.SPLITTER." + currentStudent.getId());
@@ -268,7 +268,63 @@ public class ProfessorGUI extends PageNavigator {
 			upload = new JButton("Upload");
 			upload.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// TODO do a thing
+					JFrame options = new JFrame("New Assignment");
+					JTextField aidF = new JTextField(5);
+					JTextField titleF = new JTextField(5);
+					JTextField pathF = new JTextField(5);
+					JPanel title = new JPanel();
+					JPanel info = new JPanel();
+					JPanel buttons = new JPanel();
+					options.setLayout(new BorderLayout());
+					title.add(new JLabel("Create a New Assignment"));
+					info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+					info.add(new JLabel("Assignment ID:"));
+					info.add(aidF);
+					info.add(new JLabel("Assignment Title:"));
+					info.add(titleF);
+					info.add(new JLabel("File Path:"));
+					info.add(pathF);
+					options.add("North", title);
+					options.add("Center", info);
+					JButton confirm = new JButton("Confirm");
+					confirm.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							try {
+								if (aidF.getText().length() <= 10) {
+									Assignment newAssign = new Assignment(Integer.parseInt(aidF.getText()),
+											getCurrentCourse().getCourseId(), titleF.getText(), pathF.getText(), true,
+											null, readFileContent(pathF.getText()));
+									String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
+									Message<Assignment> message = new Message<Assignment>(newAssign,
+											"CREATEFILE.SPLITTER." + path[path.length - 2]+".SPLITTER."+path[path.length-1]);
+									Message<?> receive = c.communicate(message);
+									setAssignments((Vector<Assignment>) receive.getObject());
+									options.dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "Invalid Course ID");
+								}
+							} catch (NumberFormatException e) {
+								JOptionPane.showMessageDialog(null, "Invalid Course ID");
+							} catch (IOException e) {
+								JOptionPane.showMessageDialog(null, "Invalid File Path");
+							}
+
+						}
+					});
+					JButton cancel = new JButton("Cancel");
+					cancel.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							options.dispose();
+						}
+					});
+					buttons.setLayout(new FlowLayout());
+					buttons.add(confirm);
+					buttons.add(cancel);
+					options.add("South", buttons);
+					options.setSize(300, 250);
+					options.setResizable(false);
+					options.setLocationByPlatform(true);
+					options.setVisible(true);
 				}
 			});
 			info.addListSelectionListener(new ListSelectionListener() {
@@ -285,7 +341,7 @@ public class ProfessorGUI extends PageNavigator {
 			Message<?> receive = c.communicate(message);
 			setAssignments((Vector<Assignment>) receive.getObject());
 		}
-		
+
 		public void setAssignments(Vector<Assignment> v) {
 			assignVector = v;
 			String[] temp = new String[v.size()];
@@ -296,7 +352,7 @@ public class ProfessorGUI extends PageNavigator {
 			info.setListData(temp);
 			currentAssignment = v.get(0);
 		}
-		
+
 		public byte[] readFileContent(String path) throws IOException {
 			File selectedFile = new File(path);
 			long length = selectedFile.length();
