@@ -377,6 +377,13 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+			sub.addListSelectionListener(new ListSelectionListener() {			
+				public void valueChanged(ListSelectionEvent arg0) {
+					if (sub.getSelectedIndex() >= 0) {
+						currentSub = subVector.get(sub.getSelectedIndex());
+					}
+				}
+			});
 			active = new JButton("Toggle Active");
 			active.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
