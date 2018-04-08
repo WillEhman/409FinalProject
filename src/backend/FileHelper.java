@@ -82,7 +82,7 @@ public class FileHelper {
 		// null);
 		String receivedString = null;
 		try {
-			receivedString = new String(fh.readFileContent("test.jpg"));
+			receivedString = new String(fh.readFileContent("453SWE.txt"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
