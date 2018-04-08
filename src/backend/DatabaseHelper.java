@@ -496,6 +496,31 @@ public class DatabaseHelper {
 		return null;
 
 	}
+	
+	Vector<Course> listCourses(Student student) {
+		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + student.getId();
+		try {
+			Vector<Course> listofCourses = new Vector<Course>();
+
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+
+			while (course.next()) {
+				Course temp = new Course();
+				temp.setActive(course.getBoolean("ACTIVE"));
+				temp.setCourseId(course.getInt("COURSENUMBER"));
+				temp.setCourseName(course.getString("COURSENAME"));
+				temp.setProfId(course.getInt("PROFESSORID"));
+				listofCourses.add(temp);
+			}
+			course.close();
+			return listofCourses;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 	Vector<Assignment> listAssignments(Course course) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + course.getCourseId();

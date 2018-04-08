@@ -9,6 +9,7 @@ import shared.Course;
 import shared.LoginInfo;
 import shared.Message;
 import shared.Professor;
+import shared.Student;
 import shared.User;
 /**
  * 
@@ -88,6 +89,15 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Professor")) {
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses((Professor) inMessage.getObject());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Course>>(cVector, "COURSELIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("COURSELIST")
+						&& inMessage.getObject().getClass().toString().contains("Student")) {
+					Vector<Course> cVector = new Vector<Course>();
+					cVector = database.listCourses((Student) inMessage.getObject());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "COURSELIST");
 					out.writeObject(outMessage);
