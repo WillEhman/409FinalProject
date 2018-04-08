@@ -53,12 +53,14 @@ public class Email implements Serializable {
 	 * @param to
 	 * @param subject
 	 * @param content
+	 * @param pw
 	 */
-	public Email(String from, ArrayList<String> to, String subject, String content) {
+	public Email(String from, ArrayList<String> to, String subject, String content, String pw) {
 		this.from = from;
 		this.to = to;
 		this.subject = subject;
 		this.content = content;
+		this.pw = pw;
 	}
 
 	/**

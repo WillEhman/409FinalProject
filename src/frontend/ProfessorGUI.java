@@ -319,7 +319,7 @@ public class ProfessorGUI extends PageNavigator {
 						} else {
 							toArray.add(to);
 						}
-						Email temp = new Email(from, toArray, subF.getText(), contF.getText());
+						Email temp = new Email(from, toArray, subF.getText(), contF.getText(), passF.getText());
 						Message<Email> message = new Message<Email>(temp, "SENDEMAIL");
 						c.communicate(message);
 						options.dispose();
