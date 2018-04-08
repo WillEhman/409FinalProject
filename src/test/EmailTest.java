@@ -1,12 +1,14 @@
 package test;
 
+
 import java.util.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.activation.*;
 
 public class EmailTest {
-	public void main() {
+	public static void main(String [] args) {
 		
 		String YOUR_ADDRESS = "stevesjob69@gmail.com";
 		String YOUR_PASSWORD = "wowzers409";

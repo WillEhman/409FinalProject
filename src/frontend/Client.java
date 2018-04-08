@@ -2,11 +2,8 @@ package frontend;
 
 import java.io.*;
 import java.net.*;
-
-import com.mysql.jdbc.log.Log;
-
-import shared.LoginInfo;
 import shared.Message;
+
 /**
  * 
  * @author William Ehman
@@ -18,8 +15,6 @@ public class Client implements Serializable {
 	public Socket socket;
 	public ObjectInputStream in;
 	public ObjectOutputStream out;
-	// private LoginWindow logingui;
-	// private boolean login;
 
 	public Client(String serverIp, int port) throws IOException {
 
