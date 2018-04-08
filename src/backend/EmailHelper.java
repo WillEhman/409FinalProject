@@ -21,11 +21,11 @@ public class EmailHelper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void SendEmail(final String sender, String receiver, String subject, String content) {
+	public static void SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
 
 		InternetAddress RECIPIENT_ADDRESS = null;
 		try {
-			RECIPIENT_ADDRESS = new InternetAddress("zoochegg@gmail.com");
+			RECIPIENT_ADDRESS = new InternetAddress(recipient);
 		} catch (AddressException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -39,7 +39,7 @@ public class EmailHelper {
 
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(sender, receiver);
+				return new PasswordAuthentication(sender, senderPw);
 			}
 		});
 
@@ -56,10 +56,12 @@ public class EmailHelper {
 	}
 	public static void main(String [] args) {
 		String sender1 = "stevesjob69@gmail.com";
-		String receiver1 = "wowzers409";
+		String senderPw1 = "wowzers409";
+		String recipient1 = "zoochegg@gmail.com";
 		String subject1 = "holy dicks, batman!";
 		String content1 = "chickens";
-		SendEmail(sender1, receiver1, subject1, content1);
+		
+		SendEmail(sender1, senderPw1, recipient1, subject1, content1);
 	}
 
 }
