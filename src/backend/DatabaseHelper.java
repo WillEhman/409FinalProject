@@ -5,6 +5,7 @@ import shared.*;
 
 import java.sql.*;
 import java.util.Vector;
+
 /**
  * 
  * @author William Ehman
@@ -15,7 +16,7 @@ import java.util.Vector;
 
 public class DatabaseHelper {
 
-	//Database data members
+	// Database data members
 	private PreparedStatement statement;
 	private Connection connection;
 	// TODO format this
@@ -24,7 +25,7 @@ public class DatabaseHelper {
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
 			login = "student", password = "student";
 
-	//Establish connection
+	// Establish connection
 	public DatabaseHelper() {
 		try {
 			// If this throws an error, make sure you have added the mySQL connector JAR to
@@ -151,7 +152,7 @@ public class DatabaseHelper {
 	}
 
 	public void preparedAdd(Course course) {
-//		System.out.println("Adding Course");
+		// System.out.println("Adding Course");
 		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -165,7 +166,7 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preparedAdd(Assignment assignment) {
 		String sql = "INSERT INTO assignments VALUES (Default, ?, ?, ?, ?, ?, ?)";
 		try {
@@ -205,12 +206,12 @@ public class DatabaseHelper {
 			statement.setInt(3, a.getAssignId());
 
 			statement.executeUpdate();
-			System.out.println("Activated Assignment: "+ active);
+			System.out.println("Activated Assignment: " + active);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preparedSetDue(Assignment a, String date) {
 		String sql = "UPDATE courses SET DUEDATE = ? WHERE COURSENUMBER = ?";
 		try {
@@ -471,6 +472,7 @@ public class DatabaseHelper {
 		}
 	}
 
+	// TODO make prepared
 	Vector<Course> listCourses(Professor prof) {
 		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + prof.getId();
 		try {
@@ -496,30 +498,30 @@ public class DatabaseHelper {
 		return null;
 
 	}
-	
+
 	Vector<Course> listCourses(Student student) {
-		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + student.getId();
+		Vector<Course> results = new Vector<Course>();
 		try {
-			Vector<Course> listofCourses = new Vector<Course>();
-
+			String sql = "SELECT * FROM enrolment WHERE USERID = ?";
 			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
+			statement.setInt(1, student.getId());
+			ResultSet eset = statement.executeQuery();
 
-			while (course.next()) {
-				Course temp = new Course();
-				temp.setActive(course.getBoolean("ACTIVE"));
-				temp.setCourseId(course.getInt("COURSENUMBER"));
-				temp.setCourseName(course.getString("COURSENAME"));
-				temp.setProfId(course.getInt("PROFESSORID"));
-				listofCourses.add(temp);
+			while (eset.next()) {
+				sql = "SELECT * FROM courses WHERE COURSENUMBER= ?";
+				statement = connection.prepareStatement(sql);
+				statement.setInt(1, eset.getInt("COURSENUMBER"));
+				ResultSet cset = statement.executeQuery();
+				if (cset.next()) {
+					results.add(new Course(cset.getInt("COURSENUMBER"), cset.getInt("PROFESSORID"),
+							cset.getString("COURSENAME"), cset.getBoolean("ACTIVE")));
+
+				}
 			}
-			course.close();
-			return listofCourses;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
-
+		return results;
 	}
 
 	Vector<Assignment> listAssignments(Course course) {
@@ -549,7 +551,7 @@ public class DatabaseHelper {
 		return null;
 
 	}
-	
+
 	Vector<Assignment> listAssignments(int courseId) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + courseId;
 		try {
@@ -598,6 +600,30 @@ public class DatabaseHelper {
 			}
 			course.close();
 			return listofCourses;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	Vector<Submission> listSubmissions(Assignment assignment) {
+		String sql = "SELECT * FROM submissions WHERE ASSIGNMENTID = " + assignment.getAssignId();
+		try {
+			Vector<Submission> listofSubmissions = new Vector<Submission>();
+
+			statement = connection.prepareStatement(sql);
+			// statement.setInt(1, prof.getId());
+			ResultSet subs = statement.executeQuery(sql);
+
+			while (subs.next()) {
+				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
+						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"));
+				listofSubmissions.add(temp);
+			}
+			subs.close();
+			return listofSubmissions;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

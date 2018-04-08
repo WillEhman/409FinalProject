@@ -10,6 +10,7 @@ import shared.LoginInfo;
 import shared.Message;
 import shared.Professor;
 import shared.Student;
+import shared.Submission;
 import shared.User;
 /**
  * 
@@ -237,6 +238,26 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ACTIVATEASSIGNMENT");
 					out.writeObject(outMessage);
 				}
+				
+				if (inMessage.getQuery().equals("SUBMISSIONLIST")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+					Vector<Submission> aVector = new Vector<Submission>();
+					aVector = database.listSubmissions((Assignment) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("VIEWSUBMISSION")
+						&& inMessage.getObject().getClass().toString().contains("Submission")) {
+					System.out.println("Viewing submission"+inMessage.getObject().toString());
+					Submission a = (Submission) inMessage.getObject();// Should contain path i.e (test.txt)
+					String path = a.getPath();
+					byte[] data = fileManager.readFileContent(path);
+					Message<?> outMessage = new Message<byte[]>(data, "VIEWSUBMISSION");
+					out.writeObject(outMessage);
+					//TODO
+				}
 
 				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
 				// Should contain data in object in form byte[]
@@ -249,7 +270,7 @@ public class Worker implements Runnable {
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignments(a.getCourseId());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "CREATEFILE");
 					out.writeObject(outMessage);
 				}
 
