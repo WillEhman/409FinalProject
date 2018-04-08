@@ -381,6 +381,7 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (sub.getSelectedIndex() >= 0) {
 						currentSub = subVector.get(sub.getSelectedIndex());
+						System.out.println("TEST");
 					}
 				}
 			});
