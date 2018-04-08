@@ -29,11 +29,17 @@ public class Submission implements Serializable {
 	 * id of assignment associated with the submission
 	 */
 	private int assignId;
+	
+	/**
+	 * id of assignment associated with the submission
+	 */
+	private int courseId;
 
 	/**
 	 * id of student submitting
 	 */
 	private int studentId;
+
 
 	/**
 	 * path of submitted file
@@ -95,6 +101,15 @@ public class Submission implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+
 
 	public int getAssignId() {
 		return assignId;
