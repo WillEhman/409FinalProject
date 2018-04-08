@@ -119,14 +119,11 @@ public class ProfessorGUI extends PageNavigator {
 				}
 			}
 		});
+		remove.setEnabled(false);
 		remove.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add.setAlignmentX(Component.CENTER_ALIGNMENT);
 		super.getCoursePanel().add(add);
 		super.getCoursePanel().add(remove);
-		if (getCurrentCourse() == null) {
-			remove.setEnabled(false);
-			;
-		}
 		super.frame.setLocationRelativeTo(null);
 		super.setVisible(true);
 	}
@@ -372,8 +369,10 @@ public class ProfessorGUI extends PageNavigator {
 						setSubmissions((Vector<Submission>) receive.getObject());
 						if (currentSub != null) {
 							downloadSub.setEnabled(true);
+							grade.setEnabled(true);
 						} else {
 							downloadSub.setEnabled(false);
+							grade.setEnabled(false);
 						}
 					}
 				}
@@ -425,7 +424,7 @@ public class ProfessorGUI extends PageNavigator {
 					String ID;
 					ID = JOptionPane.showInputDialog(null, "Set Grade");
 					try {
-						Integer.parseInt(ID);
+						currentSub.setGrade(Integer.parseInt(ID));
 						Message<Submission> message = new Message<Submission>(currentSub,"SETGRADE");
 						Message<?> receive = c.communicate(message);
 						setSubmissions((Vector<Submission>) receive.getObject());
@@ -434,9 +433,11 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+			grade.setEnabled(false);
 			buttons.add(upload);
 			buttons.add(active);
 			buttons.add(downloadSub);
+			buttons.add(grade);
 			main.add(aScroll);
 			main.add(sScroll);
 			this.add("South", buttons);
@@ -571,6 +572,11 @@ public class ProfessorGUI extends PageNavigator {
 			} else {
 				String[] options = { "Home" };
 				setSelections(options);
+			}
+			if (getCurrentCourse() != null) {
+				remove.setEnabled(true);
+			} else {
+				remove.setEnabled(false);
 			}
 		}
 	}
