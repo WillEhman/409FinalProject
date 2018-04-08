@@ -151,5 +151,9 @@ public class Submission implements Serializable {
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
+	
+	public String toString() {
+		return title + ", " + studentId +  ", " + comment + ", " + grade + "% ----- " + timeStamp;
+	}
 
 }

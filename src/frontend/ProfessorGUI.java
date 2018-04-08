@@ -7,14 +7,17 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 /**
  * 
  * @author William Ehman
@@ -120,7 +123,11 @@ public class ProfessorGUI extends PageNavigator {
 		add.setAlignmentX(Component.CENTER_ALIGNMENT);
 		super.getCoursePanel().add(add);
 		super.getCoursePanel().add(remove);
-		super.frame.setLocationRelativeTo(null); 
+		if (getCurrentCourse() == null) {
+			remove.setEnabled(false);
+			;
+		}
+		super.frame.setLocationRelativeTo(null);
 		super.setVisible(true);
 	}
 
@@ -130,7 +137,7 @@ public class ProfessorGUI extends PageNavigator {
 		JPanel buttons;
 		JList<String> info;
 		JScrollPane scroll;
-		JButton enroll, unenroll, search, refresh;
+		JButton enroll, unenroll, search, refresh, eStudent, eAll;
 		JTextField searchBar;
 		JRadioButton id, lName;
 		ButtonGroup radios;
@@ -218,8 +225,21 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
-			;
-			searchBar = new JTextField(20);
+			eStudent = new JButton("Email Student");
+			eStudent.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+			eAll = new JButton("Email Class");
+			eAll.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+			searchBar = new JTextField(10);
 			id = new JRadioButton("ID");
 			lName = new JRadioButton("LastName");
 			id.setSelected(true);
@@ -232,6 +252,8 @@ public class ProfessorGUI extends PageNavigator {
 			buttons.add(refresh);
 			buttons.add(enroll);
 			buttons.add(unenroll);
+			buttons.add(eStudent);
+			buttons.add(eAll);
 			this.add("South", buttons);
 			this.add("Center", scroll);
 			Message<Course> message = new Message<Course>(getCurrentCourse(), "STUDENTLIST");
@@ -258,20 +280,26 @@ public class ProfessorGUI extends PageNavigator {
 	private class AssignmentPage extends JPanel {
 
 		private static final long serialVersionUID = 1L;
-		JPanel buttons;
-		JList<String> info;
-		JScrollPane scroll;
-		JButton upload, active;
+		JPanel buttons, main;
+		JList<String> info, sub;
+		JScrollPane aScroll, sScroll;
+		JButton upload, active, downloadSub;
 		private Assignment currentAssignment;
+		private Submission currentSub;
 		private Vector<Assignment> assignVector;
+		private Vector<Submission> subVector;
 
 		public AssignmentPage(Client c) {
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
+			main = new JPanel();
+			main.setLayout(new BoxLayout(main, BoxLayout.X_AXIS));
 			this.setLayout(new BorderLayout());
 			info = new JList();
-			scroll = new JScrollPane(info);
-			upload = new JButton("Upload");
+			sub = new JList();
+			aScroll = new JScrollPane(info);
+			sScroll = new JScrollPane(sub);
+			upload = new JButton("Upload Assignment");
 			upload.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					JFrame options = new JFrame("New Assignment");
@@ -343,8 +371,9 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
 						currentAssignment = assignVector.get(info.getSelectedIndex());
-//						System.out.println("------Assign ID: " + currentAssignment.getAssignId());
-//						System.out.println("------Assign Course ID: " + currentAssignment.getCourseId());
+						Message<Assignment> message = new Message<Assignment>(currentAssignment, "SUBMISSIONLIST");
+						Message<?> receive = c.communicate(message);
+						setSubmissions((Vector<Submission>) receive.getObject());
 					}
 				}
 			});
@@ -354,7 +383,8 @@ public class ProfessorGUI extends PageNavigator {
 
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					int dialogResult = JOptionPane.showConfirmDialog(null,
-							"Change Assignment Active State to " + !currentAssignment.isActive(), "Toggle Active State", dialogButton);
+							"Change Assignment Active State to " + !currentAssignment.isActive(), "Toggle Active State",
+							dialogButton);
 					if (dialogResult == 0) {
 						currentAssignment.setActive(!currentAssignment.isActive());
 						Message<Assignment> message = new Message<Assignment>(currentAssignment, "ACTIVATEASSIGNMENT");
@@ -367,10 +397,25 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+			downloadSub = new JButton("Download Submission");
+			downloadSub.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Message<Submission> message = new Message<Submission>(currentSub, "VIEWSUBMISSION");
+					Message<?> receive = c.communicate(message);
+					try {
+						writeFileContent((byte[]) receive.getObject(), currentSub);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 			buttons.add(upload);
 			buttons.add(active);
+			buttons.add(downloadSub);
+			main.add(aScroll);
+			main.add(sScroll);
 			this.add("South", buttons);
-			this.add("Center", scroll);
+			this.add("Center", main);
 			Message<Course> message = new Message<Course>(getCurrentCourse(), "ASSIGNMENTLIST");
 			Message<?> receive = c.communicate(message);
 			setAssignments((Vector<Assignment>) receive.getObject());
@@ -391,6 +436,21 @@ public class ProfessorGUI extends PageNavigator {
 			}
 		}
 
+		public void setSubmissions(Vector<Submission> v) {
+			subVector = v;
+			String[] temp = new String[v.size()];
+			for (int i = 0; i < temp.length; i++) {
+				temp[i] = v.get(i).toString();
+				System.out.println(temp[i]);
+			}
+			sub.setListData(temp);
+			try {
+				currentSub = v.get(0);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				currentSub = null;
+			}
+		}
+
 		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
 			File selectedFile = new File(path);
 			long length = selectedFile.length();
@@ -407,6 +467,21 @@ public class ProfessorGUI extends PageNavigator {
 			}
 			return content;
 
+		}
+
+		void writeFileContent(byte[] input, Submission sub) throws IOException {
+			File newFile = new File(sub.getPath());
+			try {
+				if (!newFile.exists()) {
+					newFile.createNewFile();
+				}
+				FileOutputStream fos = new FileOutputStream(newFile);
+				BufferedOutputStream bos = new BufferedOutputStream(fos);
+				bos.write(input);
+				bos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
