@@ -250,11 +250,8 @@ public class Worker implements Runnable {
 				
 				if (inMessage.getQuery().equals("VIEWSUBMISSION")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
-					System.out.println("Viewing submission"+inMessage.getObject().toString());
 					Submission s = (Submission) inMessage.getObject();// Should contain path i.e (test.txt)
-					System.out.println("SUBMISSION IS:"+s.toString());
 					String path = s.getPath();
-					System.out.println("SUBMISSION PATH IS:"+path);
 					byte[] data = fileManager.readFileContent(path);
 					Message<?> outMessage = new Message<byte[]>(data, "VIEWSUBMISSION");
 					out.writeObject(outMessage);
