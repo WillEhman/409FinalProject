@@ -197,15 +197,11 @@ public class ProfessorGUI extends PageNavigator {
 							JOptionPane.showMessageDialog(null, "Invalid ID");
 						}
 					} else if (lName.isSelected()) {
-						try {
-							if (searchBar.getText() != null) {
-								Message<Course> message = new Message<Course>(getCurrentCourse(),
-										"SEARCHSTUDENTSLN.SPLITTER." + searchBar.getText());
-								Message<?> receive = c.communicate(message);
-								setStudents((Vector<User>) receive.getObject());
-							}
-						} catch (Exception e) {
-							// TODO: handle exception
+						if (searchBar.getText() != null) {
+							Message<Course> message = new Message<Course>(getCurrentCourse(),
+									"SEARCHSTUDENTSLN.SPLITTER." + searchBar.getText());
+							Message<?> receive = c.communicate(message);
+							setStudents((Vector<User>) receive.getObject());
 						}
 					}
 				}
@@ -283,7 +279,7 @@ public class ProfessorGUI extends PageNavigator {
 		JPanel buttons, main;
 		JList<String> info, sub;
 		JScrollPane aScroll, sScroll;
-		JButton upload, active, downloadSub;
+		JButton upload, active, downloadSub, grade;
 		private Assignment currentAssignment;
 		private Submission currentSub;
 		private Vector<Assignment> assignVector;
@@ -374,10 +370,15 @@ public class ProfessorGUI extends PageNavigator {
 						Message<Assignment> message = new Message<Assignment>(currentAssignment, "SUBMISSIONLIST");
 						Message<?> receive = c.communicate(message);
 						setSubmissions((Vector<Submission>) receive.getObject());
+						if (currentSub != null) {
+							downloadSub.setEnabled(true);
+						} else {
+							downloadSub.setEnabled(false);
+						}
 					}
 				}
 			});
-			sub.addListSelectionListener(new ListSelectionListener() {			
+			sub.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (sub.getSelectedIndex() >= 0) {
 						currentSub = subVector.get(sub.getSelectedIndex());
@@ -414,6 +415,22 @@ public class ProfessorGUI extends PageNavigator {
 						writeFileContent((byte[]) receive.getObject(), currentSub);
 					} catch (IOException e) {
 						e.printStackTrace();
+					}
+				}
+			});
+			downloadSub.setEnabled(false);
+			grade = new JButton("Set Grade");
+			grade.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					String ID;
+					ID = JOptionPane.showInputDialog(null, "Set Grade");
+					try {
+						Integer.parseInt(ID);
+						Message<Submission> message = new Message<Submission>(currentSub,"SETGRADE");
+						Message<?> receive = c.communicate(message);
+						setSubmissions((Vector<Submission>) receive.getObject());
+					} catch (NumberFormatException e) {
+						JOptionPane.showMessageDialog(null, "Invalid Grade");
 					}
 				}
 			});

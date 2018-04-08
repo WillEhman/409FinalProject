@@ -183,6 +183,23 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	public void preparedAdd(Submission submission) {
+		String sql = "INSERT INTO submissions VALUES (Default, ?, ?, ?, ?, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, submission.getCourseId());
+			statement.setInt(2, submission.getAssignId());
+			statement.setInt(2, submission.getStudentId());
+			statement.setString(3, submission.getPath());
+			statement.setInt(4, submission.getGrade());
+			statement.setString(5, submission.getComment());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public void preparedSetActive(int id, boolean active) {
 		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
