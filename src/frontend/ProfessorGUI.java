@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -215,23 +216,24 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
 						currentStudent = studentVector.get(info.getSelectedIndex());
+						setButtons();
 					}
 				}
 			});
 			eStudent = new JButton("Email Student");
 			eStudent.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-
+					mail(currentStudent.getEmailAddress(), professor.getEmailAddress(), c);
 				}
 			});
 			eAll = new JButton("Email Class");
 			eAll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// TODO Auto-generated method stub
-
+					mail("All", professor.getEmailAddress(), c);
 				}
 			});
+			eStudent.setEnabled(false);
+			unenroll.setEnabled(false);
 			searchBar = new JTextField(10);
 			id = new JRadioButton("ID");
 			lName = new JRadioButton("LastName");
@@ -267,6 +269,78 @@ public class ProfessorGUI extends PageNavigator {
 			} catch (ArrayIndexOutOfBoundsException e) {
 				currentStudent = null;
 			}
+		}
+		
+		public void setButtons() {
+			if (currentStudent != null) {
+				eStudent.setEnabled(true);
+				unenroll.setEnabled(true);
+			} else {
+				eStudent.setEnabled(false);
+				unenroll.setEnabled(false);
+			}
+		}
+		
+		public void mail(String to, String from, Client c) {
+			JFrame options = new JFrame("Send an Email");
+			JTextField subF = new JTextField(5);
+			JTextField toF = new JTextField(to, 5);
+			JTextField fromF = new JTextField(from, 5);
+			JTextField contF = new JTextField(5);
+			JTextField passF = new JTextField(5);
+			JPanel title = new JPanel();
+			JPanel info = new JPanel();
+			JPanel buttons = new JPanel();
+			options.setLayout(new BoxLayout(options.getContentPane(), BoxLayout.Y_AXIS));
+			title.add(new JLabel("Send a New Email"));
+			info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+			info.add(new JLabel("Subject:"));
+			info.add(subF);
+			info.add(new JLabel("To:"));
+			info.add(toF);
+			info.add(new JLabel("From:"));
+			info.add(fromF);
+			info.add(new JLabel("Content:"));
+			info.add(contF);
+			info.add(new JLabel("Email Password:"));
+			info.add(passF);
+			options.add(title);
+			options.add(info);
+			JButton send = new JButton();
+			send.setText("Send");
+			send.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (subF.getText() != null && contF.getText() != null) {
+						ArrayList<String> toArray = new ArrayList<String>();
+						if (to.equals("All")) {
+							for (int i = 0; i < studentVector.size(); i++) {
+								toArray.add(studentVector.get(i).getEmailAddress());
+							}
+						} else {
+							toArray.add(to);
+						}
+						Email temp = new Email(from, toArray, subF.getText(), contF.getText());
+						Message<Email> message = new Message<Email>(temp, "SENDEMAIL");
+						c.communicate(message);
+						options.dispose();
+					}
+				}
+			});
+			JButton cancel = new JButton();
+			cancel.setText("Cancel");
+			cancel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					options.dispose();
+				}
+			});
+			toF.setEnabled(false);
+			fromF.setEnabled(false);
+			buttons.setLayout(new FlowLayout());
+			buttons.add(send);
+			buttons.add(cancel);
+			options.add(buttons);
+			options.setSize(400, 400);
+			options.setVisible(true);
 		}
 	}
 
@@ -367,13 +441,7 @@ public class ProfessorGUI extends PageNavigator {
 						Message<Assignment> message = new Message<Assignment>(currentAssignment, "SUBMISSIONLIST");
 						Message<?> receive = c.communicate(message);
 						setSubmissions((Vector<Submission>) receive.getObject());
-						if (currentSub != null) {
-							downloadSub.setEnabled(true);
-							grade.setEnabled(true);
-						} else {
-							downloadSub.setEnabled(false);
-							grade.setEnabled(false);
-						}
+						setButtons();
 					}
 				}
 			});
@@ -421,16 +489,50 @@ public class ProfessorGUI extends PageNavigator {
 			grade = new JButton("Set Grade");
 			grade.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					String ID;
-					ID = JOptionPane.showInputDialog(null, "Set Grade");
-					try {
-						currentSub.setGrade(Integer.parseInt(ID));
-						Message<Submission> message = new Message<Submission>(currentSub,"SETGRADE");
-						Message<?> receive = c.communicate(message);
-						setSubmissions((Vector<Submission>) receive.getObject());
-					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Invalid Grade");
-					}
+					JFrame options = new JFrame("New Course");
+					JTextField gradeF = new JTextField(""+currentSub.getGrade(), 5);
+					JTextField commF = new JTextField(currentSub.getComment(), 5);
+					JPanel title = new JPanel();
+					JPanel info = new JPanel();
+					JPanel buttons = new JPanel();
+					options.setLayout(new BorderLayout());
+					title.add(new JLabel("Grade Submission"));
+					info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+					info.add(new JLabel("Grade:"));
+					info.add(gradeF);
+					info.add(new JLabel("Comment:"));
+					info.add(commF);
+					options.add("North", title);
+					options.add("Center", info);
+					JButton confirm = new JButton("Confirm");
+					confirm.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							try {
+								currentSub.setGrade(Integer.parseInt(gradeF.getText()));
+								currentSub.setComment(commF.getText());
+								Message<Submission> message = new Message<Submission>(currentSub,"SETGRADE");
+								Message<?> receive = c.communicate(message);
+								setSubmissions((Vector<Submission>) receive.getObject());
+								options.dispose();
+							} catch (NumberFormatException e) {
+								JOptionPane.showMessageDialog(null, "Invalid Grade");
+							}
+						}
+					});
+					JButton cancel = new JButton("Cancel");
+					cancel.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							options.dispose();
+						}
+					});
+					buttons.setLayout(new FlowLayout());
+					buttons.add(confirm);
+					buttons.add(cancel);
+					options.add("South", buttons);
+					options.setSize(300, 200);
+					options.setResizable(false);
+					options.setLocationByPlatform(true);
+					options.setVisible(true);
 				}
 			});
 			grade.setEnabled(false);
@@ -474,6 +576,16 @@ public class ProfessorGUI extends PageNavigator {
 				currentSub = v.get(0);
 			} catch (ArrayIndexOutOfBoundsException e) {
 				currentSub = null;
+			}
+		}
+		
+		public void setButtons() {
+			if (currentSub != null) {
+				downloadSub.setEnabled(true);
+				grade.setEnabled(true);
+			} else {
+				downloadSub.setEnabled(false);
+				grade.setEnabled(false);
 			}
 		}
 
