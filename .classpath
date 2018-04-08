@@ -13,5 +13,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/409FinalProject/lib/miglayout-core-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Luke/Downloads/java_ee_sdk-8/glassfish5/glassfish/lib/javaee.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Luke/Downloads/java_ee_sdk-8/glassfish5/glassfish/modules/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
