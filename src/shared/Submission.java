@@ -23,7 +23,7 @@ public class Submission implements Serializable {
 	/**
 	 * id of submission
 	 */
-	private int id;
+//	private int id;
 
 	/**
 	 * id of assignment associated with the submission
@@ -78,9 +78,10 @@ public class Submission implements Serializable {
 	 * @param title
 	 * @param timeStamp
 	 */
-	public Submission(int id, int assignId, int studentId, String path, int grade, String comment, String title,
+	public Submission( int cid, int assignId, int studentId, String path, int grade, String comment, String title,
 			String timeStamp) {
-		this.id = id;
+//		this.id = id;
+		this.courseId = cid;
 		this.assignId = assignId;
 		this.studentId = studentId;
 		this.path = path;
@@ -94,13 +95,13 @@ public class Submission implements Serializable {
 	 * getters and setters
 	 * 
 	 */
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+//	public int getId() {
+//		return id;
+//	}
+//
+//	public void setId(int id) {
+//		this.id = id;
+//	}
 	
 	public int getCourseId() {
 		return courseId;

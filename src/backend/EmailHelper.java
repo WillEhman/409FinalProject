@@ -21,7 +21,7 @@ public class EmailHelper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
+	public void SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
 
 		InternetAddress RECIPIENT_ADDRESS = null;
 		try {
@@ -54,14 +54,15 @@ public class EmailHelper {
 			e.printStackTrace();
 		}
 	}
+	
 	public static void main(String [] args) {
 		String sender1 = "stevesjob69@gmail.com";
 		String senderPw1 = "wowzers409";
 		String recipient1 = "zoochegg@gmail.com";
 		String subject1 = "holy dicks, batman!";
 		String content1 = "chickens";
-		
-		SendEmail(sender1, senderPw1, recipient1, subject1, content1);
+		EmailHelper se = new EmailHelper();
+		se.SendEmail(sender1, senderPw1, recipient1, subject1, content1);
 	}
 
 }

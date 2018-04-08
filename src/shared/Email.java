@@ -27,6 +27,11 @@ public class Email implements Serializable {
 	private String from;
 
 	/**
+	 * password to email sender
+	 */
+	private String pw;
+
+	/**
 	 * email receiver(s)
 	 */
 	private ArrayList<String> to;
@@ -65,6 +70,14 @@ public class Email implements Serializable {
 
 	public void setFrom(String from) {
 		this.from = from;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
 	}
 
 	public ArrayList<String> getTo() {

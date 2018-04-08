@@ -183,17 +183,19 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void preparedAdd(Submission submission) {
-		String sql = "INSERT INTO submissions VALUES (Default, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO submissions VALUES (Default, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, submission.getCourseId());
 			statement.setInt(2, submission.getAssignId());
-			statement.setInt(2, submission.getStudentId());
-			statement.setString(3, submission.getPath());
-			statement.setInt(4, submission.getGrade());
-			statement.setString(5, submission.getComment());
+			statement.setInt(3, submission.getStudentId());
+			statement.setString(4, submission.getPath());
+			statement.setInt(5, submission.getGrade());
+			statement.setString(6, submission.getComment());
+			statement.setString(7, submission.getTitle());
+			statement.setString(8, submission.getTimeStamp());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -259,6 +261,19 @@ public class DatabaseHelper {
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void preparedRemove(Submission submission) {
+		String sql = "DELETE FROM submissions WHERE STUDENTID=? AND ASSIGNMENTID=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, submission.getStudentId());
+			statement.setInt(2, submission.getAssignId());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -640,7 +655,39 @@ public class DatabaseHelper {
 			// statement.setInt(1, assignment.getCourseId());
 			// statement.setInt(2, assignment.getAssignId());
 			// System.out.println(sql1);
-//			System.out.println(sql2);
+			// System.out.println(sql2);
+			ResultSet subs = statement.executeQuery(sql2);
+
+			while (subs.next()) {
+				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
+						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"));
+				listofSubmissions.add(temp);
+			}
+			subs.close();
+			return listofSubmissions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	Vector<Submission> listSubmissions(Submission submission) {
+
+		try {
+			// String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND
+			// COURSENUMBER=453";
+			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID=" + submission.getAssignId()
+					+ " AND COURSENUMBER=" + submission.getCourseId();
+
+			Vector<Submission> listofSubmissions = new Vector<Submission>();
+
+			statement = connection.prepareStatement(sql2);
+			// statement.setInt(1, assignment.getCourseId());
+			// statement.setInt(2, assignment.getAssignId());
+			// System.out.println(sql1);
+			// System.out.println(sql2);
 			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {

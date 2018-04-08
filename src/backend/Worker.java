@@ -6,12 +6,14 @@ import java.util.Vector;
 
 import shared.Assignment;
 import shared.Course;
+import shared.Email;
 import shared.LoginInfo;
 import shared.Message;
 import shared.Professor;
 import shared.Student;
 import shared.Submission;
 import shared.User;
+
 /**
  * 
  * @author William Ehman
@@ -94,7 +96,7 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "COURSELIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("COURSELIST")
 						&& inMessage.getObject().getClass().toString().contains("Student")) {
 					Vector<Course> cVector = new Vector<Course>();
@@ -213,12 +215,12 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("ASSIGNMENTDUE")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Assignment a = (Assignment) inMessage.getObject();
 					database.preparedSetDue(a, a.getDueDate());
-					
+
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignments(a.getCourseId());
 					System.out.println(aVector);
@@ -238,7 +240,7 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ACTIVATEASSIGNMENT");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("SUBMISSIONLIST")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Vector<Submission> aVector = new Vector<Submission>();
@@ -247,7 +249,7 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("VIEWSUBMISSION")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();// Should contain path i.e (test.txt)
@@ -256,7 +258,35 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<byte[]>(data, "VIEWSUBMISSION");
 					out.writeObject(outMessage);
 					System.out.println("Message sent back");
-					//TODO
+					// TODO
+				}
+
+				if (inMessage.getQuery().equals("SETGRADE")
+						&& inMessage.getObject().getClass().toString().contains("Submission")) {
+					Submission s = (Submission) inMessage.getObject();
+
+					database.preparedRemove(s);
+					database.preparedAdd(s);
+
+					Vector<Submission> aVector = new Vector<Submission>();
+					aVector = database.listSubmissions((Submission) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
+				}
+
+				if (inMessage.getQuery().equals("SETCOMMENT")
+						&& inMessage.getObject().getClass().toString().contains("Submission")) {
+					Submission s = (Submission) inMessage.getObject();
+
+					database.preparedRemove(s);
+					database.preparedAdd(s);
+
+					Vector<Submission> aVector = new Vector<Submission>();
+					aVector = database.listSubmissions((Submission) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
 				}
 
 				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
@@ -266,7 +296,7 @@ public class Worker implements Runnable {
 					byte[] input = a.getBytes();
 					database.preparedAdd(a);
 					fileManager.writeFileContent(input, inMessage.getQuery());
-					
+
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignments(a.getCourseId());
 					System.out.println(aVector);
@@ -283,6 +313,22 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 					System.out.println("Message sent back");
 				}
+				
+				if (inMessage.getQuery().contains("SENDEMAIL")
+						&& inMessage.getObject().getClass().toString().contains("Email")) {
+					
+					Email e = (Email) inMessage.getObject();
+					for (int i =0;i<e.getTo().size();i++) {
+						emailService.SendEmail(e.getFrom(),e.getPw(),e.getTo().get(i),e.getSubject(),e.getContent());
+					}
+					
+					
+					Message<?> outMessage = new Message<String>("Email Sent Succesfully", "SENDEMAIL");
+					System.out.println(outMessage);
+					out.writeObject(outMessage);
+					
+				}
+				
 
 			} catch (IOException e) {
 				System.out.println("Client Disconnected");
