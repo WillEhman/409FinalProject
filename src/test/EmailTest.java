@@ -5,7 +5,7 @@ import java.util.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
+//import javax.activation.*;
 
 public class EmailTest {
 	public static void main(String [] args) {
