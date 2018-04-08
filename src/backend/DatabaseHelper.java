@@ -612,15 +612,17 @@ public class DatabaseHelper {
 		System.out.println(assignment.getAssignId());
 
 		try {
-//			String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND COURSENUMBER=453";
-			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID="+assignment.getAssignId()+ " AND COURSENUMBER="+assignment.getCourseId();
-			
+			// String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND
+			// COURSENUMBER=453";
+			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID=" + assignment.getAssignId()
+					+ " AND COURSENUMBER=" + assignment.getCourseId();
+
 			Vector<Submission> listofSubmissions = new Vector<Submission>();
 
 			statement = connection.prepareStatement(sql2);
-//			statement.setInt(1, assignment.getCourseId());
-//			statement.setInt(2, assignment.getAssignId());
-//			System.out.println(sql1);
+			// statement.setInt(1, assignment.getCourseId());
+			// statement.setInt(2, assignment.getAssignId());
+			// System.out.println(sql1);
 			System.out.println(sql2);
 			ResultSet subs = statement.executeQuery(sql2);
 
