@@ -608,13 +608,21 @@ public class DatabaseHelper {
 	}
 
 	Vector<Submission> listSubmissions(Assignment assignment) {
-		String sql = "SELECT * FROM submissions WHERE ASSIGNMENTID = " + assignment.getAssignId();
+		System.out.println(assignment.getCourseId());
+		System.out.println(assignment.getAssignId());
+
 		try {
+//			String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND COURSENUMBER=453";
+			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID="+assignment.getAssignId()+ " AND COURSENUMBER="+assignment.getCourseId();
+			
 			Vector<Submission> listofSubmissions = new Vector<Submission>();
 
-			statement = connection.prepareStatement(sql);
-			// statement.setInt(1, prof.getId());
-			ResultSet subs = statement.executeQuery(sql);
+			statement = connection.prepareStatement(sql2);
+//			statement.setInt(1, assignment.getCourseId());
+//			statement.setInt(2, assignment.getAssignId());
+//			System.out.println(sql1);
+			System.out.println(sql2);
+			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {
 				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
@@ -635,135 +643,109 @@ public class DatabaseHelper {
 
 	public static void main(String args[]) {
 		DatabaseHelper masterDB = new DatabaseHelper();
-
-		System.out.println();
-		System.out.println("Reading all courses from the table:");
-		masterDB.preparedprintCourses();
-
-		System.out.println("\nSearching table for course 409: should return 'SoftwareDesign'");
-		int courseID = 409;
-		Course searchResult = masterDB.preparedsearchCourses(courseID);
-		if (searchResult == null)
-			System.out.println("Search Failed to find a course matching ID: " + courseID);
-		else
-			System.out.println("Search Result: " + searchResult.getCourseName());
-
-		System.out.println("Searching table for course 441: should fail to find a course");
-		courseID = 441;
-		searchResult = masterDB.preparedsearchCourses(courseID);
-		if (searchResult == null)
-			System.out.println("Search Failed to find a course matching ID: " + courseID);
-		else
-			System.out.println("Search Result: " + searchResult.getCourseName());
-		System.out.println();
-
-		System.out.println();
-		System.out.println("Trying to add course 200.");
-		Course design = new Course(200, 3, "EnggDesign", false);
-		masterDB.preparedAdd(design);
-		masterDB.preparedprintCourses();
-		System.out.println();
-		System.out.println("Trying to remove course 200.");
-		masterDB.preparedRemove(design);
-		masterDB.preparedprintCourses();
-
-		System.out.println();
-		System.out.println("Trying to set 225 active");
-		masterDB.preparedSetActive(225, true);
-		masterDB.preparedprintCourses();
-		System.out.println();
-		System.out.println("Trying to set 225 inactive");
-		masterDB.preparedSetActive(225, false);
-		masterDB.preparedprintCourses();
-
-		System.out.println("\nThe program is finished running through the courses");
-		System.out.println();
-		System.out.println();
-
-		System.out.println("Reading all users from the table:");
-		masterDB.preparedprintUsers();
-
-		System.out.println();
-		System.out.println("Student Logins");
-		System.out.println("Trying to login as Will. Should succeed:");
-		if (masterDB.isValidStudentLogin("will", "pw")) {
-			System.out.println("Successful login");
-		} else {
-			System.err.println("Failed login");
-		}
-
-		System.out.println("Trying to login as David. Should fail:");
-		if (masterDB.isValidStudentLogin("dave", "asdf")) {
-			System.out.println("Successful login");
-		} else {
-			System.out.println("Failed login");
-		}
-
-		System.out.println();
-		System.out.println("Professor Logins");
-		System.out.println("Trying to login as Will. Should fail:");
-		if (masterDB.isValidProfLogin("will", "pw")) {
-			System.out.println("Successful login");
-		} else {
-			System.out.println("Failed login");
-		}
-
-		System.out.println("Trying to login as Norm. Should Succeed:");
-		if (masterDB.isValidProfLogin("norm", "42")) {
-			System.out.println("Successful login");
-		} else {
-			System.out.println("Failed login");
-		}
-		System.out.println();
-		System.out.println("Trying to add user David.");
-		User dave = new User(10, "David", "Parkin", "S", "dparkin@test.com");
-		masterDB.preparedAdd(dave, "dparkin", "pass");
-		masterDB.preparedprintUsers();
-		System.out.println();
-		System.out.println("Trying to remove user David.");
-		masterDB.preparedRemove(dave);
-		masterDB.preparedprintUsers();
-
-		System.out.println();
-		System.out.println("Searching for Student 2. Should Return Will Ehman");
-		Vector<User> result = masterDB.preparedSearchUsers(2);
-		System.out.println(result.get(0).toString());
-		System.out.println();
-		System.out.println("Searching for Students with last name Ehman. Should return 2 results");
-		result = masterDB.preparedSearchUsers("Ehman");
-		for (int i = 0; i < result.size(); i++) {
-			System.out.println(result.get(i).toString());
-		}
-		System.out.println("Searching for Students with last name Ehman in 409. Should return 2 results");
-		result = masterDB.preparedSearchUsersinCourse("Ehman", 409);
-		for (int i = 0; i < result.size(); i++) {
-			System.out.println(result.get(i).toString());
-		}
-		System.out.println("Searching for Students with last name Ehman in 453. Should return 1 result");
-		result = masterDB.preparedSearchUsersinCourse("Ehman", 453);
-		for (int i = 0; i < result.size(); i++) {
-			System.out.println(result.get(i).toString());
-		}
-
-		System.out.println("\nThe program is finished running through the users");
-
-		System.out.println();
-
-		System.out.println("Reading all enrolments from the table:");
-		masterDB.preparedprintEnrolments();
-
-		System.out.println("Enrolling Will in 453");
-		masterDB.preparedEnrol(2, 453);
-		masterDB.preparedprintEnrolments();
-
-		System.out.println("Unenrolling Will in 453");
-		masterDB.preparedUnenrol(2, 453);
-		masterDB.preparedprintEnrolments();
-
-		System.out.println();
-
-		System.out.println("Reading all assignments from the table:");
-		masterDB.preparedprintAssignments();
+		Assignment a = new Assignment(1, 453, "Boolean Logic", "A1.txt", true, "Today", null);
+		Vector<Submission> v = masterDB.listSubmissions(a);
+		System.out.println(v);
+		/*
+		 * System.out.println();
+		 * System.out.println("Reading all courses from the table:");
+		 * masterDB.preparedprintCourses();
+		 * 
+		 * System.out.
+		 * println("\nSearching table for course 409: should return 'SoftwareDesign'");
+		 * int courseID = 409; Course searchResult =
+		 * masterDB.preparedsearchCourses(courseID); if (searchResult == null)
+		 * System.out.println("Search Failed to find a course matching ID: " +
+		 * courseID); else System.out.println("Search Result: " +
+		 * searchResult.getCourseName());
+		 * 
+		 * System.out.
+		 * println("Searching table for course 441: should fail to find a course");
+		 * courseID = 441; searchResult = masterDB.preparedsearchCourses(courseID); if
+		 * (searchResult == null)
+		 * System.out.println("Search Failed to find a course matching ID: " +
+		 * courseID); else System.out.println("Search Result: " +
+		 * searchResult.getCourseName()); System.out.println();
+		 * 
+		 * System.out.println(); System.out.println("Trying to add course 200."); Course
+		 * design = new Course(200, 3, "EnggDesign", false);
+		 * masterDB.preparedAdd(design); masterDB.preparedprintCourses();
+		 * System.out.println(); System.out.println("Trying to remove course 200.");
+		 * masterDB.preparedRemove(design); masterDB.preparedprintCourses();
+		 * 
+		 * System.out.println(); System.out.println("Trying to set 225 active");
+		 * masterDB.preparedSetActive(225, true); masterDB.preparedprintCourses();
+		 * System.out.println(); System.out.println("Trying to set 225 inactive");
+		 * masterDB.preparedSetActive(225, false); masterDB.preparedprintCourses();
+		 * 
+		 * System.out.println("\nThe program is finished running through the courses");
+		 * System.out.println(); System.out.println();
+		 * 
+		 * System.out.println("Reading all users from the table:");
+		 * masterDB.preparedprintUsers();
+		 * 
+		 * System.out.println(); System.out.println("Student Logins");
+		 * System.out.println("Trying to login as Will. Should succeed:"); if
+		 * (masterDB.isValidStudentLogin("will", "pw")) {
+		 * System.out.println("Successful login"); } else {
+		 * System.err.println("Failed login"); }
+		 * 
+		 * System.out.println("Trying to login as David. Should fail:"); if
+		 * (masterDB.isValidStudentLogin("dave", "asdf")) {
+		 * System.out.println("Successful login"); } else {
+		 * System.out.println("Failed login"); }
+		 * 
+		 * System.out.println(); System.out.println("Professor Logins");
+		 * System.out.println("Trying to login as Will. Should fail:"); if
+		 * (masterDB.isValidProfLogin("will", "pw")) {
+		 * System.out.println("Successful login"); } else {
+		 * System.out.println("Failed login"); }
+		 * 
+		 * System.out.println("Trying to login as Norm. Should Succeed:"); if
+		 * (masterDB.isValidProfLogin("norm", "42")) {
+		 * System.out.println("Successful login"); } else {
+		 * System.out.println("Failed login"); } System.out.println();
+		 * System.out.println("Trying to add user David."); User dave = new User(10,
+		 * "David", "Parkin", "S", "dparkin@test.com"); masterDB.preparedAdd(dave,
+		 * "dparkin", "pass"); masterDB.preparedprintUsers(); System.out.println();
+		 * System.out.println("Trying to remove user David.");
+		 * masterDB.preparedRemove(dave); masterDB.preparedprintUsers();
+		 * 
+		 * System.out.println();
+		 * System.out.println("Searching for Student 2. Should Return Will Ehman");
+		 * Vector<User> result = masterDB.preparedSearchUsers(2);
+		 * System.out.println(result.get(0).toString()); System.out.println();
+		 * System.out.
+		 * println("Searching for Students with last name Ehman. Should return 2 results"
+		 * ); result = masterDB.preparedSearchUsers("Ehman"); for (int i = 0; i <
+		 * result.size(); i++) { System.out.println(result.get(i).toString()); }
+		 * System.out.
+		 * println("Searching for Students with last name Ehman in 409. Should return 2 results"
+		 * ); result = masterDB.preparedSearchUsersinCourse("Ehman", 409); for (int i =
+		 * 0; i < result.size(); i++) { System.out.println(result.get(i).toString()); }
+		 * System.out.
+		 * println("Searching for Students with last name Ehman in 453. Should return 1 result"
+		 * ); result = masterDB.preparedSearchUsersinCourse("Ehman", 453); for (int i =
+		 * 0; i < result.size(); i++) { System.out.println(result.get(i).toString()); }
+		 * 
+		 * System.out.println("\nThe program is finished running through the users");
+		 * 
+		 * System.out.println();
+		 * 
+		 * System.out.println("Reading all enrolments from the table:");
+		 * masterDB.preparedprintEnrolments();
+		 * 
+		 * System.out.println("Enrolling Will in 453"); masterDB.preparedEnrol(2, 453);
+		 * masterDB.preparedprintEnrolments();
+		 * 
+		 * System.out.println("Unenrolling Will in 453"); masterDB.preparedUnenrol(2,
+		 * 453); masterDB.preparedprintEnrolments();
+		 * 
+		 * System.out.println();
+		 * 
+		 * System.out.println("Reading all assignments from the table:");
+		 * masterDB.preparedprintAssignments();
+		 */
 
 		try {
 			masterDB.statement.close();
