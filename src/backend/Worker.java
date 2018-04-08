@@ -207,6 +207,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				//TODO implement different versions for prof and student that only show when flagged as active
 				if (inMessage.getQuery().equals("ASSIGNMENTLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Assignment> aVector = new Vector<Assignment>();
@@ -319,6 +320,7 @@ public class Worker implements Runnable {
 					
 					Email e = (Email) inMessage.getObject();
 					for (int i =0;i<e.getTo().size();i++) {
+						System.out.println("Sent email");
 						emailService.SendEmail(e.getFrom(),e.getPw(),e.getTo().get(i),e.getSubject(),e.getContent());
 					}
 					

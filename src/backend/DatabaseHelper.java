@@ -540,9 +540,10 @@ public class DatabaseHelper {
 			ResultSet eset = statement.executeQuery();
 
 			while (eset.next()) {
-				sql = "SELECT * FROM courses WHERE COURSENUMBER= ?";
+				sql = "SELECT * FROM courses WHERE COURSENUMBER= ? AND ACTIVE =? ORDER BY COURSENUMBER";
 				statement = connection.prepareStatement(sql);
 				statement.setInt(1, eset.getInt("COURSENUMBER"));
+				statement.setBoolean(2, true);
 				ResultSet cset = statement.executeQuery();
 				if (cset.next()) {
 					results.add(new Course(cset.getInt("COURSENUMBER"), cset.getInt("PROFESSORID"),
