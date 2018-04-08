@@ -22,7 +22,7 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/409FinalProject/lib/miglayout-core-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/David/eclipse-workspace/409FinalProject/lib/javaee.jar"/>
-	<classpathentry kind="lib" path="C:/Users/David/eclipse-workspace/409FinalProject/lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/javaee.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
