@@ -26,12 +26,13 @@ public class LoginWindow extends JFrame {
 	private JPasswordField password;
 
 	private Client client;
-	JFrame frame = new JFrame("Login");
+	JFrame frame;
 
 	public LoginWindow() throws IOException {
 
 //		client = new Client("localhost", 9090);
-		client = new Client("10.13.116.163", 9090);
+		client = new Client("10.13.179.35", 9090);
+		frame = new JFrame("Login");
 		JPanel title = new JPanel();
 		JPanel main = new JPanel();
 		JPanel buttons = new JPanel();

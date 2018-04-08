@@ -30,16 +30,27 @@ public class StudentGUI extends PageNavigator {
 
 	public StudentGUI(User user, Client client) {
 		super(client);
+		JButton refresh = new JButton("Refresh");
+		refresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Message<Student> message = new Message<Student>(student, "COURSELIST");
+				Message<?> recieve = client.communicate(message);
+				setCourses((Vector<Course>) recieve.getObject());
+			}
+		});
 		setCourseListener(new CourseListListener(this));
 		setBoxListener(new BoxListener(this));
 		student = new Student(user);
 		isProfessor = false;
+		super.setFrameText("Course Manager 2018: " + student.getFirstName() + " " + student.getLastName());
 		System.out.println("Creating Message");
 		Message<Student> message = new Message<Student>(student, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
 		setCourses((Vector<Course>) recieve.getObject());
 		System.out.println("Got Message");
+		refresh.setAlignmentX(Component.CENTER_ALIGNMENT);
+		super.getCoursePanel().add(refresh);
 		super.frame.setLocationRelativeTo(null); 
 		super.setVisible(true);
 	}
@@ -100,7 +111,7 @@ public class StudentGUI extends PageNavigator {
 			HomePage p = new HomePage(display.getClient());
 			displayPage(p);
 			if (getCurrentCourse().isActive()) {
-				String[] options = { "Home", "Students", "Assignments" };
+				String[] options = { "Home", "Assignments" };
 				setSelections(options);
 			} else {
 				String[] options = { "Home" };

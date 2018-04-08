@@ -35,6 +35,7 @@ public class ProfessorGUI extends PageNavigator {
 		setBoxListener(new BoxListener(this));
 		professor = new Professor(user);
 		isProfessor = true;
+		super.setFrameText("Course Manager 2018: " + professor.getFirstName() + " " + professor.getLastName());
 		System.out.println("Creating Message");
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");

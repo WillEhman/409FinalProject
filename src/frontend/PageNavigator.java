@@ -35,7 +35,7 @@ public class PageNavigator {
 	public PageNavigator(Client c) {
 		//Initialize the panels and frame
 		client = c;
-		frame = new JFrame("Course Manager 2018");
+		frame = new JFrame();
 		coursePanel = new JPanel();
 		infoPanel = new JPanel();
 		JPanel title = new JPanel();
@@ -81,6 +81,10 @@ public class PageNavigator {
 		
 	}
 	
+	public void setFrameText(String s) {
+		frame.setTitle(s);
+	}
+	
 	public Client getClient() {
 		return client;
 	}
@@ -110,7 +114,11 @@ public class PageNavigator {
 			System.out.println(temp[i]);
 		}
 		courses.setListData(temp);
-		currentCourse = vectorOfCourses.get(0);
+		try {
+			currentCourse = vectorOfCourses.get(0);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			currentCourse = null;
+		}
 	}
 	
 	public void setCourseListener(ListSelectionListener l) {
