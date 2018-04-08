@@ -623,7 +623,7 @@ public class DatabaseHelper {
 			// statement.setInt(1, assignment.getCourseId());
 			// statement.setInt(2, assignment.getAssignId());
 			// System.out.println(sql1);
-			System.out.println(sql2);
+//			System.out.println(sql2);
 			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {
