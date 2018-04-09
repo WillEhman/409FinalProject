@@ -30,7 +30,6 @@ public class ProfessorGUI extends PageNavigator {
 
 	private Client client;
 	private Professor professor;
-	private boolean isProfessor;
 	private JButton add, remove;
 
 	public ProfessorGUI(User user, Client client) {
@@ -38,7 +37,6 @@ public class ProfessorGUI extends PageNavigator {
 		setCourseListener(new CourseListListener(this));
 		setBoxListener(new BoxListener(this));
 		professor = new Professor(user);
-		isProfessor = true;
 		super.setFrameText("Course Manager 2018: " + professor.getFirstName() + " " + professor.getLastName());
 		System.out.println("Creating Message");
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
@@ -287,7 +285,7 @@ public class ProfessorGUI extends PageNavigator {
 			JTextField toF = new JTextField(to, 5);
 			JTextField fromF = new JTextField(from, 5);
 			JTextField contF = new JTextField(5);
-			JTextField passF = new JTextField(5);
+			JPasswordField passF = new JPasswordField(5);
 			JPanel title = new JPanel();
 			JPanel info = new JPanel();
 			JPanel buttons = new JPanel();
@@ -321,8 +319,14 @@ public class ProfessorGUI extends PageNavigator {
 						}
 						Email temp = new Email(from, toArray, subF.getText(), contF.getText(), passF.getText());
 						Message<Email> message = new Message<Email>(temp, "SENDEMAIL");
-						c.communicate(message);
-						options.dispose();
+						Message<?> recieve = c.communicate(message);
+						String check = (String) recieve.getQuery();
+						if (check.equals("Success")) {
+							JOptionPane.showMessageDialog(null, "Message Sent");
+							options.dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Message Failed to Send");
+						}
 					}
 				}
 			});
@@ -438,7 +442,7 @@ public class ProfessorGUI extends PageNavigator {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
 						currentAssignment = assignVector.get(info.getSelectedIndex());
-						Message<Assignment> message = new Message<Assignment>(currentAssignment, "SUBMISSIONLIST");
+						Message<Assignment> message = new Message<Assignment>(currentAssignment, "SUBMISSIONPROFLIST");
 						Message<?> receive = c.communicate(message);
 						setSubmissions((Vector<Submission>) receive.getObject());
 						setButtons();
