@@ -152,15 +152,15 @@ public class StudentGUI extends PageNavigator {
 						public void actionPerformed(ActionEvent arg0) {
 							try {
 								if (aidF.getText().length() <= 10) {
-									Submission newSub = new Submission(Integer.parseInt(aidF.getText()),
-											getCurrentCourse().getCourseId(), titleF.getText(), pathF.getText(), true,
-											dueF.getText(), readFileContent(pathF.getText()));
+									Submission newSub = new Submission(getCurrentCourse().getCourseId(),
+											currentAssignment.getAssignId(), student.getId(), pathF.getText(), 0, null,
+											dueF.getText(), titleF.getText(), readFileContent(pathF.getText()));
 									String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
 									Message<Submission> message = new Message<Submission>(newSub,
 											"CREATEFILE.SPLITTER." + path[path.length - 2] + ".SPLITTER."
 													+ path[path.length - 1]);
 									Message<?> receive = c.communicate(message);
-									setAssignments((Vector<Assignment>) receive.getObject());
+									setSubmissions((Vector<Submission>) receive.getObject());
 									options.dispose();
 								} else {
 									JOptionPane.showMessageDialog(null, "Invalid Course ID");

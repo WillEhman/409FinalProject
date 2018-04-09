@@ -83,7 +83,7 @@ public class Submission implements Serializable {
 	 * @param timeStamp
 	 */
 	public Submission( int cid, int assignId, int studentId, String path, int grade, String comment, String title,
-			String timeStamp) {
+			String timeStamp, byte[] data) {
 //		this.id = id;
 		this.courseId = cid;
 		this.assignId = assignId;
@@ -93,6 +93,7 @@ public class Submission implements Serializable {
 		this.comment = comment;
 		this.title = title;
 		this.timeStamp = timeStamp;
+		this.data = data;
 	}
 
 	/**
