@@ -207,7 +207,8 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				//TODO implement different versions for prof and student that only show when flagged as active
+				// TODO implement different versions for prof and student that only show when
+				// flagged as active
 				if (inMessage.getQuery().equals("ASSIGNMENTLISTPROF")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Assignment> aVector = new Vector<Assignment>();
@@ -216,11 +217,10 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("ASSIGNMENTLISTSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
-					
-					
+
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignmentsStudent((Course) inMessage.getObject());
 					System.out.println(aVector);
@@ -262,6 +262,8 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// TODO convert file sending to send back a submission filled with byte data
+				// rather than just sending the data
 				if (inMessage.getQuery().equals("VIEWSUBMISSION")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();// Should contain path i.e (test.txt)
@@ -270,7 +272,20 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<byte[]>(data, "VIEWSUBMISSION");
 					out.writeObject(outMessage);
 					System.out.println("Message sent back");
-					// TODO
+				}
+
+				if (inMessage.getQuery().equals("UPLOADSUBMISSION")
+						&& inMessage.getObject().getClass().toString().contains("Submission")) {
+					Submission s = (Submission) inMessage.getObject();
+					byte[] input = s.getData();
+					database.preparedAdd(s);
+					fileManager.writeFileContent(input, inMessage.getQuery());
+
+					Vector<Submission> aVector = database.listSubmissions(s);
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
+
 				}
 
 				if (inMessage.getQuery().equals("SETGRADE")
@@ -325,23 +340,22 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 					System.out.println("Message sent back");
 				}
-				
+
 				if (inMessage.getQuery().contains("SENDEMAIL")
 						&& inMessage.getObject().getClass().toString().contains("Email")) {
-					
+
 					Email e = (Email) inMessage.getObject();
-					for (int i =0;i<e.getTo().size();i++) {
+					for (int i = 0; i < e.getTo().size(); i++) {
 						System.out.println("Sent email");
-						emailService.SendEmail(e.getFrom(),e.getPw(),e.getTo().get(i),e.getSubject(),e.getContent());
+						emailService.SendEmail(e.getFrom(), e.getPw(), e.getTo().get(i), e.getSubject(),
+								e.getContent());
 					}
-					
-					
+
 					Message<?> outMessage = new Message<String>("Email Sent Succesfully", "SENDEMAIL");
 					System.out.println(outMessage);
 					out.writeObject(outMessage);
-					
+
 				}
-				
 
 			} catch (IOException e) {
 				System.out.println("Client Disconnected");

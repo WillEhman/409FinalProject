@@ -65,6 +65,10 @@ public class Submission implements Serializable {
 	 * time of submission
 	 */
 	private String timeStamp;
+	
+	private byte [] data;
+
+
 
 	/**
 	 * Constructor for submission
@@ -166,6 +170,14 @@ public class Submission implements Serializable {
 
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+	
+	public byte[] getData() {
+		return data;
+	}
+
+	public void setData(byte[] data) {
+		this.data = data;
 	}
 	
 	public String toString() {
