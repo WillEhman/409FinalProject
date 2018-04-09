@@ -544,7 +544,7 @@ public class ProfessorGUI extends PageNavigator {
 			main.add(sScroll);
 			this.add("South", buttons);
 			this.add("Center", main);
-			Message<Course> message = new Message<Course>(getCurrentCourse(), "ASSIGNMENTLIST");
+			Message<Course> message = new Message<Course>(getCurrentCourse(), "ASSIGNMENTLISTPROF");
 			Message<?> receive = c.communicate(message);
 			setAssignments((Vector<Assignment>) receive.getObject());
 		}

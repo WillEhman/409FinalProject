@@ -208,10 +208,21 @@ public class Worker implements Runnable {
 				}
 
 				//TODO implement different versions for prof and student that only show when flagged as active
-				if (inMessage.getQuery().equals("ASSIGNMENTLIST")
+				if (inMessage.getQuery().equals("ASSIGNMENTLISTPROF")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments((Course) inMessage.getObject());
+					aVector = database.listAssignmentsProf((Course) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("ASSIGNMENTLISTSTUDENT")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					
+					
+					Vector<Assignment> aVector = new Vector<Assignment>();
+					aVector = database.listAssignmentsStudent((Course) inMessage.getObject());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
 					out.writeObject(outMessage);
@@ -223,7 +234,7 @@ public class Worker implements Runnable {
 					database.preparedSetDue(a, a.getDueDate());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments(a.getCourseId());
+					aVector = database.listAssignmentsProf(a.getCourseId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTDUE");
 					out.writeObject(outMessage);
@@ -236,7 +247,7 @@ public class Worker implements Runnable {
 					database.preparedSetActive(a, a.isActive());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments(a.getCourseId());
+					aVector = database.listAssignmentsProf(a.getCourseId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ACTIVATEASSIGNMENT");
 					out.writeObject(outMessage);
@@ -299,7 +310,7 @@ public class Worker implements Runnable {
 					fileManager.writeFileContent(input, inMessage.getQuery());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
-					aVector = database.listAssignments(a.getCourseId());
+					aVector = database.listAssignmentsProf(a.getCourseId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "CREATEFILE");
 					out.writeObject(outMessage);

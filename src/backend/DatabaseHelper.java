@@ -557,7 +557,7 @@ public class DatabaseHelper {
 		return results;
 	}
 
-	Vector<Assignment> listAssignments(Course course) {
+	Vector<Assignment> listAssignmentsProf(Course course) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + course.getCourseId();
 		try {
 			Vector<Assignment> listofAssignments = new Vector<Assignment>();
@@ -585,8 +585,36 @@ public class DatabaseHelper {
 
 	}
 
-	Vector<Assignment> listAssignments(int courseId) {
+	Vector<Assignment> listAssignmentsProf(int courseId) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + courseId;
+		try {
+			Vector<Assignment> listofAssignments = new Vector<Assignment>();
+
+			statement = connection.prepareStatement(sql);
+			// statement.setInt(1, prof.getId());
+			ResultSet assigns = statement.executeQuery(sql);
+
+			while (assigns.next()) {
+				Assignment temp = new Assignment();
+				temp.setCourseId(assigns.getInt("COURSENUMBER"));
+				temp.setAssignId(assigns.getInt("ASSIGNMENTID"));
+				temp.setTitle(assigns.getString("ASSIGNMENTNAME"));
+				temp.setPath(assigns.getString("FILEPATH"));
+				temp.setDueDate(assigns.getString("DUEDATE"));
+				temp.setActive(assigns.getBoolean("ACTIVE"));
+				listofAssignments.add(temp);
+			}
+			assigns.close();
+			return listofAssignments;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	Vector<Assignment> listAssignmentsStudent(Course course) {
+		String sql = "SELECT * FROM assignments WHERE ACTIVE=TRUE AND COURSENUMBER=" + course.getCourseId();
 		try {
 			Vector<Assignment> listofAssignments = new Vector<Assignment>();
 
@@ -713,6 +741,8 @@ public class DatabaseHelper {
 		Assignment a = new Assignment(1, 453, "Boolean Logic", "A1.txt", true, "Today", null);
 		Vector<Submission> v = masterDB.listSubmissions(a);
 		System.out.println(v);
+		Course c = new Course(453, 1, "", true);
+		Vector<Assignment> av = masterDB.listAssignmentsStudent(c);
 		/*
 		 * System.out.println();
 		 * System.out.println("Reading all courses from the table:");
