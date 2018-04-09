@@ -690,7 +690,7 @@ public class DatabaseHelper {
 			while (subs.next()) {
 				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
 						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"));
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"),null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -722,7 +722,7 @@ public class DatabaseHelper {
 			while (subs.next()) {
 				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
 						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"));
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"),null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
