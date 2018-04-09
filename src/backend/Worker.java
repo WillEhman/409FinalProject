@@ -214,7 +214,7 @@ public class Worker implements Runnable {
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignmentsProf((Course) inMessage.getObject());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLISTPROF");
 					out.writeObject(outMessage);
 				}
 
@@ -224,7 +224,7 @@ public class Worker implements Runnable {
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignmentsStudent((Course) inMessage.getObject());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLIST");
+					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "ASSIGNMENTLISTSTUDENT");
 					out.writeObject(outMessage);
 				}
 
@@ -253,10 +253,23 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().equals("SUBMISSIONLIST")
+				if (inMessage.getQuery().equals("SUBMISSIONPROFLIST")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Vector<Submission> aVector = new Vector<Submission>();
 					aVector = database.listSubmissions((Assignment) inMessage.getObject());
+					System.out.println(aVector);
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
+				}
+
+				if (inMessage.getQuery().contains("SUBMISSIONLIST")
+						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
+
+					String[] split = inMessage.getQuery().split(".SPLITTER.");
+
+					Vector<Submission> aVector = new Vector<Submission>();
+					aVector = database.listSubmissions((Assignment) inMessage.getObject(),
+							Integer.parseInt(split[split.length - 1]));
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
 					out.writeObject(outMessage);
@@ -274,14 +287,14 @@ public class Worker implements Runnable {
 					System.out.println("Message sent back");
 				}
 
-				if (inMessage.getQuery().equals("UPLOADSUBMISSION")
+				if (inMessage.getQuery().contains("UPLOADSUBMISSION")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();
 					byte[] input = s.getData();
 					database.preparedAdd(s);
 					fileManager.writeFileContent(input, inMessage.getQuery());
 
-					Vector<Submission> aVector = database.listSubmissions(s);
+					Vector<Submission> aVector = database.listSubmissions(s,s.getStudentId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
 					out.writeObject(outMessage);
@@ -313,6 +326,15 @@ public class Worker implements Runnable {
 					aVector = database.listSubmissions((Submission) inMessage.getObject());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("GETPROF")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					Course c = (Course) inMessage.getObject();
+
+					Professor p = database.findProf(c);
+					Message<?> outMessage = new Message<Professor>(p, "GETPROF");
 					out.writeObject(outMessage);
 				}
 

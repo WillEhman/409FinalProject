@@ -61,6 +61,10 @@ public class User implements Serializable {
 		this.emailAddress = email;
 	}
 
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * getters and setters
 	 * 

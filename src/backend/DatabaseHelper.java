@@ -1,6 +1,5 @@
 package backend;
 
-import shared.Assignment;
 import shared.*;
 
 import java.sql.*;
@@ -612,7 +611,7 @@ public class DatabaseHelper {
 		return null;
 
 	}
-	
+
 	Vector<Assignment> listAssignmentsStudent(Course course) {
 		String sql = "SELECT * FROM assignments WHERE ACTIVE=TRUE AND COURSENUMBER=" + course.getCourseId();
 		try {
@@ -669,8 +668,8 @@ public class DatabaseHelper {
 	}
 
 	Vector<Submission> listSubmissions(Assignment assignment) {
-		System.out.println(assignment.getCourseId());
-		System.out.println(assignment.getAssignId());
+		// System.out.println(assignment.getCourseId());
+		// System.out.println(assignment.getAssignId());
 
 		try {
 			// String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND
@@ -690,7 +689,7 @@ public class DatabaseHelper {
 			while (subs.next()) {
 				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
 						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"),null);
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -700,6 +699,31 @@ public class DatabaseHelper {
 		}
 		return null;
 
+	}
+
+	public Vector<Submission> listSubmissions(Assignment assignment, int studentId) {
+
+		try {
+			String sql = "SELECT * FROM submissions WHERE STUDENTID=" + studentId + " AND COURSENUMBER="
+					+ assignment.getCourseId() + " AND ASSIGNMENTID=" + assignment.getAssignId();
+
+			Vector<Submission> listofSubmissions = new Vector<Submission>();
+
+			statement = connection.prepareStatement(sql);
+			ResultSet subs = statement.executeQuery(sql);
+
+			while (subs.next()) {
+				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
+						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				listofSubmissions.add(temp);
+			}
+			subs.close();
+			return listofSubmissions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	Vector<Submission> listSubmissions(Submission submission) {
@@ -722,7 +746,7 @@ public class DatabaseHelper {
 			while (subs.next()) {
 				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
 						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"),null);
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -732,6 +756,57 @@ public class DatabaseHelper {
 		}
 		return null;
 
+	}
+
+	Vector<Submission> listSubmissions(Submission submission, int studentid) {
+
+		try {
+			// String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND
+			// COURSENUMBER=453";
+			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID=" + submission.getAssignId()
+					+ " AND COURSENUMBER=" + submission.getCourseId() + " AND STUDENTID=" + studentid;
+
+			Vector<Submission> listofSubmissions = new Vector<Submission>();
+
+			statement = connection.prepareStatement(sql2);
+			// statement.setInt(1, assignment.getCourseId());
+			// statement.setInt(2, assignment.getAssignId());
+			// System.out.println(sql1);
+			// System.out.println(sql2);
+			ResultSet subs = statement.executeQuery(sql2);
+
+			while (subs.next()) {
+				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
+						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
+						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				listofSubmissions.add(temp);
+			}
+			subs.close();
+			return listofSubmissions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	public Professor findProf(Course c) {
+		Professor results = new Professor();
+		try {
+			String sql = "SELECT * FROM users WHERE TYPE = ? AND ID = ?";
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, "p");
+			statement.setInt(2, c.getProfId());
+
+			ResultSet rset = statement.executeQuery();
+			while (rset.next()) {
+				results = new Professor(rset.getInt("ID"), rset.getString("firstname"), rset.getString("lastname"),
+						rset.getString("EMAIL"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return results;
 	}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

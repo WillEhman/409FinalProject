@@ -35,4 +35,9 @@ public class Professor extends User implements Serializable {
 		super(user.getId(), user.getFirstName(), user.getLastName(), "P", user.getEmailAddress());
 	}
 
+	public Professor() {
+		// TODO Auto-generated constructor stub
+		super();
+	}
+
 }
