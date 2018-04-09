@@ -21,8 +21,8 @@ public class EmailHelper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
-
+	public String SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
+		String response = "Success";
 		InternetAddress RECIPIENT_ADDRESS = null;
 		try {
 			RECIPIENT_ADDRESS = new InternetAddress(recipient);
@@ -50,9 +50,13 @@ public class EmailHelper {
 			message.setSubject(subject);
 			message.setText(content);
 			Transport.send(message); // Send the Email Message
+			response = "Success";
 		} catch (MessagingException e) {
 			e.printStackTrace();
+			response = "Fail";
+			
 		}
+		return response;
 	}
 	
 	public static void main(String [] args) {

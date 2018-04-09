@@ -365,15 +365,15 @@ public class Worker implements Runnable {
 
 				if (inMessage.getQuery().contains("SENDEMAIL")
 						&& inMessage.getObject().getClass().toString().contains("Email")) {
-
+					String response = "";
 					Email e = (Email) inMessage.getObject();
 					for (int i = 0; i < e.getTo().size(); i++) {
 						System.out.println("Sent email");
-						emailService.SendEmail(e.getFrom(), e.getPw(), e.getTo().get(i), e.getSubject(),
+						response =emailService.SendEmail(e.getFrom(), e.getPw(), e.getTo().get(i), e.getSubject(),
 								e.getContent());
 					}
 
-					Message<?> outMessage = new Message<String>("Email Sent Succesfully", "SENDEMAIL");
+					Message<?> outMessage = new Message<String>(response, response);
 					System.out.println(outMessage);
 					out.writeObject(outMessage);
 
