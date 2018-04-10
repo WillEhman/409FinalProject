@@ -88,6 +88,15 @@ public class Worker implements Runnable {
 					}
 				}
 
+				// Syntax is ADDUSER.SPLITTER.USERNAME.SPLITTER.PASSWORD.SPLITTER.ADMINPW
+				if (inMessage.getQuery().contains("ADDUSER")) {
+					String[] split = inMessage.getQuery().split(".SPLITTER.");
+					User u = (User) inMessage.getObject();
+					if (split[split.length - 1].equals(database.getAdminPW())) {
+						database.preparedAdd(u, split[split.length - 3], split[split.length - 2]);
+					}
+				}
+
 				if (inMessage.getQuery().equals("COURSELIST")
 						&& inMessage.getObject().getClass().toString().contains("Professor")) {
 					Vector<Course> cVector = new Vector<Course>();
@@ -294,7 +303,7 @@ public class Worker implements Runnable {
 					database.preparedAdd(s);
 					fileManager.writeFileContent(input, inMessage.getQuery());
 
-					Vector<Submission> aVector = database.listSubmissions(s,s.getStudentId());
+					Vector<Submission> aVector = database.listSubmissions(s, s.getStudentId());
 					System.out.println(aVector);
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
 					out.writeObject(outMessage);
@@ -328,7 +337,7 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("GETPROF")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Course c = (Course) inMessage.getObject();
@@ -369,7 +378,7 @@ public class Worker implements Runnable {
 					Email e = (Email) inMessage.getObject();
 					for (int i = 0; i < e.getTo().size(); i++) {
 						System.out.println("Sent email");
-						response =emailService.SendEmail(e.getFrom(), e.getPw(), e.getTo().get(i), e.getSubject(),
+						response = emailService.SendEmail(e.getFrom(), e.getPw(), e.getTo().get(i), e.getSubject(),
 								e.getContent());
 					}
 
