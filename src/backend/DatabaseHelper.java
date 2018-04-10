@@ -133,16 +133,16 @@ public class DatabaseHelper {
 	}
 
 	public void preparedAdd(User user, String username, String password) {
-		String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO users VALUES ( Default, ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, user.getId());
-			statement.setString(2, username);
-			statement.setString(3, password);
-			statement.setString(4, user.getType());
-			statement.setString(5, user.getFirstName());
-			statement.setString(6, user.getLastName());
-			statement.setString(7, user.getEmailAddress());
+//			statement.setInt(1, user.getId());
+			statement.setString(1, username);
+			statement.setString(2, password);
+			statement.setString(3, user.getType());
+			statement.setString(4, user.getFirstName());
+			statement.setString(5, user.getLastName());
+			statement.setString(6, user.getEmailAddress());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {

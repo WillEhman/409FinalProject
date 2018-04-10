@@ -92,8 +92,17 @@ public class Worker implements Runnable {
 				if (inMessage.getQuery().contains("ADDUSER")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
 					User u = (User) inMessage.getObject();
+					try {
 					if (split[split.length - 1].equals(database.getAdminPW())) {
 						database.preparedAdd(u, split[split.length - 3], split[split.length - 2]);
+						Message<?> outMessage = new Message<String>("Success", "Success");
+						System.out.println(outMessage);
+						out.writeObject(outMessage);
+					}
+					}catch(Exception e) {
+						Message<?> outMessage = new Message<String>("Failed", "Failed");
+						System.out.println(outMessage);
+						out.writeObject(outMessage);
 					}
 				}
 
