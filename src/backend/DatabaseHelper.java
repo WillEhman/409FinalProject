@@ -303,8 +303,8 @@ public class DatabaseHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		 sql = "DELETE FROM chats WHERE COURSENUMBER=?";
+
+		sql = "DELETE FROM chats WHERE COURSENUMBER=?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, course.getCourseId());
@@ -313,7 +313,7 @@ public class DatabaseHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		sql = "DELETE FROM assignments WHERE COURSENUMBER=?";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -323,7 +323,7 @@ public class DatabaseHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		sql = "DELETE FROM enrolment WHERE COURSENUMBER=?";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -333,7 +333,7 @@ public class DatabaseHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		sql = "DELETE FROM submissions WHERE COURSENUMBER=?";
 		try {
 			statement = connection.prepareStatement(sql);

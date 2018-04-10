@@ -168,7 +168,7 @@ public class PageNavigator {
 			currentCourse = null;
 		}
 	}
-	
+
 	public void setCourses(Vector<Course> v, int index) {
 		vectorOfCourses = v;
 		String[] temp = new String[v.size()];
@@ -183,7 +183,7 @@ public class PageNavigator {
 			currentCourse = null;
 		}
 	}
-	
+
 	public JList<String> getCourses() {
 		return courses;
 	}
@@ -201,7 +201,7 @@ public class PageNavigator {
 			currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
 		}
 	}
-	
+
 	public void setCurrentCourse(Course c) {
 		currentCourse = c;
 	}
@@ -222,7 +222,7 @@ public class PageNavigator {
 		DefaultComboBoxModel model = new DefaultComboBoxModel(s);
 		selection.setModel(model);
 	}
-	
+
 	public int getCourseIndex() {
 		for (int i = 0; i < vectorOfCourses.size(); i++) {
 			if (currentCourse.getCourseId() == vectorOfCourses.get(i).getCourseId()) {

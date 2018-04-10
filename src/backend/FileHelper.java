@@ -4,6 +4,7 @@ import java.io.*;
 //import java.util.Scanner;
 
 import shared.*;
+
 /**
  * 
  * @author William Ehman
@@ -12,7 +13,7 @@ import shared.*;
  *
  */
 public class FileHelper {
-//	private String path;
+	// private String path;
 
 	public FileHelper() {
 		// TODO Auto-generated constructor stub

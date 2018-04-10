@@ -29,7 +29,7 @@ public class Submission implements Serializable {
 	 * id of assignment associated with the submission
 	 */
 	private int assignId;
-	
+
 	/**
 	 * id of assignment associated with the submission
 	 */
@@ -39,7 +39,6 @@ public class Submission implements Serializable {
 	 * id of student submitting
 	 */
 	private int studentId;
-
 
 	/**
 	 * path of submitted file
@@ -65,10 +64,8 @@ public class Submission implements Serializable {
 	 * time of submission
 	 */
 	private String timeStamp;
-	
-	private byte [] data;
 
-
+	private byte[] data;
 
 	/**
 	 * Constructor for submission
@@ -82,8 +79,8 @@ public class Submission implements Serializable {
 	 * @param title
 	 * @param timeStamp
 	 */
-	public Submission(int id, int cid, int assignId, int studentId, String path, int grade, String comment, String title,
-			String timeStamp, byte[] data) {
+	public Submission(int id, int cid, int assignId, int studentId, String path, int grade, String comment,
+			String title, String timeStamp, byte[] data) {
 		this.id = id;
 		this.courseId = cid;
 		this.assignId = assignId;
@@ -103,12 +100,11 @@ public class Submission implements Serializable {
 	public int getId() {
 		return id;
 	}
-	
 
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public int getCourseId() {
 		return courseId;
 	}
@@ -116,7 +112,6 @@ public class Submission implements Serializable {
 	public void setCourseId(int courseId) {
 		this.courseId = courseId;
 	}
-
 
 	public int getAssignId() {
 		return assignId;
@@ -173,7 +168,7 @@ public class Submission implements Serializable {
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+
 	public byte[] getData() {
 		return data;
 	}
@@ -181,9 +176,9 @@ public class Submission implements Serializable {
 	public void setData(byte[] data) {
 		this.data = data;
 	}
-	
+
 	public String toString() {
-		return title + ", " + studentId +  ", " + comment + ", " + grade + "% ----- " + timeStamp;
+		return title + ", " + studentId + ", " + comment + ", " + grade + "% ----- " + timeStamp;
 	}
 
 }
