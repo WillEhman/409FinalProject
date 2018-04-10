@@ -100,13 +100,13 @@ public class Submission implements Serializable {
 	 * getters and setters
 	 * 
 	 */
-//	public int getId() {
-//		return id;
-//	}
-//
-//	public void setId(int id) {
-//		this.id = id;
-//	}
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public int getCourseId() {
 		return courseId;

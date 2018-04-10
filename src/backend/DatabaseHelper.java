@@ -136,7 +136,7 @@ public class DatabaseHelper {
 		String sql = "INSERT INTO users VALUES ( Default, ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
-//			statement.setInt(1, user.getId());
+			// statement.setInt(1, user.getId());
 			statement.setString(1, username);
 			statement.setString(2, password);
 			statement.setString(3, user.getType());
@@ -151,7 +151,7 @@ public class DatabaseHelper {
 			return false;
 		}
 	}
-	
+
 	public String getAdminPW() {
 		String sql = "SELECT * FROM users WHERE ID= ?";
 		ResultSet user;
@@ -288,11 +288,10 @@ public class DatabaseHelper {
 	}
 
 	public void preparedRemove(Submission submission) {
-		String sql = "DELETE FROM submissions WHERE STUDENTID=? AND ASSIGNMENTID=?";
+		String sql = "DELETE FROM submissions WHERE SID=?";
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, submission.getStudentId());
-			statement.setInt(2, submission.getAssignId());
+			statement.setInt(1, submission.getId());
 
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -484,17 +483,15 @@ public class DatabaseHelper {
 	}
 
 	public boolean preparedEnrol(int userid, Course course) {
-		Vector<User> vu1 = preparedSearchUsers(userid); //confirm user exists
+		Vector<User> vu1 = preparedSearchUsers(userid); // confirm user exists
 		if (vu1.size() != 1) {
 			return false;
 		}
-		Vector<User> vu2 = preparedSearchUsersinCourse(userid, course); //confirm they arent already enrolled
+		Vector<User> vu2 = preparedSearchUsersinCourse(userid, course); // confirm they arent already enrolled
 		if (vu2.size() != 0) {
 			return false;
 		}
-		
-		
-		
+
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -720,9 +717,10 @@ public class DatabaseHelper {
 			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {
-				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
-						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				Submission temp = new Submission(subs.getInt("SID"), subs.getInt("COURSENUMBER"),
+						subs.getInt("ASSIGNMENTID"), subs.getInt("STUDENTID"), subs.getString("FILEPATH"),
+						subs.getInt("Grade"), subs.getString("COMMENT"), subs.getString("TITLE"),
+						subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -746,9 +744,10 @@ public class DatabaseHelper {
 			ResultSet subs = statement.executeQuery(sql);
 
 			while (subs.next()) {
-				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
-						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				Submission temp = new Submission(subs.getInt("SID"), subs.getInt("COURSENUMBER"),
+						subs.getInt("ASSIGNMENTID"), subs.getInt("STUDENTID"), subs.getString("FILEPATH"),
+						subs.getInt("Grade"), subs.getString("COMMENT"), subs.getString("TITLE"),
+						subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -777,9 +776,10 @@ public class DatabaseHelper {
 			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {
-				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
-						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				Submission temp = new Submission(subs.getInt("SID"), subs.getInt("COURSENUMBER"),
+						subs.getInt("ASSIGNMENTID"), subs.getInt("STUDENTID"), subs.getString("FILEPATH"),
+						subs.getInt("Grade"), subs.getString("COMMENT"), subs.getString("TITLE"),
+						subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -807,9 +807,10 @@ public class DatabaseHelper {
 			ResultSet subs = statement.executeQuery(sql2);
 
 			while (subs.next()) {
-				Submission temp = new Submission(subs.getInt("COURSENUMBER"), subs.getInt("ASSIGNMENTID"),
-						subs.getInt("STUDENTID"), subs.getString("FILEPATH"), subs.getInt("Grade"),
-						subs.getString("COMMENT"), subs.getString("TITLE"), subs.getString("TIMESTAMP"), null);
+				Submission temp = new Submission(subs.getInt("SID"), subs.getInt("COURSENUMBER"),
+						subs.getInt("ASSIGNMENTID"), subs.getInt("STUDENTID"), subs.getString("FILEPATH"),
+						subs.getInt("Grade"), subs.getString("COMMENT"), subs.getString("TITLE"),
+						subs.getString("TIMESTAMP"), null);
 				listofSubmissions.add(temp);
 			}
 			subs.close();
@@ -849,12 +850,12 @@ public class DatabaseHelper {
 		System.out.println(v);
 		Course c = new Course(453, 1, "", true);
 		Vector<Assignment> av = masterDB.listAssignmentsStudent(c);
-		
+
 		String s = masterDB.getAdminPW();
 		try {
-		System.out.println(s);
-		System.out.println(s.equals("adminPW"));
-		}catch (NullPointerException n) {
+			System.out.println(s);
+			System.out.println(s.equals("adminPW"));
+		} catch (NullPointerException n) {
 			n.printStackTrace();
 		}
 		/*
