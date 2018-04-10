@@ -235,7 +235,11 @@ public class ProfessorGUI extends PageNavigator {
 						Message<Course> message = new Message<Course>(getCurrentCourse(),
 								"ENROLLSTUDENT.SPLITTER." + ID);
 						Message<?> receive = c.communicate(message);
-						setStudents((Vector<User>) receive.getObject());
+						if (receive.getQuery().equals("Success")) {
+							setStudents((Vector<User>) receive.getObject());
+						} else {
+							JOptionPane.showMessageDialog(null, "Unable to enroll student with given ID");
+						}
 					} catch (NumberFormatException e) {
 						JOptionPane.showMessageDialog(null, "Invalid ID");
 					}
@@ -647,6 +651,7 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+			active.setEnabled(false);
 
 			// Button to download submissions
 			downloadSub = new JButton("Download Submission");
@@ -823,6 +828,11 @@ public class ProfessorGUI extends PageNavigator {
 				downloadSub.setEnabled(false);
 				grade.setEnabled(false);
 			}
+			if (currentAssignment != null) {
+				active.setEnabled(true);
+			} else {
+				active.setEnabled(false);
+			}
 		}
 	}
 
@@ -841,7 +851,7 @@ public class ProfessorGUI extends PageNavigator {
 		 * serial id
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * 
 		 */

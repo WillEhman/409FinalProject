@@ -6,12 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Vector;
 
 import javax.swing.*;
 
 import shared.*;
 import javax.swing.UIManager.*;
+
 /**
  * 
  * @author William Ehman
@@ -31,7 +33,7 @@ public class LoginWindow extends JFrame {
 
 	public LoginWindow() throws IOException {
 
-//		client = new Client("localhost", 9090);
+		// client = new Client("localhost", 9090);
 		client = new Client("10.13.190.9", 9090);
 		frame = new JFrame("Login");
 		JPanel title = new JPanel();
@@ -61,13 +63,17 @@ public class LoginWindow extends JFrame {
 				login();
 			}
 		});
-		
+
 		JButton register = new JButton("Register");
 		register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame options = new JFrame("New Account");
-				JTextField cidF = new JTextField(5);
-				JTextField cNameF = new JTextField(5);
+				JTextField userF = new JTextField(5);
+				JPasswordField passF = new JPasswordField(5);
+				JTextField fNameF = new JTextField(5);
+				JTextField lNameF = new JTextField(5);
+				JTextField emailF = new JTextField(5);
+				JPasswordField adminF = new JPasswordField(5);
 				JPanel title = new JPanel();
 				JPanel info = new JPanel();
 				JPanel buttons = new JPanel();
@@ -81,10 +87,18 @@ public class LoginWindow extends JFrame {
 				options.setLayout(new BorderLayout());
 				title.add(new JLabel("Create a New Account"));
 				info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+				info.add(new JLabel("First Name:"));
+				info.add(fNameF);
+				info.add(new JLabel("Last Name:"));
+				info.add(lNameF);
+				info.add(new JLabel("Email:"));
+				info.add(emailF);
 				info.add(new JLabel("Username:"));
-				info.add(cidF);
+				info.add(userF);
 				info.add(new JLabel("Password:"));
-				info.add(cNameF);
+				info.add(passF);
+				info.add(new JLabel("Admin Password:"));
+				info.add(adminF);
 				options.add("North", title);
 				options.add("Center", info);
 				JButton confirm = new JButton("Confirm");
@@ -92,17 +106,31 @@ public class LoginWindow extends JFrame {
 					public void actionPerformed(ActionEvent arg0) {
 						try {
 							if (student.isSelected()) {
-//								Student newStudent = new Student(Integer.parseInt(cidF.getText()), professor.getId(),
-//										cNameF.getText(), true);
-//								Message<Student> message = new Message<Student>(newStudent, "ADDSTUDENT");
-//								Message<?> recieve = client.communicate(message);
-								options.dispose();
+								Student newStudent = new Student(999999, fNameF.getText(), lNameF.getText(),
+										emailF.getText());
+								Message<Student> message = new Message<Student>(newStudent,
+										"ADDUSER.SPLITTER." + userF.getText() + ".SPLITTER." + passF.getText()
+												+ ".SPLITTER." + adminF.getText());
+								Message<?> recieve = client.communicate(message);
+								if (recieve.getQuery().equals("Success")) {
+									JOptionPane.showMessageDialog(null, "Successfully added new user!");
+									options.dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "Error when adding user, contact Admin");
+								}
 							} else {
-//								Professor newProf = new Professor(Integer.parseInt(cidF.getText()), professor.getId(),
-//										cNameF.getText(), true);
-//								Message<Professor> message = new Message<Professor>(newProf, "ADDPROFESSOR");
-//								Message<?> recieve = client.communicate(message);
-								options.dispose();
+								Professor newProf = new Professor(999999, fNameF.getText(), lNameF.getText(),
+										emailF.getText());
+								Message<Professor> message = new Message<Professor>(newProf,
+										"ADDUSER.SPLITTER." + userF.getText() + ".SPLITTER." + passF.getText()
+												+ ".SPLITTER." + adminF.getText());
+								Message<?> recieve = client.communicate(message);
+								if (recieve.getQuery().equals("Success")) {
+									JOptionPane.showMessageDialog(null, "Successfully added new user!");
+									options.dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "Error when adding user, contact Admin");
+								}
 							}
 						} catch (NumberFormatException e) {
 							JOptionPane.showMessageDialog(null, "Invalid Course ID");
@@ -122,13 +150,13 @@ public class LoginWindow extends JFrame {
 				buttons.add(confirm);
 				buttons.add(cancel);
 				options.add("South", buttons);
-				options.setSize(350, 200);
+				options.setSize(350, 450);
 				options.setResizable(false);
 				options.setLocationByPlatform(true);
 				options.setVisible(true);
 			}
 		});
-		
+
 		buttons.add(b);
 		buttons.add(register);
 		frame.add("North", title);

@@ -323,10 +323,6 @@ public class StudentGUI extends PageNavigator {
 				download.setEnabled(false);
 				upload.setEnabled(false);
 			}
-
-			if (subVector.size() >= 1) {
-				upload.setEnabled(false);
-			}
 		}
 
 		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
