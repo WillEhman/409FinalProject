@@ -92,18 +92,26 @@ public class Worker implements Runnable {
 				if (inMessage.getQuery().contains("ADDUSER")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
 					User u = (User) inMessage.getObject();
+					boolean success = false;
 					try {
-					if (split[split.length - 1].equals(database.getAdminPW())) {
-						database.preparedAdd(u, split[split.length - 3], split[split.length - 2]);
-						Message<?> outMessage = new Message<String>("Success", "Success");
-						System.out.println(outMessage);
-						out.writeObject(outMessage);
-					}
-					}catch(Exception e) {
+						if (split[split.length - 1].equals(database.getAdminPW())) {
+							success = database.preparedAdd(u, split[split.length - 3], split[split.length - 2]);
+
+						}
+						if (success) {
+							Message<?> outMessage = new Message<String>("Success", "Success");
+							System.out.println("Success");
+							out.writeObject(outMessage);
+						} else {
+							throw new Exception();
+						}
+
+					} catch (Exception e) {
 						Message<?> outMessage = new Message<String>("Failed", "Failed");
-						System.out.println(outMessage);
+						System.out.println("Failure");
 						out.writeObject(outMessage);
 					}
+
 				}
 
 				if (inMessage.getQuery().equals("COURSELIST")
@@ -124,7 +132,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
-				if (inMessage.getQuery().contains("STUDENTLIST")
+				if (inMessage.getQuery().equals("STUDENTLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					// String [] split = inMessage.getQuery().split(".SPLITTER.");
 					Vector<User> uVector = new Vector<User>();
@@ -140,12 +148,20 @@ public class Worker implements Runnable {
 
 					// Course courseToUpdate = (Course) inMessage.getObject();
 					// System.out.println(split);
-					database.preparedEnrol(Integer.parseInt(split[split.length - 1]), (Course) inMessage.getObject());
+					boolean result = database.preparedEnrol(Integer.parseInt(split[split.length - 1]),
+							(Course) inMessage.getObject());
 
 					Vector<User> uVector = new Vector<User>();
 					uVector = database.preparedSearchUsersinCourse((Course) inMessage.getObject());
 					System.out.println(uVector);
-					Message<?> outMessage = new Message<Vector<User>>(uVector, "ENROLLSTUDENT");
+					Message<?> outMessage;
+					if (result) {
+						outMessage = new Message<Vector<User>>(uVector, "Success");
+						System.out.println("Success");
+					} else {
+						outMessage = new Message<Vector<User>>(uVector, "Failure");
+						System.out.println("Failure");
+					}
 					out.writeObject(outMessage);
 				}
 
@@ -262,7 +278,7 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 
 					Assignment a = (Assignment) inMessage.getObject();
-					database.preparedSetActive(a, a.isActive());
+					database.preparedSetActive(a, !a.isActive());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignmentsProf(a.getCourseId());
@@ -276,7 +292,7 @@ public class Worker implements Runnable {
 					Vector<Submission> aVector = new Vector<Submission>();
 					aVector = database.listSubmissions((Assignment) inMessage.getObject());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONPROFLIST");
 					out.writeObject(outMessage);
 				}
 
@@ -299,9 +315,17 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();// Should contain path i.e (test.txt)
 					String path = s.getPath();
-					byte[] data = fileManager.readFileContent(path);
-					Message<?> outMessage = new Message<byte[]>(data, "VIEWSUBMISSION");
-					out.writeObject(outMessage);
+					byte[] data = null;
+					try {
+						data = fileManager.readFileContent(path);
+						Message<?> outMessage = new Message<byte[]>(data, "Success");
+						out.writeObject(outMessage);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Message<?> outMessage = new Message<byte[]>(data, "Failure");
+						out.writeObject(outMessage);
+					}
+
 					System.out.println("Message sent back");
 				}
 

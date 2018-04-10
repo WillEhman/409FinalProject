@@ -53,8 +53,10 @@ public class FileHelper {
 			bos.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			throw new IOException();
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new IOException();
 		}
 		return content;
 	}
