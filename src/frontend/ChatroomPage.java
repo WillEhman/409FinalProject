@@ -1,11 +1,13 @@
 package frontend;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,10 +36,10 @@ public class ChatroomPage extends JPanel{
 		JPanel buttons = new JPanel();
 		messages = new JTextArea();
 		JScrollPane scroll = new JScrollPane(messages);
-		JTextField messageF = new JTextField(5);
+		JTextField messageF = new JTextField(60);
 		this.setLayout(new BorderLayout());
-		info.setLayout(new FlowLayout());
 		buttons.setLayout(new FlowLayout());
+		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
 		JButton send = new JButton("Send");
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -45,6 +47,7 @@ public class ChatroomPage extends JPanel{
 				Message<Chat> message = new Message<Chat>(newChat, "SENDCHAT");
 				Message<?> receive = client.communicate(message);
 				setChat((Vector<Chat>) receive.getObject());
+				messageF.setText(null);
 			}
 		});	
 		Message<Course> message = new Message<Course>(course, "CHATLIST");
