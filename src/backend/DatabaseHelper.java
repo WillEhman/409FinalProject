@@ -170,7 +170,7 @@ public class DatabaseHelper {
 		return null;
 	}
 
-	public void preparedAdd(Course course) {
+	public boolean preparedAdd(Course course) {
 		// System.out.println("Adding Course");
 		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
 		try {
@@ -181,8 +181,10 @@ public class DatabaseHelper {
 			statement.setBoolean(4, course.isActive());
 
 			statement.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
