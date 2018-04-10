@@ -203,7 +203,7 @@ public class StudentGUI extends PageNavigator {
 					confirm.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							try {
-								Submission newSub = new Submission(getCurrentCourse().getCourseId(),
+								Submission newSub = new Submission(0,getCurrentCourse().getCourseId(),
 										currentAssignment.getAssignId(), student.getId(), pathF.getText(), 0, " ",
 										titleF.getText(), dueF.getText(), readFileContent(pathF.getText()));
 								String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
