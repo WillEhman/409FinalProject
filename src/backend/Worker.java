@@ -5,6 +5,7 @@ import java.net.Socket;
 import java.util.Vector;
 
 import shared.Assignment;
+import shared.Chat;
 import shared.Course;
 import shared.Email;
 import shared.LoginInfo;
@@ -455,6 +456,27 @@ public class Worker implements Runnable {
 					System.out.println(outMessage);
 					out.writeObject(outMessage);
 
+				}
+				
+				if (inMessage.getQuery().equals("CHATLIST")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+					Vector<Chat> cVector = new Vector<Chat>();
+					cVector = database.listChat((Course) inMessage.getObject());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Chat>>(cVector, "CHATLIST");
+					out.writeObject(outMessage);
+				}
+				
+				if (inMessage.getQuery().equals("SENDCHAT")
+						&& inMessage.getObject().getClass().toString().contains("Chat")) {
+					Chat chat = (Chat) inMessage.getObject();
+					database.preparedAdd(chat);
+					
+					Vector<Chat> cVector = new Vector<Chat>();
+					cVector = database.listChat((Course) inMessage.getObject());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Chat>>(cVector, "CHATLIST");
+					out.writeObject(outMessage);
 				}
 
 			} catch (IOException e) {
