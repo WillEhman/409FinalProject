@@ -99,7 +99,7 @@ public class DatabaseHelper {
 			user = statement.executeQuery();
 
 			if (user.next()) {
-				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equals("s")) {
+				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equalsIgnoreCase("s")) {
 					return true;
 				}
 			}
@@ -120,7 +120,7 @@ public class DatabaseHelper {
 			user = statement.executeQuery();
 
 			if (user.next()) {
-				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equals("p")) {
+				if (password.equals(user.getString("PASSWORD")) && user.getString("TYPE").equalsIgnoreCase("p")) {
 					return true;
 				}
 			}
@@ -132,21 +132,23 @@ public class DatabaseHelper {
 		return false;
 	}
 
-	public void preparedAdd(User user, String username, String password) {
-		String sql = "INSERT INTO users VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+	public boolean preparedAdd(User user, String username, String password) {
+		String sql = "INSERT INTO users VALUES ( Default, ?, ?, ?, ?, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
-			statement.setInt(1, user.getId());
-			statement.setString(2, username);
-			statement.setString(3, password);
-			statement.setString(4, user.getType());
-			statement.setString(5, user.getFirstName());
-			statement.setString(6, user.getLastName());
-			statement.setString(7, user.getEmailAddress());
+//			statement.setInt(1, user.getId());
+			statement.setString(1, username);
+			statement.setString(2, password);
+			statement.setString(3, user.getType());
+			statement.setString(4, user.getFirstName());
+			statement.setString(5, user.getLastName());
+			statement.setString(6, user.getEmailAddress());
 
 			statement.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -481,7 +483,18 @@ public class DatabaseHelper {
 		}
 	}
 
-	public void preparedEnrol(int userid, Course course) {
+	public boolean preparedEnrol(int userid, Course course) {
+		Vector<User> vu1 = preparedSearchUsers(userid); //confirm user exists
+		if (vu1.size() != 1) {
+			return false;
+		}
+		Vector<User> vu2 = preparedSearchUsersinCourse(userid, course); //confirm they arent already enrolled
+		if (vu2.size() != 0) {
+			return false;
+		}
+		
+		
+		
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
 			statement = connection.prepareStatement(sql);
@@ -490,8 +503,10 @@ public class DatabaseHelper {
 			statement.setInt(2, course.getCourseId());
 
 			statement.executeUpdate();
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
