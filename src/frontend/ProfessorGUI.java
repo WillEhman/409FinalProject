@@ -55,7 +55,7 @@ public class ProfessorGUI extends PageNavigator {
 	 */
 	public ProfessorGUI(User user, Client client) {
 		super(client);
-
+		this.client = client;
 		// Set up GUI with professor name
 		setCourseListener(new CourseListListener(this));
 		setBoxListener(new BoxListener(this));
@@ -967,7 +967,7 @@ public class ProfessorGUI extends PageNavigator {
 			HomePage p = new HomePage(display.getClient());
 			displayPage(p);
 			if (getCurrentCourse().isActive()) {
-				String[] options = { "Home", "Students", "Assignments" };
+				String[] options = { "Home", "Students", "Assignments", "Chatroom" };
 				setSelections(options);
 			} else {
 				String[] options = { "Home" };
@@ -1022,6 +1022,9 @@ public class ProfessorGUI extends PageNavigator {
 				displayPage(p);
 			} else if (selected.equals("Students")) {
 				StudentPage p = new StudentPage(display.getClient(), display);
+				displayPage(p);
+			}  else if (selected.equals("Chatroom")) {
+				ChatroomPage p = new ChatroomPage(professor, client, getCurrentCourse());
 				displayPage(p);
 			}
 		}

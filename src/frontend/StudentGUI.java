@@ -382,7 +382,7 @@ public class StudentGUI extends PageNavigator {
 			HomePage p = new HomePage(display.getClient());
 			displayPage(p);
 			if (getCurrentCourse().isActive()) {
-				String[] options = { "Home", "Assignments" };
+				String[] options = { "Home", "Assignments", "Chatroom" };
 				setSelections(options);
 			} else {
 				String[] options = { "Home" };
@@ -407,6 +407,9 @@ public class StudentGUI extends PageNavigator {
 				displayPage(p);
 			} else if (selected.equals("Assignments")) {
 				AssignmentPage p = new AssignmentPage(display.getClient());
+				displayPage(p);
+			} else if (selected.equals("Chatroom")) {
+				ChatroomPage p = new ChatroomPage(student, client, getCurrentCourse());
 				displayPage(p);
 			}
 		}

@@ -187,7 +187,7 @@ public class DatabaseHelper {
 			return false;
 		}
 	}
-	
+
 	public boolean preparedToggle(Course course) {
 		// System.out.println("Adding Course");
 		String sql = "UPDATE courses SET ACTIVE =? WHERE COURSENUMBER=?";
@@ -295,6 +295,46 @@ public class DatabaseHelper {
 
 	public void preparedRemove(Course course) {
 		String sql = "DELETE FROM courses WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		 sql = "DELETE FROM chats WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM assignments WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM enrolment WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM submissions WHERE COURSENUMBER=?";
 		try {
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, course.getCourseId());
@@ -857,6 +897,69 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 		return results;
+	}
+
+	public void preparedAdd(Chat chat) {
+		String sql = "INSERT INTO chats VALUES (Default, ?, ?, ?)";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, chat.getCoursenum());
+			statement.setString(2, chat.getSender());
+			statement.setString(3, chat.getMessage());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	Vector<Chat> listChat(Course course) {
+
+		try {
+			String sql = "SELECT * FROM chats WHERE COURSENUMBER=" + course.getCourseId();
+
+			Vector<Chat> listofChat = new Vector<Chat>();
+
+			statement = connection.prepareStatement(sql);
+			ResultSet chats = statement.executeQuery(sql);
+
+			while (chats.next()) {
+				Chat temp = new Chat(chats.getInt("COURSENUMBER"), chats.getString("SENDER"),
+						chats.getString("MESSAGE"));
+				listofChat.add(temp);
+			}
+			chats.close();
+			return listofChat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	Vector<Chat> listChat(Chat chat) {
+
+		try {
+			String sql = "SELECT * FROM chats WHERE COURSENUMBER=" + chat.getCoursenum();
+
+			Vector<Chat> listofChat = new Vector<Chat>();
+
+			statement = connection.prepareStatement(sql);
+			ResultSet chats = statement.executeQuery(sql);
+
+			while (chats.next()) {
+				Chat temp = new Chat(chats.getInt("COURSENUMBER"), chats.getString("SENDER"),
+						chats.getString("MESSAGE"));
+				listofChat.add(temp);
+			}
+			chats.close();
+			return listofChat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

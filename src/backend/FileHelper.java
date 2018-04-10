@@ -25,7 +25,6 @@ public class FileHelper {
 		String[] path = query.split(".SPLITTER.");
 		String fileName = path[path.length - 2];
 		String fileExt = path[path.length - 1];
-
 		File newFile = new File(fileName + "." + fileExt);
 		try {
 			if (!newFile.exists()) {
