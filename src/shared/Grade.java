@@ -54,6 +54,10 @@ public class Grade implements Serializable {
 		this.assignName = assignName;
 	}
 
+	/**
+	 * getters and setters
+	 * 
+	 */
 	public int getStudentId() {
 		return studentId;
 	}

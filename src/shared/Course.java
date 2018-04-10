@@ -1,6 +1,7 @@
 package shared;
 
 import java.io.Serializable;
+
 /**
  * 
  * @author William Ehman
@@ -52,6 +53,7 @@ public class Course implements Serializable {
 		this.courseName = null;
 		this.active = false;
 	}
+
 	/**
 	 * Constructor for course
 	 * 
@@ -102,7 +104,7 @@ public class Course implements Serializable {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	
+
 	public String toString() {
 		return this.courseId + ": " + this.courseName;
 	}

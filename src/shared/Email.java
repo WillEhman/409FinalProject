@@ -54,6 +54,7 @@ public class Email implements Serializable {
 	 * @param subject
 	 * @param content
 	 * @param pw
+	 *            is password
 	 */
 	public Email(String from, ArrayList<String> to, String subject, String content, String pw) {
 		this.from = from;

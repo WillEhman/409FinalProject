@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @since April 5 2018
  * @version 1.0
  * 
- * Contains login information class
+ *          Contains login information class
  */
 
 public class LoginInfo implements Serializable {
@@ -19,7 +19,7 @@ public class LoginInfo implements Serializable {
 	 * serial ID
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * username of user
 	 */
@@ -37,10 +37,11 @@ public class LoginInfo implements Serializable {
 		this.username = null;
 		this.password = null;
 	}
-	
+
 	/**
 	 *
 	 * Constructor for loginInfo
+	 * 
 	 * @param username
 	 * @param password
 	 */

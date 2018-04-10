@@ -1,6 +1,7 @@
 package shared;
 
 import java.io.Serializable;
+
 /**
  * 
  * @author William Ehman
@@ -53,6 +54,9 @@ public class Assignment implements Serializable {
 	 */
 	private byte[] fileData;
 
+	/**
+	 * Constructor for Assignment
+	 */
 	public Assignment() {
 		assignId = 0;
 		courseId = 0;
@@ -159,14 +163,14 @@ public class Assignment implements Serializable {
 	public void setBytes(byte[] file) {
 		this.fileData = file;
 	}
-	
+
 	public String toString() {
 		if (active) {
 			return title + " ----- Due: " + dueDate;
 		} else {
 			return title + " ----- INACTIVE";
 		}
-		
+
 	}
 
 }

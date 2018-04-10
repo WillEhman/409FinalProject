@@ -31,12 +31,19 @@ public class Professor extends User implements Serializable {
 		super(id, firstName, lastName, "P", email);
 	}
 	
+	/**
+	 * Constructs professor from User
+	 * 
+	 * @param user to build Professor from
+	 */
 	public Professor(User user) {
 		super(user.getId(), user.getFirstName(), user.getLastName(), "P", user.getEmailAddress());
 	}
 
+	/**
+	 * Default Constructor
+	 */
 	public Professor() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 
