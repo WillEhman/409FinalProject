@@ -841,16 +841,23 @@ public class ProfessorGUI extends PageNavigator {
 		 * serial id
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
-		 * 
+		 * standard panel and buttons for homepage
 		 */
 		JPanel buttons;
 		JTextArea info;
 		JScrollPane scroll;
 		JButton active;
 
+		/**
+		 * Constructor for HomePage
+		 * 
+		 * @param c
+		 *            is client being used
+		 */
 		public HomePage(Client c) {
+			// Buttons
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
@@ -858,6 +865,7 @@ public class ProfessorGUI extends PageNavigator {
 			info.setText("Course: " + getCurrentCourse().getCourseName() + "\n" + "Course ID: "
 					+ getCurrentCourse().getCourseId() + "\n" + "Active: " + getCurrentCourse().isActive());
 			scroll = new JScrollPane(info);
+			// Toggles course active
 			active = new JButton("Toggle Active");
 			active.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -883,14 +891,36 @@ public class ProfessorGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0
+	 * 
+	 *          Updates current selected course
+	 * 
+	 */
 	private class CourseListListener implements ListSelectionListener {
 
+		/**
+		 * Display of pagenavigator
+		 */
 		PageNavigator display;
 
+		/**
+		 * Constructor
+		 * 
+		 * @param disp
+		 */
 		public CourseListListener(PageNavigator disp) {
 			display = disp;
 		}
 
+		/**
+		 * changes course displayed if value of selected course changed
+		 */
 		public void valueChanged(ListSelectionEvent e) {
 			setCurrentCourse();
 			setCourseName(getCurrentCourse().getCourseName());
@@ -912,14 +942,35 @@ public class ProfessorGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0
+	 * 
+	 * Drop down menu listener
+	 * 
+	 */
 	private class BoxListener implements ActionListener {
 
+		/**
+		 * display
+		 */
 		PageNavigator display;
 
+		/**
+		 * Constructor for BoxListener
+		 * @param disp
+		 */
 		public BoxListener(PageNavigator disp) {
 			display = disp;
 		}
 
+		/**
+		 * changes display when drop down selection changes
+		 */
 		public void actionPerformed(ActionEvent e) {
 			JComboBox c = (JComboBox) e.getSource();
 			String selected = (String) c.getSelectedItem();
