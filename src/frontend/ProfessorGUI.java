@@ -379,7 +379,7 @@ public class ProfessorGUI extends PageNavigator {
 					currentStudent = null;
 				}
 			} else {
-				String[] temp = {"No Students Found"};
+				String[] temp = { "No Students Found" };
 				info.setListData(temp);
 			}
 		}
@@ -890,6 +890,10 @@ public class ProfessorGUI extends PageNavigator {
 		 *            is client being used
 		 */
 		public HomePage(Client c) {
+			display(c);
+		}
+		
+		public void display(Client c) {
 			// Buttons
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
@@ -908,10 +912,12 @@ public class ProfessorGUI extends PageNavigator {
 							"Change Course Active State to " + !temp.isActive(), "Toggle Active State", dialogButton);
 					if (dialogResult == 0) {
 						temp.setActive(!temp.isActive());
-						Message<Course> message = new Message<Course>(temp, "UPDATECOURSE");
+						Message<Course> message = new Message<Course>(temp, "TOGGLECOURSE");
 						try {
 							Message<?> receive = c.communicate(message);
-							setCourses((Vector<Course>) receive.getObject());
+							getCourses().setSelectedIndex(getCourseIndex());
+							setCourses((Vector<Course>) receive.getObject(), getCourseIndex());
+							display(c);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

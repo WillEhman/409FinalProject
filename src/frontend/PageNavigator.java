@@ -168,6 +168,25 @@ public class PageNavigator {
 			currentCourse = null;
 		}
 	}
+	
+	public void setCourses(Vector<Course> v, int index) {
+		vectorOfCourses = v;
+		String[] temp = new String[v.size()];
+		for (int i = 0; i < temp.length; i++) {
+			temp[i] = v.get(i).toString();
+			System.out.println(temp[i]);
+		}
+		courses.setListData(temp);
+		try {
+			currentCourse = vectorOfCourses.get(index);
+		} catch (ArrayIndexOutOfBoundsException e) {
+			currentCourse = null;
+		}
+	}
+	
+	public JList<String> getCourses() {
+		return courses;
+	}
 
 	public void setCourseListener(ListSelectionListener l) {
 		courses.addListSelectionListener(l);
@@ -203,24 +222,13 @@ public class PageNavigator {
 		DefaultComboBoxModel model = new DefaultComboBoxModel(s);
 		selection.setModel(model);
 	}
-
-	public void showPage(String page) {
-
-	}
-
-	public void addPage(JPanel page, String name) {
-
-	}
-
-	public void removePage(String page) {
-
-	}
-
-	public JPanel searchPage(String page) {
-		return null;
-	}
-
-	public JPanel getPageHolder() {
-		return pageHolder;
+	
+	public int getCourseIndex() {
+		for (int i = 0; i < vectorOfCourses.size(); i++) {
+			if (currentCourse.getCourseId() == vectorOfCourses.get(i).getCourseId()) {
+				return i;
+			}
+		}
+		return 0;
 	}
 }
