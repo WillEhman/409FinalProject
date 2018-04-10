@@ -205,12 +205,17 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
 					Course newcourse = (Course) inMessage.getObject();
-					database.preparedAdd(newcourse);
+					boolean result = database.preparedAdd(newcourse);
 
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses(newcourse.getProfId());
 					System.out.println(cVector);
-					Message<?> outMessage = new Message<Vector<Course>>(cVector, "ADDCOURSE");
+					Message<?> outMessage;
+					if (result) {
+						outMessage = new Message<Vector<Course>>(cVector, "Success");
+					} else {
+						outMessage = new Message<Vector<Course>>(cVector, "Failure");
+					}
 					out.writeObject(outMessage);
 				}
 
@@ -334,11 +339,17 @@ public class Worker implements Runnable {
 					Submission s = (Submission) inMessage.getObject();
 					byte[] input = s.getData();
 					database.preparedAdd(s);
-					fileManager.writeFileContent(input, inMessage.getQuery());
+					boolean result = fileManager.writeFileContent(input, inMessage.getQuery());
 
 					Vector<Submission> aVector = database.listSubmissions(s, s.getStudentId());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Submission>>(aVector, "SUBMISSIONLIST");
+
+					Message<?> outMessage;
+					if (result) {
+						outMessage = new Message<Vector<Submission>>(aVector, "Success");
+					} else {
+						outMessage = new Message<Vector<Submission>>(aVector, "Failure");
+					}
 					out.writeObject(outMessage);
 
 				}
@@ -386,12 +397,17 @@ public class Worker implements Runnable {
 					Assignment a = (Assignment) inMessage.getObject();
 					byte[] input = a.getBytes();
 					database.preparedAdd(a);
-					fileManager.writeFileContent(input, inMessage.getQuery());
+					boolean result = fileManager.writeFileContent(input, inMessage.getQuery());
 
 					Vector<Assignment> aVector = new Vector<Assignment>();
 					aVector = database.listAssignmentsProf(a.getCourseId());
 					System.out.println(aVector);
-					Message<?> outMessage = new Message<Vector<Assignment>>(aVector, "CREATEFILE");
+					Message<?> outMessage;
+					if (result) {
+						outMessage = new Message<Vector<Assignment>>(aVector, "Success");
+					} else {
+						outMessage = new Message<Vector<Assignment>>(aVector, "Failure");
+					}
 					out.writeObject(outMessage);
 				}
 
@@ -399,8 +415,15 @@ public class Worker implements Runnable {
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Assignment a = (Assignment) inMessage.getObject();// Should contain path i.e (test.txt)
 					String path = a.getPath();
-					byte[] data = fileManager.readFileContent(path);
-					Message<?> outMessage = new Message<byte[]>(data, "READFILE");
+					byte[] data = null;
+					Message<?> outMessage;
+					try {
+						data = fileManager.readFileContent(path);
+						outMessage = new Message<byte[]>(data, "Success");
+					} catch (Exception e) {
+						e.printStackTrace();
+						outMessage = new Message<byte[]>(data, "Failure");
+					}
 					out.writeObject(outMessage);
 					System.out.println("Message sent back");
 				}

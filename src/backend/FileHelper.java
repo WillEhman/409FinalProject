@@ -21,7 +21,7 @@ public class FileHelper {
 
 	// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
 	// Should contain data in object in form byte[]
-	void writeFileContent(byte[] input, String query) throws IOException {
+	boolean writeFileContent(byte[] input, String query) throws IOException {
 		String[] path = query.split(".SPLITTER.");
 		String fileName = path[path.length - 2];
 		String fileExt = path[path.length - 1];
@@ -36,8 +36,10 @@ public class FileHelper {
 			BufferedOutputStream bos = new BufferedOutputStream(fos);
 			bos.write(input);
 			bos.close();
+			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
