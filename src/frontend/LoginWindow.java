@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -60,8 +61,76 @@ public class LoginWindow extends JFrame {
 				login();
 			}
 		});
-		buttons.add(b); // TODO: add action listener to send username and pass to server
+		
+		JButton register = new JButton("Register");
+		register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame options = new JFrame("New Account");
+				JTextField cidF = new JTextField(5);
+				JTextField cNameF = new JTextField(5);
+				JPanel title = new JPanel();
+				JPanel info = new JPanel();
+				JPanel buttons = new JPanel();
+				JRadioButton prof, student;
+				ButtonGroup radios = new ButtonGroup();
+				prof = new JRadioButton("Professor");
+				student = new JRadioButton("Student");
+				student.setSelected(true);
+				radios.add(prof);
+				radios.add(student);
+				options.setLayout(new BorderLayout());
+				title.add(new JLabel("Create a New Account"));
+				info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+				info.add(new JLabel("Username:"));
+				info.add(cidF);
+				info.add(new JLabel("Password:"));
+				info.add(cNameF);
+				options.add("North", title);
+				options.add("Center", info);
+				JButton confirm = new JButton("Confirm");
+				confirm.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						try {
+							if (student.isSelected()) {
+//								Student newStudent = new Student(Integer.parseInt(cidF.getText()), professor.getId(),
+//										cNameF.getText(), true);
+//								Message<Student> message = new Message<Student>(newStudent, "ADDSTUDENT");
+//								Message<?> recieve = client.communicate(message);
+								options.dispose();
+							} else {
+//								Professor newProf = new Professor(Integer.parseInt(cidF.getText()), professor.getId(),
+//										cNameF.getText(), true);
+//								Message<Professor> message = new Message<Professor>(newProf, "ADDPROFESSOR");
+//								Message<?> recieve = client.communicate(message);
+								options.dispose();
+							}
+						} catch (NumberFormatException e) {
+							JOptionPane.showMessageDialog(null, "Invalid Course ID");
+						}
 
+					}
+				});
+				JButton cancel = new JButton("Cancel");
+				cancel.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						options.dispose();
+					}
+				});
+				buttons.setLayout(new FlowLayout());
+				buttons.add(student);
+				buttons.add(prof);
+				buttons.add(confirm);
+				buttons.add(cancel);
+				options.add("South", buttons);
+				options.setSize(350, 200);
+				options.setResizable(false);
+				options.setLocationByPlatform(true);
+				options.setVisible(true);
+			}
+		});
+		
+		buttons.add(b);
+		buttons.add(register);
 		frame.add("North", title);
 		frame.add("Center", main);
 		frame.add("South", buttons);
