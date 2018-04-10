@@ -104,8 +104,12 @@ public class ProfessorGUI extends PageNavigator {
 										cNameF.getText(), true);
 								Message<Course> message = new Message<Course>(newCourse, "ADDCOURSE");
 								Message<?> recieve = client.communicate(message);
-								setCourses((Vector<Course>) recieve.getObject());
-								options.dispose();
+								if (recieve.getQuery().equals("Success")) {
+									setCourses((Vector<Course>) recieve.getObject());
+									options.dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "Error Adding Course: Name or ID in Use");
+								}
 							} else {
 								JOptionPane.showMessageDialog(null, "Invalid Course ID");
 							}
@@ -362,16 +366,21 @@ public class ProfessorGUI extends PageNavigator {
 		 */
 		public void setStudents(Vector<User> v) {
 			studentVector = v;
-			String[] temp = new String[v.size()];
-			for (int i = 0; i < temp.length; i++) {
-				temp[i] = v.get(i).toString();
-				System.out.println(temp[i]);
-			}
-			info.setListData(temp);
-			try {
-				currentStudent = v.get(0);
-			} catch (ArrayIndexOutOfBoundsException e) {
-				currentStudent = null;
+			if (studentVector.size() > 0) {
+				String[] temp = new String[v.size()];
+				for (int i = 0; i < temp.length; i++) {
+					temp[i] = v.get(i).toString();
+					System.out.println(temp[i]);
+				}
+				info.setListData(temp);
+				try {
+					currentStudent = v.get(0);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					currentStudent = null;
+				}
+			} else {
+				String[] temp = {"No Students Found"};
+				info.setListData(temp);
 			}
 		}
 
@@ -548,7 +557,9 @@ public class ProfessorGUI extends PageNavigator {
 					options.setLayout(new BorderLayout());
 					title.add(new JLabel("Create a New Assignment"));
 					info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-					info.add(new JLabel("Assignment ID:"));
+					info.add(new JLabel("Assignment Number:"));
+					aidF.setText("" + (assignVector.size() + 1));
+					aidF.setEnabled(false);
 					info.add(aidF);
 					info.add(new JLabel("Assignment Title:"));
 					info.add(titleF);
@@ -569,12 +580,20 @@ public class ProfessorGUI extends PageNavigator {
 											getCurrentCourse().getCourseId(), titleF.getText(), pathF.getText(), true,
 											dueF.getText(), readFileContent(pathF.getText()));
 									String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
-									Message<Assignment> message = new Message<Assignment>(newAssign,
-											"CREATEFILE.SPLITTER." + path[path.length - 2] + ".SPLITTER."
-													+ path[path.length - 1]);
-									Message<?> receive = c.communicate(message);
-									setAssignments((Vector<Assignment>) receive.getObject());
-									options.dispose();
+									try {
+										Message<Assignment> message = new Message<Assignment>(newAssign,
+												"CREATEFILE.SPLITTER." + path[path.length - 2] + ".SPLITTER."
+														+ path[path.length - 1]);
+										Message<?> receive = c.communicate(message);
+										if (receive.getQuery().equals("Success")) {
+											setAssignments((Vector<Assignment>) receive.getObject());
+											options.dispose();
+										} else {
+											JOptionPane.showMessageDialog(null, "Error Uploading File");
+										}
+									} catch (ArrayIndexOutOfBoundsException e) {
+										e.printStackTrace();
+									}
 								} else {
 									JOptionPane.showMessageDialog(null, "Invalid Course ID");
 								}
@@ -659,10 +678,14 @@ public class ProfessorGUI extends PageNavigator {
 				public void actionPerformed(ActionEvent arg0) {
 					Message<Submission> message = new Message<Submission>(currentSub, "VIEWSUBMISSION");
 					Message<?> receive = c.communicate(message);
-					try {
-						writeFileContent((byte[]) receive.getObject(), currentSub);
-					} catch (IOException e) {
-						e.printStackTrace();
+					if (receive.getQuery().equals("Success")) {
+						try {
+							writeFileContent((byte[]) receive.getObject(), currentSub);
+						} catch (IOException e) {
+							JOptionPane.showMessageDialog(null, "Error Downloading File");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Error Downloading File");
 					}
 				}
 			});
@@ -757,7 +780,7 @@ public class ProfessorGUI extends PageNavigator {
 				BufferedInputStream bos = new BufferedInputStream(fis);
 				bos.read(content, 0, (int) length);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unable to Find File");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -960,7 +983,7 @@ public class ProfessorGUI extends PageNavigator {
 	 * @since April 6, 2018
 	 * @version 1.0
 	 * 
-	 * Drop down menu listener
+	 *          Drop down menu listener
 	 * 
 	 */
 	private class BoxListener implements ActionListener {
@@ -972,6 +995,7 @@ public class ProfessorGUI extends PageNavigator {
 
 		/**
 		 * Constructor for BoxListener
+		 * 
 		 * @param disp
 		 */
 		public BoxListener(PageNavigator disp) {

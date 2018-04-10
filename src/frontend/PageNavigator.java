@@ -182,6 +182,10 @@ public class PageNavigator {
 			currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
 		}
 	}
+	
+	public void setCurrentCourse(Course c) {
+		currentCourse = c;
+	}
 
 	public Course getCurrentCourse() {
 		return currentCourse;

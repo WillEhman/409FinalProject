@@ -77,13 +77,13 @@ public class StudentGUI extends PageNavigator {
 			this.setLayout(new BorderLayout());
 			info = new JTextArea();
 			info.setText("Course: " + getCurrentCourse().getCourseName() + "\n" + "Course ID: "
-					+ getCurrentCourse().getCourseId() + "\n" + "Professor: Dr. "
-					+ currentProf.getFirstName() + " " + currentProf.getLastName());
+					+ getCurrentCourse().getCourseId() + "\n" + "Professor: Dr. " + currentProf.getFirstName() + " "
+					+ currentProf.getLastName());
 			scroll = new JScrollPane(info);
 			email = new JButton("Email Professor");
 			email.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					 mail(currentProf.getEmailAddress(), student.getEmailAddress(), c);
+					mail(currentProf.getEmailAddress(), student.getEmailAddress(), c);
 				}
 			});
 			buttons.add(email);
@@ -122,7 +122,7 @@ public class StudentGUI extends PageNavigator {
 				public void actionPerformed(ActionEvent arg0) {
 					if (subF.getText() != null && contF.getText() != null) {
 						ArrayList<String> toArray = new ArrayList<String>();
-						 toArray.add(to);
+						toArray.add(to);
 						Email temp = new Email(from, toArray, subF.getText(), contF.getText(), passF.getText());
 						Message<Email> message = new Message<Email>(temp, "SENDEMAIL");
 						Message<?> recieve = c.communicate(message);
@@ -203,7 +203,7 @@ public class StudentGUI extends PageNavigator {
 					confirm.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							try {
-								Submission newSub = new Submission(0,getCurrentCourse().getCourseId(),
+								Submission newSub = new Submission(0, getCurrentCourse().getCourseId(),
 										currentAssignment.getAssignId(), student.getId(), pathF.getText(), 0, " ",
 										titleF.getText(), dueF.getText(), readFileContent(pathF.getText()));
 								String[] path = pathF.getText().split("\\.(?=[^\\.]+$)");
@@ -211,9 +211,13 @@ public class StudentGUI extends PageNavigator {
 										"UPLOADSUBMISSION.SPLITTER." + path[path.length - 2] + ".SPLITTER."
 												+ path[path.length - 1]);
 								Message<?> receive = c.communicate(message);
-								setSubmissions((Vector<Submission>) receive.getObject());
-								setButtons();
-								options.dispose();
+								if (receive.getQuery().equals("Success")) {
+									setSubmissions((Vector<Submission>) receive.getObject());
+									setButtons();
+									options.dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "Error Uploading File");
+								}
 							} catch (NumberFormatException e) {
 								JOptionPane.showMessageDialog(null, "Invalid Course ID");
 							} catch (IOException e) {
@@ -265,10 +269,14 @@ public class StudentGUI extends PageNavigator {
 				public void actionPerformed(ActionEvent arg0) {
 					Message<Assignment> message = new Message<Assignment>(currentAssignment, "READFILE");
 					Message<?> receive = c.communicate(message);
-					try {
-						writeFileContent((byte[]) receive.getObject(), currentAssignment);
-					} catch (IOException e) {
-						e.printStackTrace();
+					if (receive.getQuery().equals("Success")) {
+						try {
+							writeFileContent((byte[]) receive.getObject(), currentAssignment);
+						} catch (IOException e) {
+							JOptionPane.showMessageDialog(null, "Error Downloading File");
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Error Downloading File");
 					}
 				}
 			});
@@ -335,7 +343,7 @@ public class StudentGUI extends PageNavigator {
 				BufferedInputStream bos = new BufferedInputStream(fis);
 				bos.read(content, 0, (int) length);
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Unable to Find File");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -400,7 +408,7 @@ public class StudentGUI extends PageNavigator {
 			} else if (selected.equals("Assignments")) {
 				AssignmentPage p = new AssignmentPage(display.getClient());
 				displayPage(p);
-			} 
+			}
 		}
 	}
 }
