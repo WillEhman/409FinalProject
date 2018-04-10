@@ -232,6 +232,19 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "UPDATECOURSE");
 					out.writeObject(outMessage);
 				}
+				
+				if (inMessage.getQuery().equals("TOGGLECOURSE")
+						&& inMessage.getObject().getClass().toString().contains("Course")) {
+
+					Course courseToUpdate = (Course) inMessage.getObject();
+					database.preparedToggle(courseToUpdate);
+					
+					Vector<Course> cVector = new Vector<Course>();
+					cVector = database.listCourses(courseToUpdate.getProfId());
+					System.out.println(cVector);
+					Message<?> outMessage = new Message<Vector<Course>>(cVector, "UPDATECOURSE");
+					out.writeObject(outMessage);
+				}
 
 				if (inMessage.getQuery().equals("REMOVECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
