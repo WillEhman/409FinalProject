@@ -149,6 +149,24 @@ public class DatabaseHelper {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getAdminPW() {
+		String sql = "SELECT * FROM users WHERE ID= ?";
+		ResultSet user;
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, 0);
+			user = statement.executeQuery();
+
+			if (user.next()) {
+				return user.getString("PASSWORD");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public void preparedAdd(Course course) {
 		// System.out.println("Adding Course");
@@ -761,8 +779,6 @@ public class DatabaseHelper {
 	Vector<Submission> listSubmissions(Submission submission, int studentid) {
 
 		try {
-			// String sql1 = "SELECT * FROM submissions WHERE ASSIGNMENTID=1 AND
-			// COURSENUMBER=453";
 			String sql2 = "SELECT * FROM submissions WHERE ASSIGNMENTID=" + submission.getAssignId()
 					+ " AND COURSENUMBER=" + submission.getCourseId() + " AND STUDENTID=" + studentid;
 
@@ -818,6 +834,14 @@ public class DatabaseHelper {
 		System.out.println(v);
 		Course c = new Course(453, 1, "", true);
 		Vector<Assignment> av = masterDB.listAssignmentsStudent(c);
+		
+		String s = masterDB.getAdminPW();
+		try {
+		System.out.println(s);
+		System.out.println(s.equals("adminPW"));
+		}catch (NullPointerException n) {
+			n.printStackTrace();
+		}
 		/*
 		 * System.out.println();
 		 * System.out.println("Reading all courses from the table:");
