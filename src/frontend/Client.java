@@ -9,13 +9,27 @@ import shared.Message;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
+ * 
+ *          Client for client-server communication
  *
  */
 public class Client implements Serializable {
+	/**
+	 * Standard sockets and input/output streams
+	 */
 	public Socket socket;
 	public ObjectInputStream in;
 	public ObjectOutputStream out;
 
+	/**
+	 * Constructor for client
+	 * 
+	 * @param serverIp
+	 * @param port
+	 * @throws IOException
+	 */
 	public Client(String serverIp, int port) throws IOException {
 
 		try {
@@ -33,6 +47,13 @@ public class Client implements Serializable {
 
 	}
 
+	/**
+	 * Communicate facilitates client server communication
+	 * 
+	 * @param message
+	 *            is message received
+	 * @return message received
+	 */
 	public Message<?> communicate(Message<?> message) {
 		System.out.println("Starting Communication");
 		try {
@@ -74,11 +95,6 @@ public class Client implements Serializable {
 	// }
 	//
 	// }
-
-	public File getFile(String path) {
-		// TODO
-		return null;
-	}
 
 	// public static void main(String[] args) throws IOException {
 	// Client client = new Client("localhost", 9090);

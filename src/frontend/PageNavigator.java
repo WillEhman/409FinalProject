@@ -12,28 +12,65 @@ import javax.swing.event.ListSelectionListener;
 import frontend.Client;
 import shared.Course;
 import shared.User;
+
 /**
  * 
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
  *
+ *          class to display and navigate pages within GUIs
  */
 public class PageNavigator {
 
+	/**
+	 * JFrames and JPanels to be displayed
+	 */
 	protected JFrame frame;
 	private JPanel pageHolder;
 	private JPanel coursePanel;
 	private JPanel infoPanel;
+
+	/**
+	 * list of courses to be displayed
+	 */
 	private JList<String> courses;
+
+	/**
+	 * label of current course
+	 */
 	private JLabel courseName;
+
+	/**
+	 * currently selected String on display
+	 */
 	private JComboBox<String> selection;
+
+	/**
+	 * vector of courses to be displayed
+	 */
 	private Vector<Course> vectorOfCourses;
+
+	/**
+	 * currently selected course
+	 */
 	private Course currentCourse;
+
+	/**
+	 * Client currently in use with PageNavigator
+	 */
 	private Client client;
 
+	/**
+	 * Constructor for PageNavigator
+	 * 
+	 * @param c
+	 *            is client in use
+	 */
 	public PageNavigator(Client c) {
-		//Initialize the panels and frame
+		// Initialize the panels and frame
 		client = c;
 		frame = new JFrame();
 		coursePanel = new JPanel();
@@ -41,17 +78,17 @@ public class PageNavigator {
 		JPanel title = new JPanel();
 		JPanel infoTitle = new JPanel();
 		pageHolder = new JPanel();
-		
-		//Set layouts
+
+		// Set layouts
 		frame.setLayout(new BorderLayout());
-//		frame.getContentPane().setBackground(Color.CYAN); TODO make this work maybe
+		// frame.getContentPane().setBackground(Color.CYAN); TODO make this work maybe
 		title.setLayout(new FlowLayout());
 		infoPanel.setLayout(new BorderLayout());
 		infoTitle.setLayout(new BorderLayout());
 		coursePanel.setLayout(new BoxLayout(coursePanel, BoxLayout.Y_AXIS));
 		pageHolder.setLayout(new FlowLayout());
-		
-		//Setup Courses Panel
+
+		// Setup Courses Panel
 		JLabel cTitle = new JLabel("Your Courses");
 		courses = new JList();
 		JScrollPane cScroll = new JScrollPane(courses);
@@ -59,40 +96,34 @@ public class PageNavigator {
 		coursePanel.add(cTitle);
 		coursePanel.add(cScroll);
 		coursePanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-		
-		//Setup Info Panel
+
+		// Setup Info Panel
 		pageHolder.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
 		courseName = new JLabel("      Select a Course");
-		String[] options = {"Home"};
+		String[] options = { "Home" };
 		selection = new JComboBox<String>(options);
 		infoTitle.add("West", selection);
 		infoTitle.add("Center", courseName);
 		infoPanel.add("North", infoTitle);
 		infoPanel.add("Center", pageHolder);
 		infoPanel.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY));
-		
-		//Display the frame
+
+		// Display the frame
 		frame.add("North", title);
 		frame.add("West", coursePanel);
 		frame.add("Center", infoPanel);
-		frame.setSize(1000,600);
+		frame.setSize(1000, 600);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 	}
-	
-	public void setFrameText(String s) {
-		frame.setTitle(s);
-	}
-	
-	public Client getClient() {
-		return client;
-	}
-	
-	public void setVisible(boolean b) {
-		frame.setVisible(b);
-	}
-	
+
+	/**
+	 * Displays a page
+	 * 
+	 * @param p
+	 *            is page being displayed
+	 */
 	public void displayPage(JPanel p) {
 		infoPanel.remove(pageHolder);
 		pageHolder.removeAll();
@@ -102,10 +133,27 @@ public class PageNavigator {
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Getters and setters
+	 * 
+	 * @param s
+	 */
+	public void setFrameText(String s) {
+		frame.setTitle(s);
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setVisible(boolean b) {
+		frame.setVisible(b);
+	}
+
 	public JPanel getCoursePanel() {
 		return coursePanel;
 	}
-	
+
 	public void setCourses(Vector<Course> v) {
 		vectorOfCourses = v;
 		String[] temp = new String[v.size()];
@@ -120,52 +168,52 @@ public class PageNavigator {
 			currentCourse = null;
 		}
 	}
-	
+
 	public void setCourseListener(ListSelectionListener l) {
 		courses.addListSelectionListener(l);
 	}
-	
+
 	public void setBoxListener(ActionListener a) {
 		selection.addActionListener(a);
 	}
-	
+
 	public void setCurrentCourse() {
 		if (courses.getSelectedIndex() >= 0) {
 			currentCourse = vectorOfCourses.get(courses.getSelectedIndex());
 		}
 	}
-	
+
 	public Course getCurrentCourse() {
 		return currentCourse;
 	}
-	
+
 	public void setCourseName(String name) {
-		courseName.setText("      "+name);
+		courseName.setText("      " + name);
 	}
-	
+
 	public void setComboBox(int i) {
 		selection.setSelectedIndex(i);
 	}
-	
+
 	public void setSelections(String[] s) {
 		DefaultComboBoxModel model = new DefaultComboBoxModel(s);
 		selection.setModel(model);
 	}
 
 	public void showPage(String page) {
-		// TODO
+
 	}
 
 	public void addPage(JPanel page, String name) {
-		// TODO
+
 	}
 
 	public void removePage(String page) {
-		// TODO
+
 	}
 
 	public JPanel searchPage(String page) {
-		return null; // TODO: Set later
+		return null;
 	}
 
 	public JPanel getPageHolder() {

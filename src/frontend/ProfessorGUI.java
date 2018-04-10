@@ -24,29 +24,58 @@ import javax.swing.event.ListSelectionListener;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
- *
+ * @since April 6, 2018
+ * @version 1.0
+ * 
  */
 public class ProfessorGUI extends PageNavigator {
 
+	/**
+	 * client currently in use
+	 */
 	private Client client;
+
+	/**
+	 * current Professor in use
+	 */
 	private Professor professor;
+
+	/**
+	 * buttons to add and remove courses
+	 */
 	private JButton add, remove;
 
+	/**
+	 * constructor for ProfessorGUI
+	 * 
+	 * @param user
+	 *            is user of ProfessorGUI
+	 * @param client
+	 *            is client aggregated by ProfessorGUI
+	 */
 	public ProfessorGUI(User user, Client client) {
 		super(client);
+
+		// Set up GUI with professor name
 		setCourseListener(new CourseListListener(this));
 		setBoxListener(new BoxListener(this));
 		professor = new Professor(user);
 		super.setFrameText("Course Manager 2018: " + professor.getFirstName() + " " + professor.getLastName());
+
+		// Retrieve course list for the professor
 		System.out.println("Creating Message");
 		Message<Professor> message = new Message<Professor>(professor, "COURSELIST");
 		System.out.println("Sending Message");
 		Message<?> recieve = client.communicate(message);
 		setCourses((Vector<Course>) recieve.getObject());
 		System.out.println("Got Message");
+
+		// Create button to add new courses
 		add = new JButton("Add");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
+				// New window and fields for when course is getting added
 				JFrame options = new JFrame("New Course");
 				JTextField cidF = new JTextField(5);
 				JTextField cNameF = new JTextField(5);
@@ -62,7 +91,11 @@ public class ProfessorGUI extends PageNavigator {
 				info.add(cNameF);
 				options.add("North", title);
 				options.add("Center", info);
+
+				// Button to confirm addition of new course
 				JButton confirm = new JButton("Confirm");
+
+				// Appending course list when new course is confirmed
 				confirm.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						try {
@@ -82,6 +115,8 @@ public class ProfessorGUI extends PageNavigator {
 
 					}
 				});
+
+				// Cancels addition of new course
 				JButton cancel = new JButton("Cancel");
 				cancel.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
@@ -98,14 +133,20 @@ public class ProfessorGUI extends PageNavigator {
 				options.setVisible(true);
 			}
 		});
+
+		// Button to remove selected course
 		remove = new JButton("Remove");
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Course temp = getCurrentCourse();
+
+					// confirmation window
 					int dialogButton = JOptionPane.YES_NO_OPTION;
 					int dialogResult = JOptionPane.showConfirmDialog(null, "Remove " + temp.toString() + "?",
 							"Remove Course", dialogButton);
+
+					// Remove the course
 					if (dialogResult == 0) {
 						Message<Course> message = new Message<Course>(temp, "REMOVECOURSE");
 						Message<?> receive = client.communicate(message);
@@ -127,26 +168,63 @@ public class ProfessorGUI extends PageNavigator {
 		super.setVisible(true);
 	}
 
+	/**
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0 page displaying students currently enrolled in a course
+	 */
 	private class StudentPage extends JPanel {
 
+		/**
+		 * serial id
+		 */
 		private static final long serialVersionUID = 1L;
+
+		/**
+		 * buttons, lists and panes for the window
+		 */
 		JPanel buttons;
 		JList<String> info;
 		JScrollPane scroll;
 		JButton enroll, unenroll, search, refresh, eStudent, eAll;
-		JTextField searchBar;
 		JRadioButton id, lName;
 		ButtonGroup radios;
+
+		/**
+		 * Used to search for students
+		 */
+		JTextField searchBar;
+
+		/**
+		 * Vector of students
+		 */
 		private Vector<User> studentVector;
+
+		/**
+		 * currently selected student
+		 */
 		private User currentStudent;
 
+		/**
+		 * Constructor for StudentPage
+		 * 
+		 * @param c
+		 *            client currently in use
+		 * @param display
+		 */
 		public StudentPage(Client c, PageNavigator display) {
+
+			// Initialize buttons
 			buttons = new JPanel();
 			radios = new ButtonGroup();
 			buttons.setLayout(new FlowLayout());
 			this.setLayout(new BorderLayout());
 			info = new JList();
 			scroll = new JScrollPane(info);
+
+			// Button to enroll a new student in that course
 			enroll = new JButton("Enroll");
 			enroll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -163,6 +241,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Unenrolls a student from a course
 			unenroll = new JButton("Unenroll");
 			unenroll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -177,9 +257,13 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Search for students in a course
 			search = new JButton("Search");
 			search.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+
+					// Search by id
 					if (id.isSelected()) {
 						try {
 							Integer.parseInt(searchBar.getText());
@@ -193,6 +277,8 @@ public class ProfessorGUI extends PageNavigator {
 							JOptionPane.showMessageDialog(null, "Invalid ID");
 						}
 					} else if (lName.isSelected()) {
+						// Search by name
+
 						if (searchBar.getText() != null) {
 							Message<Course> message = new Message<Course>(getCurrentCourse(),
 									"SEARCHSTUDENTSLN.SPLITTER." + searchBar.getText());
@@ -202,6 +288,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Shows all students after a search
 			refresh = new JButton("Show All");
 			refresh.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -210,6 +298,8 @@ public class ProfessorGUI extends PageNavigator {
 					setStudents((Vector<User>) receive.getObject());
 				}
 			});
+
+			// Allows for selection of an object
 			info.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
@@ -218,18 +308,24 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Button to email selected student
 			eStudent = new JButton("Email Student");
 			eStudent.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					mail(currentStudent.getEmailAddress(), professor.getEmailAddress(), c);
 				}
 			});
+
+			// Button to email whole class
 			eAll = new JButton("Email Class");
 			eAll.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					mail("All", professor.getEmailAddress(), c);
 				}
 			});
+
+			// Clean up any changed variables, finish construction
 			eStudent.setEnabled(false);
 			unenroll.setEnabled(false);
 			searchBar = new JTextField(10);
@@ -254,6 +350,12 @@ public class ProfessorGUI extends PageNavigator {
 			setStudents((Vector<User>) receive.getObject());
 		}
 
+		/**
+		 * Sets students enrolled in class from list of users
+		 * 
+		 * @param v
+		 *            is list of users
+		 */
 		public void setStudents(Vector<User> v) {
 			studentVector = v;
 			String[] temp = new String[v.size()];
@@ -268,7 +370,10 @@ public class ProfessorGUI extends PageNavigator {
 				currentStudent = null;
 			}
 		}
-		
+
+		/**
+		 * enables/disables buttons
+		 */
 		public void setButtons() {
 			if (currentStudent != null) {
 				eStudent.setEnabled(true);
@@ -278,17 +383,34 @@ public class ProfessorGUI extends PageNavigator {
 				unenroll.setEnabled(false);
 			}
 		}
-		
+
+		/**
+		 * Sends an email
+		 * 
+		 * @param to
+		 *            is email address of receiver
+		 * @param from
+		 *            is email address of sender
+		 * @param c
+		 *            is client sending email to server
+		 */
 		public void mail(String to, String from, Client c) {
+			// Button to send the email
 			JFrame options = new JFrame("Send an Email");
+
+			// Initialize text fields for email data
 			JTextField subF = new JTextField(5);
 			JTextField toF = new JTextField(to, 5);
 			JTextField fromF = new JTextField(from, 5);
 			JTextField contF = new JTextField(5);
 			JPasswordField passF = new JPasswordField(5);
+
+			// Additional GUI display panels
 			JPanel title = new JPanel();
 			JPanel info = new JPanel();
 			JPanel buttons = new JPanel();
+
+			// Layout and display panels in GUI
 			options.setLayout(new BoxLayout(options.getContentPane(), BoxLayout.Y_AXIS));
 			title.add(new JLabel("Send a New Email"));
 			info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
@@ -304,6 +426,8 @@ public class ProfessorGUI extends PageNavigator {
 			info.add(passF);
 			options.add(title);
 			options.add(info);
+
+			// Button that sends email
 			JButton send = new JButton();
 			send.setText("Send");
 			send.addActionListener(new ActionListener() {
@@ -330,6 +454,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Button to cancel email
 			JButton cancel = new JButton();
 			cancel.setText("Cancel");
 			cancel.addActionListener(new ActionListener() {
@@ -348,19 +474,50 @@ public class ProfessorGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0
+	 * 
+	 */
 	private class AssignmentPage extends JPanel {
 
+		/**
+		 * serial id
+		 */
 		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Standard panel and button setup
+		 */
 		JPanel buttons, main;
 		JList<String> info, sub;
 		JScrollPane aScroll, sScroll;
 		JButton upload, active, downloadSub, grade;
+
+		/**
+		 * Selected assignment and submission
+		 */
 		private Assignment currentAssignment;
 		private Submission currentSub;
+
+		/**
+		 * Vectors of all assignments and submissions for the course
+		 */
 		private Vector<Assignment> assignVector;
 		private Vector<Submission> subVector;
 
+		/**
+		 * Displays assignments
+		 * 
+		 * @param c
+		 *            is client in use
+		 */
 		public AssignmentPage(Client c) {
+			// Set up buttons and panels in frame
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			main = new JPanel();
@@ -370,9 +527,12 @@ public class ProfessorGUI extends PageNavigator {
 			sub = new JList();
 			aScroll = new JScrollPane(info);
 			sScroll = new JScrollPane(sub);
+
+			// Button to upload assignment
 			upload = new JButton("Upload Assignment");
 			upload.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					// Frame to add assignment
 					JFrame options = new JFrame("New Assignment");
 					JTextField aidF = new JTextField(5);
 					JTextField titleF = new JTextField(5);
@@ -394,6 +554,8 @@ public class ProfessorGUI extends PageNavigator {
 					info.add(pathF);
 					options.add("North", title);
 					options.add("Center", info);
+
+					// Button to confirm new assignment upload
 					JButton confirm = new JButton("Confirm");
 					confirm.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -422,6 +584,8 @@ public class ProfessorGUI extends PageNavigator {
 
 						}
 					});
+
+					// Cancel addition of new assignment
 					JButton cancel = new JButton("Cancel");
 					cancel.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -438,6 +602,8 @@ public class ProfessorGUI extends PageNavigator {
 					options.setVisible(true);
 				}
 			});
+
+			// Select a list
 			info.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
@@ -449,6 +615,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Select a submission
 			sub.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (sub.getSelectedIndex() >= 0) {
@@ -457,6 +625,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Switches course between being active and inactive
 			active = new JButton("Toggle Active");
 			active.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -477,6 +647,8 @@ public class ProfessorGUI extends PageNavigator {
 					}
 				}
 			});
+
+			// Button to download submissions
 			downloadSub = new JButton("Download Submission");
 			downloadSub.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -490,11 +662,14 @@ public class ProfessorGUI extends PageNavigator {
 				}
 			});
 			downloadSub.setEnabled(false);
+
+			// Sets a grade for a submission
 			grade = new JButton("Set Grade");
 			grade.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					// New frame for grade addition with comment
 					JFrame options = new JFrame("New Course");
-					JTextField gradeF = new JTextField(""+currentSub.getGrade(), 5);
+					JTextField gradeF = new JTextField("" + currentSub.getGrade(), 5);
 					JTextField commF = new JTextField(currentSub.getComment(), 5);
 					JPanel title = new JPanel();
 					JPanel info = new JPanel();
@@ -508,13 +683,15 @@ public class ProfessorGUI extends PageNavigator {
 					info.add(commF);
 					options.add("North", title);
 					options.add("Center", info);
+
+					// Confirms grade submission and changes grade assiciated with assignment
 					JButton confirm = new JButton("Confirm");
 					confirm.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
 							try {
 								currentSub.setGrade(Integer.parseInt(gradeF.getText()));
 								currentSub.setComment(commF.getText());
-								Message<Submission> message = new Message<Submission>(currentSub,"SETGRADE");
+								Message<Submission> message = new Message<Submission>(currentSub, "SETGRADE");
 								Message<?> receive = c.communicate(message);
 								setSubmissions((Vector<Submission>) receive.getObject());
 								options.dispose();
@@ -523,6 +700,8 @@ public class ProfessorGUI extends PageNavigator {
 							}
 						}
 					});
+
+					// Cancels grade change
 					JButton cancel = new JButton("Cancel");
 					cancel.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -539,6 +718,8 @@ public class ProfessorGUI extends PageNavigator {
 					options.setVisible(true);
 				}
 			});
+
+			// Changes GUI back to the way it was
 			grade.setEnabled(false);
 			buttons.add(upload);
 			buttons.add(active);
@@ -553,6 +734,57 @@ public class ProfessorGUI extends PageNavigator {
 			setAssignments((Vector<Assignment>) receive.getObject());
 		}
 
+		/**
+		 * Reads content of a file
+		 * 
+		 * @param path
+		 * @return file content from file within path
+		 * @throws IOException
+		 * @throws FileNotFoundException
+		 */
+		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
+			File selectedFile = new File(path);
+			long length = selectedFile.length();
+			byte[] content = new byte[(int) length];
+
+			try {
+				FileInputStream fis = new FileInputStream(selectedFile);
+				BufferedInputStream bos = new BufferedInputStream(fis);
+				bos.read(content, 0, (int) length);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return content;
+
+		}
+
+		/**
+		 * Writes to a file
+		 * 
+		 * @param input
+		 * @param sub
+		 * @throws IOException
+		 */
+		void writeFileContent(byte[] input, Submission sub) throws IOException {
+			File newFile = new File(sub.getPath());
+			try {
+				if (!newFile.exists()) {
+					newFile.createNewFile();
+				}
+				FileOutputStream fos = new FileOutputStream(newFile);
+				BufferedOutputStream bos = new BufferedOutputStream(fos);
+				bos.write(input);
+				bos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		/**
+		 * Setters and getters
+		 */
 		public void setAssignments(Vector<Assignment> v) {
 			assignVector = v;
 			String[] temp = new String[v.size()];
@@ -582,7 +814,7 @@ public class ProfessorGUI extends PageNavigator {
 				currentSub = null;
 			}
 		}
-		
+
 		public void setButtons() {
 			if (currentSub != null) {
 				downloadSub.setEnabled(true);
@@ -592,44 +824,27 @@ public class ProfessorGUI extends PageNavigator {
 				grade.setEnabled(false);
 			}
 		}
-
-		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
-			File selectedFile = new File(path);
-			long length = selectedFile.length();
-			byte[] content = new byte[(int) length];
-
-			try {
-				FileInputStream fis = new FileInputStream(selectedFile);
-				BufferedInputStream bos = new BufferedInputStream(fis);
-				bos.read(content, 0, (int) length);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return content;
-
-		}
-
-		void writeFileContent(byte[] input, Submission sub) throws IOException {
-			File newFile = new File(sub.getPath());
-			try {
-				if (!newFile.exists()) {
-					newFile.createNewFile();
-				}
-				FileOutputStream fos = new FileOutputStream(newFile);
-				BufferedOutputStream bos = new BufferedOutputStream(fos);
-				bos.write(input);
-				bos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0
+	 * 
+	 */
 	public class HomePage extends JPanel {
 
+		/**
+		 * serial id
+		 */
 		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * 
+		 */
 		JPanel buttons;
 		JTextArea info;
 		JScrollPane scroll;
