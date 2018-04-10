@@ -473,7 +473,7 @@ public class Worker implements Runnable {
 					database.preparedAdd(chat);
 
 					Vector<Chat> cVector = new Vector<Chat>();
-					cVector = database.listChat((Course) inMessage.getObject());
+					cVector = database.listChat((Chat) inMessage.getObject());
 					System.out.println(cVector);
 					Message<?> outMessage = new Message<Vector<Chat>>(cVector, "CHATLIST");
 					out.writeObject(outMessage);

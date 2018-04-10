@@ -303,6 +303,46 @@ public class DatabaseHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		 sql = "DELETE FROM chats WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM assignments WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM enrolment WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		sql = "DELETE FROM submissions WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, course.getCourseId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void preparedRemove(Submission submission) {
@@ -878,6 +918,30 @@ public class DatabaseHelper {
 
 		try {
 			String sql = "SELECT * FROM chats WHERE COURSENUMBER=" + course.getCourseId();
+
+			Vector<Chat> listofChat = new Vector<Chat>();
+
+			statement = connection.prepareStatement(sql);
+			ResultSet chats = statement.executeQuery(sql);
+
+			while (chats.next()) {
+				Chat temp = new Chat(chats.getInt("COURSENUMBER"), chats.getString("SENDER"),
+						chats.getString("MESSAGE"));
+				listofChat.add(temp);
+			}
+			chats.close();
+			return listofChat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	Vector<Chat> listChat(Chat chat) {
+
+		try {
+			String sql = "SELECT * FROM chats WHERE COURSENUMBER=" + chat.getCoursenum();
 
 			Vector<Chat> listofChat = new Vector<Chat>();
 
