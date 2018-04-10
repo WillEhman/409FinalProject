@@ -187,6 +187,22 @@ public class DatabaseHelper {
 			return false;
 		}
 	}
+	
+	public boolean preparedToggle(Course course) {
+		// System.out.println("Adding Course");
+		String sql = "UPDATE courses SET ACTIVE =? WHERE COURSENUMBER=?";
+		try {
+			statement = connection.prepareStatement(sql);
+			statement.setBoolean(1, course.isActive());
+			statement.setInt(2, course.getCourseId());
+
+			statement.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	public void preparedAdd(Assignment assignment) {
 		String sql = "INSERT INTO assignments VALUES (Default, ?, ?, ?, ?, ?, ?)";
