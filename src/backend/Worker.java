@@ -233,13 +233,13 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Course>>(cVector, "UPDATECOURSE");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("TOGGLECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
 					Course courseToUpdate = (Course) inMessage.getObject();
 					database.preparedToggle(courseToUpdate);
-					
+
 					Vector<Course> cVector = new Vector<Course>();
 					cVector = database.listCourses(courseToUpdate.getProfId());
 					System.out.println(cVector);
@@ -457,7 +457,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 
 				}
-				
+
 				if (inMessage.getQuery().equals("CHATLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Chat> cVector = new Vector<Chat>();
@@ -466,12 +466,12 @@ public class Worker implements Runnable {
 					Message<?> outMessage = new Message<Vector<Chat>>(cVector, "CHATLIST");
 					out.writeObject(outMessage);
 				}
-				
+
 				if (inMessage.getQuery().equals("SENDCHAT")
 						&& inMessage.getObject().getClass().toString().contains("Chat")) {
 					Chat chat = (Chat) inMessage.getObject();
 					database.preparedAdd(chat);
-					
+
 					Vector<Chat> cVector = new Vector<Chat>();
 					cVector = database.listChat((Course) inMessage.getObject());
 					System.out.println(cVector);

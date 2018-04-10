@@ -1,6 +1,13 @@
 package shared;
 
-public class Chat {
+import java.io.Serializable;
+
+public class Chat implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private int coursenum;
 
@@ -38,9 +45,14 @@ public class Chat {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
+
 	public String toString() {
-		return sender + ": " + message;
+		String s;
+		s = sender + ": " + message;
+		// for (int i = 0; i<s.length();i++) {
+		// s.charAt(i) = '\n';
+		// }
+		return s;
 	}
 
 }
