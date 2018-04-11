@@ -20,22 +20,49 @@ import shared.User;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 6 2018
+ * @version 1.0
+ * 
+ *          Worker for helping input and interpret objects. 1 worker per client.
  *
  */
 public class Worker implements Runnable {
 
+	/**
+	 * Input and output streams
+	 */
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
+
+	/**
+	 * Helpers for worker tasks
+	 */
 	private FileHelper fileManager;
 	private DatabaseHelper database;
 	private EmailHelper emailService;
 
+	/**
+	 * Constructor for Worker
+	 * 
+	 * @param commSocket
+	 * @param server
+	 * @throws IOException
+	 */
 	public Worker(Socket commSocket, Server server) throws IOException {
 		System.out.println("\n" + "|-----Created Worker-----|");
 		in = new ObjectInputStream(commSocket.getInputStream());
 		out = new ObjectOutputStream(commSocket.getOutputStream());
 	}
 
+	/**
+	 * Constructor for worker
+	 * 
+	 * @param commSocket
+	 * @param fileManager2
+	 * @param database2
+	 * @param emailService2
+	 * @throws IOException
+	 */
 	public Worker(Socket commSocket, FileHelper fileManager2, DatabaseHelper database2, EmailHelper emailService2)
 			throws IOException {
 		// TODO Auto-generated constructor stub
@@ -53,14 +80,19 @@ public class Worker implements Runnable {
 	public void run() {
 		LoginInfo login = null;
 		System.out.println("|---Running...");
+		/**
+		 * Worker code. Run until broken.
+		 */
 		while (true) {
 
 			try {
+				// Read message in
 				Message<?> inMessage = (Message<?>) in.readObject();
 				System.out.println("\nInput received: ");
 				System.out.println(inMessage.getObject());
 				System.out.println(inMessage.getQuery());
 
+				// Runs when User attempts a log in
 				if (inMessage.getQuery().equals("LOGIN")
 						&& inMessage.getObject().getClass().toString().contains("LoginInfo")) {
 					System.out.println("|---Logging in...");
@@ -89,6 +121,7 @@ public class Worker implements Runnable {
 					}
 				}
 
+				// Runs when attempting to add a user
 				// Syntax is ADDUSER.SPLITTER.USERNAME.SPLITTER.PASSWORD.SPLITTER.ADMINPW
 				if (inMessage.getQuery().contains("ADDUSER")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
@@ -115,6 +148,7 @@ public class Worker implements Runnable {
 
 				}
 
+				// Get list of courses
 				if (inMessage.getQuery().equals("COURSELIST")
 						&& inMessage.getObject().getClass().toString().contains("Professor")) {
 					Vector<Course> cVector = new Vector<Course>();
@@ -124,6 +158,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Get list of courses
 				if (inMessage.getQuery().equals("COURSELIST")
 						&& inMessage.getObject().getClass().toString().contains("Student")) {
 					Vector<Course> cVector = new Vector<Course>();
@@ -133,6 +168,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Get list of students
 				if (inMessage.getQuery().equals("STUDENTLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					// String [] split = inMessage.getQuery().split(".SPLITTER.");
@@ -143,6 +179,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to enroll a new student
 				if (inMessage.getQuery().contains("ENROLLSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
@@ -166,6 +203,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to remove a student
 				if (inMessage.getQuery().contains("REMOVESTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
@@ -180,6 +218,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Searches a course by id of students
 				if (inMessage.getQuery().contains("SEARCHSTUDENTSID")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
@@ -191,6 +230,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Searches a course by last name of students
 				if (inMessage.getQuery().contains("SEARCHSTUDENTSLN")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					String[] split = inMessage.getQuery().split(".SPLITTER.");
@@ -202,6 +242,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to add a course to the list of courses
 				if (inMessage.getQuery().equals("ADDCOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -220,6 +261,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Updates a course
 				if (inMessage.getQuery().equals("UPDATECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -234,6 +276,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Toggles course active/inactive
 				if (inMessage.getQuery().equals("TOGGLECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -247,6 +290,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to remove a course
 				if (inMessage.getQuery().equals("REMOVECOURSE")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -260,6 +304,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// List assignments of a prof
 				// TODO implement different versions for prof and student that only show when
 				// flagged as active
 				if (inMessage.getQuery().equals("ASSIGNMENTLISTPROF")
@@ -271,6 +316,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Lists assignments of a student
 				if (inMessage.getQuery().equals("ASSIGNMENTLISTSTUDENT")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 
@@ -281,6 +327,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Lists assignment due date
 				if (inMessage.getQuery().equals("ASSIGNMENTDUE")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Assignment a = (Assignment) inMessage.getObject();
@@ -293,6 +340,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Retrieve assignment active/inactive
 				if (inMessage.getQuery().equals("ACTIVATEASSIGNMENT")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 
@@ -306,6 +354,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Shows submission for a prof
 				if (inMessage.getQuery().equals("SUBMISSIONPROFLIST")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Vector<Submission> aVector = new Vector<Submission>();
@@ -315,6 +364,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Lists submissions
 				if (inMessage.getQuery().contains("SUBMISSIONLIST")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 
@@ -328,6 +378,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Views a specific submission
 				// TODO convert file sending to send back a submission filled with byte data
 				// rather than just sending the data
 				if (inMessage.getQuery().equals("VIEWSUBMISSION")
@@ -348,6 +399,7 @@ public class Worker implements Runnable {
 					System.out.println("Message sent back");
 				}
 
+				// Attempts to upload a submission
 				if (inMessage.getQuery().contains("UPLOADSUBMISSION")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();
@@ -368,6 +420,7 @@ public class Worker implements Runnable {
 
 				}
 
+				// Attempts to set a grade for a submission
 				if (inMessage.getQuery().equals("SETGRADE")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();
@@ -382,6 +435,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to set a comment on a submission
 				if (inMessage.getQuery().equals("SETCOMMENT")
 						&& inMessage.getObject().getClass().toString().contains("Submission")) {
 					Submission s = (Submission) inMessage.getObject();
@@ -396,6 +450,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to get a prof for a course
 				if (inMessage.getQuery().equals("GETPROF")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Course c = (Course) inMessage.getObject();
@@ -405,6 +460,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to create a file
 				// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
 				// Should contain data in object in form byte[]
 				if (inMessage.getQuery().contains("CREATEFILE")) {
@@ -425,6 +481,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to read a file
 				if (inMessage.getQuery().contains("READFILE")
 						&& inMessage.getObject().getClass().toString().contains("Assignment")) {
 					Assignment a = (Assignment) inMessage.getObject();// Should contain path i.e (test.txt)
@@ -442,6 +499,7 @@ public class Worker implements Runnable {
 					System.out.println("Message sent back");
 				}
 
+				// Attempts to send an email
 				if (inMessage.getQuery().contains("SENDEMAIL")
 						&& inMessage.getObject().getClass().toString().contains("Email")) {
 					String response = "";
@@ -458,6 +516,7 @@ public class Worker implements Runnable {
 
 				}
 
+				// Lists chat messages for a course
 				if (inMessage.getQuery().equals("CHATLIST")
 						&& inMessage.getObject().getClass().toString().contains("Course")) {
 					Vector<Chat> cVector = new Vector<Chat>();
@@ -467,6 +526,7 @@ public class Worker implements Runnable {
 					out.writeObject(outMessage);
 				}
 
+				// Attempts to send a chat message
 				if (inMessage.getQuery().equals("SENDCHAT")
 						&& inMessage.getObject().getClass().toString().contains("Chat")) {
 					Chat chat = (Chat) inMessage.getObject();
@@ -488,6 +548,7 @@ public class Worker implements Runnable {
 			}
 		}
 
+		// Closes input and output streams
 		try {
 			in.close();
 			out.close();
@@ -496,6 +557,9 @@ public class Worker implements Runnable {
 		}
 	}
 
+	/**
+	 * Closes the connection
+	 */
 	// TODO see if necessary
 	void closeConnection() {
 

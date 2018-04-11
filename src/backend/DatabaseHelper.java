@@ -10,6 +10,10 @@ import java.util.Vector;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 5 2018
+ * @version 1.0
+ * 
+ *          DatabaseHelper for communication with the database
  *
  */
 
@@ -18,7 +22,6 @@ public class DatabaseHelper {
 	// Database data members
 	private PreparedStatement statement;
 	private Connection connection;
-	// TODO format this
 	public String databaseName = "school_master", usersTable = "users", coursesTable = "courses",
 			assignmentsTable = "assignments";
 	public String connectionInfo = "jdbc:mysql://localhost:3306/school_master?verifyServerCertificate=false&useSSL=true",
@@ -70,6 +73,12 @@ public class DatabaseHelper {
 		return null;
 	}
 
+	/**
+	 * Logs in user
+	 * 
+	 * @param login
+	 * @return
+	 */
 	public User Login(LoginInfo login) {
 		String sql = "SELECT * FROM users WHERE USERNAME= ?";
 		ResultSet user;
@@ -90,6 +99,13 @@ public class DatabaseHelper {
 		return null;
 	}
 
+	/**
+	 * Returns true if student login is valid
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public boolean isValidStudentLogin(String username, String password) {
 		String sql = "SELECT * FROM users WHERE USERNAME= ?";
 		ResultSet user;
@@ -111,6 +127,13 @@ public class DatabaseHelper {
 		return false;
 	}
 
+	/**
+	 * Returns true if prof login is valid
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public boolean isValidProfLogin(String username, String password) {
 		String sql = "SELECT * FROM users WHERE USERNAME= ?";
 		ResultSet user;
@@ -132,6 +155,14 @@ public class DatabaseHelper {
 		return false;
 	}
 
+	/**
+	 * Makes prepared statement for Add
+	 * 
+	 * @param user
+	 * @param username
+	 * @param password
+	 * @return
+	 */
 	public boolean preparedAdd(User user, String username, String password) {
 		String sql = "INSERT INTO users VALUES ( Default, ?, ?, ?, ?, ?, ?)";
 		try {
@@ -152,6 +183,11 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Gets administrator password
+	 * 
+	 * @return
+	 */
 	public String getAdminPW() {
 		String sql = "SELECT * FROM users WHERE ID= ?";
 		ResultSet user;
@@ -170,6 +206,12 @@ public class DatabaseHelper {
 		return null;
 	}
 
+	/**
+	 * Creates prepared statement for add
+	 * 
+	 * @param course
+	 * @return
+	 */
 	public boolean preparedAdd(Course course) {
 		// System.out.println("Adding Course");
 		String sql = "INSERT INTO courses VALUES ( ?, ?, ?, ?)";
@@ -188,6 +230,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for toggle
+	 * 
+	 * @param course
+	 * @return
+	 */
 	public boolean preparedToggle(Course course) {
 		// System.out.println("Adding Course");
 		String sql = "UPDATE courses SET ACTIVE =? WHERE COURSENUMBER=?";
@@ -204,6 +252,11 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for Add
+	 * 
+	 * @param assignment
+	 */
 	public void preparedAdd(Assignment assignment) {
 		String sql = "INSERT INTO assignments VALUES (Default, ?, ?, ?, ?, ?, ?)";
 		try {
@@ -221,6 +274,11 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for add
+	 * 
+	 * @param submission
+	 */
 	public void preparedAdd(Submission submission) {
 		String sql = "INSERT INTO submissions VALUES (Default, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
@@ -240,6 +298,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for setting course as active
+	 * 
+	 * @param id
+	 * @param active
+	 */
 	public void preparedSetActive(int id, boolean active) {
 		String sql = "UPDATE courses SET ACTIVE = ? WHERE COURSENUMBER = ?";
 		try {
@@ -253,6 +317,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for setting assignments as active
+	 * 
+	 * @param a
+	 * @param active
+	 */
 	public void preparedSetActive(Assignment a, boolean active) {
 		String sql = "UPDATE assignments SET ACTIVE = ? WHERE COURSENUMBER = ? AND ASSIGNMENTID = ?";
 		try {
@@ -268,6 +338,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for setting assignments as due
+	 * 
+	 * @param a
+	 * @param date
+	 */
 	public void preparedSetDue(Assignment a, String date) {
 		String sql = "UPDATE courses SET DUEDATE = ? WHERE COURSENUMBER = ?";
 		try {
@@ -281,6 +357,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for removing a user
+	 * 
+	 * @param user
+	 */
+
 	public void preparedRemove(User user) {
 		String sql = "DELETE FROM users WHERE ID=?";
 		try {
@@ -293,6 +375,11 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for removing a course
+	 * 
+	 * @param course
+	 */
 	public void preparedRemove(Course course) {
 		String sql = "DELETE FROM courses WHERE COURSENUMBER=?";
 		try {
@@ -345,6 +432,11 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for removing a submission
+	 * 
+	 * @param submission
+	 */
 	public void preparedRemove(Submission submission) {
 		String sql = "DELETE FROM submissions WHERE SID=?";
 		try {
@@ -357,6 +449,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates prepared statement for searching users
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsers(int id) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -377,6 +475,13 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates prepared statement for searching for users within a course
+	 * 
+	 * @param id
+	 * @param coursenumber
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsersinCourse(int id, int coursenumber) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -403,6 +508,12 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for searching for users by last name
+	 * 
+	 * @param lastname
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsers(String lastname) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -422,6 +533,13 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for searching for students
+	 * 
+	 * @param lastname
+	 * @param coursenumber
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsersinCourse(String lastname, int coursenumber) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -448,6 +566,13 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for searching for users
+	 * 
+	 * @param lastname
+	 * @param object
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsersinCourse(String lastname, Course object) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -474,6 +599,12 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for searching for users
+	 * 
+	 * @param object
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsersinCourse(Course object) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -500,6 +631,13 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for searching for users
+	 * 
+	 * @param id
+	 * @param object
+	 * @return
+	 */
 	public Vector<User> preparedSearchUsersinCourse(int id, Course object) {
 		Vector<User> results = new Vector<User>();
 		try {
@@ -526,6 +664,12 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for enrolling students
+	 * 
+	 * @param userid
+	 * @param courseid
+	 */
 	public void preparedEnrol(int userid, int courseid) {
 		String sql = "INSERT INTO enrolment VALUES (Default, ?, ?)";
 		try {
@@ -540,12 +684,19 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates a prepared statement for enrolling students
+	 * 
+	 * @param userid
+	 * @param course
+	 * @return
+	 */
 	public boolean preparedEnrol(int userid, Course course) {
 		Vector<User> vu1 = preparedSearchUsers(userid); // confirm user exists
 		if (vu1.size() != 1) {
 			return false;
 		}
-		Vector<User> vu2 = preparedSearchUsersinCourse(userid, course); // confirm they arent already enrolled
+		Vector<User> vu2 = preparedSearchUsersinCourse(userid, course); // confirm they aren't already enrolled
 		if (vu2.size() != 0) {
 			return false;
 		}
@@ -565,6 +716,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates a prepared statement for unenrolling students
+	 * 
+	 * @param userid
+	 * @param courseid
+	 */
 	public void preparedUnenrol(int userid, int courseid) {
 		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
 		try {
@@ -578,6 +735,12 @@ public class DatabaseHelper {
 		}
 	}
 
+	/**
+	 * Creates a prepared statement for unenrolling students
+	 * 
+	 * @param userid
+	 * @param course
+	 */
 	public void preparedUnenrol(int userid, Course course) {
 		String sql = "DELETE FROM enrolment WHERE COURSENUMBER=? AND USERID = ?";
 		try {
@@ -591,8 +754,14 @@ public class DatabaseHelper {
 		}
 	}
 
-	// TODO make prepared
+	/**
+	 * Creates a prepared statement for listing courses
+	 * 
+	 * @param prof
+	 * @return
+	 */
 	Vector<Course> listCourses(Professor prof) {
+
 		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + prof.getId();
 		try {
 			Vector<Course> listofCourses = new Vector<Course>();
@@ -618,6 +787,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing courses
+	 * 
+	 * @param student
+	 * @return
+	 */
 	Vector<Course> listCourses(Student student) {
 		Vector<Course> results = new Vector<Course>();
 		try {
@@ -644,6 +819,12 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared statement for listing assignments in a course
+	 * 
+	 * @param course
+	 * @return
+	 */
 	Vector<Assignment> listAssignmentsProf(Course course) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + course.getCourseId();
 		try {
@@ -672,6 +853,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing assignments from a course
+	 * 
+	 * @param courseId
+	 * @return
+	 */
 	Vector<Assignment> listAssignmentsProf(int courseId) {
 		String sql = "SELECT * FROM assignments WHERE COURSENUMBER = " + courseId;
 		try {
@@ -700,6 +887,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing assignments for a course
+	 * 
+	 * @param course
+	 * @return
+	 */
 	Vector<Assignment> listAssignmentsStudent(Course course) {
 		String sql = "SELECT * FROM assignments WHERE ACTIVE=TRUE AND COURSENUMBER=" + course.getCourseId();
 		try {
@@ -728,7 +921,12 @@ public class DatabaseHelper {
 
 	}
 
-	// TODO make prepared statement
+	/**
+	 * Creates a prepared statement for listing courses
+	 * 
+	 * @param profid
+	 * @return
+	 */
 	Vector<Course> listCourses(int profid) {
 		String sql = "SELECT * FROM courses WHERE PROFESSORID = " + profid;
 		try {
@@ -755,6 +953,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing submissions for an assignment
+	 * 
+	 * @param assignment
+	 * @return
+	 */
 	Vector<Submission> listSubmissions(Assignment assignment) {
 		// System.out.println(assignment.getCourseId());
 		// System.out.println(assignment.getAssignId());
@@ -790,6 +994,13 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing submissions for an assignment
+	 * 
+	 * @param assignment
+	 * @param studentId
+	 * @return
+	 */
 	public Vector<Submission> listSubmissions(Assignment assignment, int studentId) {
 
 		try {
@@ -816,6 +1027,12 @@ public class DatabaseHelper {
 		return null;
 	}
 
+	/**
+	 * Creates a prepared statement for listing submissions
+	 * 
+	 * @param submission
+	 * @return
+	 */
 	Vector<Submission> listSubmissions(Submission submission) {
 
 		try {
@@ -849,6 +1066,13 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing a single student's submissions
+	 * 
+	 * @param submission
+	 * @param studentid
+	 * @return
+	 */
 	Vector<Submission> listSubmissions(Submission submission, int studentid) {
 
 		try {
@@ -880,6 +1104,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Finds professor of a course
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public Professor findProf(Course c) {
 		Professor results = new Professor();
 		try {
@@ -899,6 +1129,11 @@ public class DatabaseHelper {
 		return results;
 	}
 
+	/**
+	 * Creates a prepared add statement for a message for the chat
+	 * 
+	 * @param chat
+	 */
 	public void preparedAdd(Chat chat) {
 		String sql = "INSERT INTO chats VALUES (Default, ?, ?, ?)";
 		try {
@@ -914,6 +1149,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for retrieving chat messages
+	 * 
+	 * @param course
+	 * @return
+	 */
 	Vector<Chat> listChat(Course course) {
 
 		try {
@@ -938,6 +1179,12 @@ public class DatabaseHelper {
 
 	}
 
+	/**
+	 * Creates a prepared statement for listing chat messages
+	 * 
+	 * @param chat
+	 * @return
+	 */
 	Vector<Chat> listChat(Chat chat) {
 
 		try {
@@ -960,6 +1207,84 @@ public class DatabaseHelper {
 		}
 		return null;
 
+	}
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintCourses() {
+		try {
+			String sql = "SELECT * FROM " + coursesTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Courses:");
+			while (course.next()) {
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("PROFESSORID") + " "
+						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintUsers() {
+		try {
+			String sql = "SELECT * FROM " + usersTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Users:");
+			while (course.next()) {
+				System.out.println(
+						course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD")
+								+ " " + course.getString("TYPE") + " " + course.getString("FIRSTNAME") + " "
+								+ course.getString("LASTNAME") + " " + course.getString("EMAIL"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintAssignments() {
+		try {
+			String sql = "SELECT * FROM " + assignmentsTable;
+			statement = connection.prepareStatement(sql);
+			ResultSet course = statement.executeQuery(sql);
+			System.out.println("Assignments:");
+			while (course.next()) {
+				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("ASSIGNMENTID") + " "
+						+ course.getString("FILEPATH"));
+			}
+			course.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * prints all items in database to console
+	 */
+	public void preparedprintEnrolments() {
+		try {
+			String sql = "SELECT * FROM enrolment";
+			statement = connection.prepareStatement(sql);
+			ResultSet rset = statement.executeQuery(sql);
+			System.out.println("Enrolments:");
+			while (rset.next()) {
+				System.out.println(rset.getInt("ENROLMENTID") + " " + rset.getInt("USERID") + " "
+						+ rset.getString("COURSENUMBER"));
+			}
+			rset.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// ~~~~~~~~~~~~~FOR_TESTING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1089,84 +1414,6 @@ public class DatabaseHelper {
 			System.out.println("\nThe program is finished running through the Database");
 		}
 
-	}
-
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintCourses() {
-		try {
-			String sql = "SELECT * FROM " + coursesTable;
-			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
-			System.out.println("Courses:");
-			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("PROFESSORID") + " "
-						+ course.getString("COURSENAME") + " " + course.getBoolean("ACTIVE"));
-			}
-			course.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintUsers() {
-		try {
-			String sql = "SELECT * FROM " + usersTable;
-			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
-			System.out.println("Users:");
-			while (course.next()) {
-				System.out.println(
-						course.getString("ID") + " " + course.getString("USERNAME") + " " + course.getString("PASSWORD")
-								+ " " + course.getString("TYPE") + " " + course.getString("FIRSTNAME") + " "
-								+ course.getString("LASTNAME") + " " + course.getString("EMAIL"));
-			}
-			course.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintAssignments() {
-		try {
-			String sql = "SELECT * FROM " + assignmentsTable;
-			statement = connection.prepareStatement(sql);
-			ResultSet course = statement.executeQuery(sql);
-			System.out.println("Assignments:");
-			while (course.next()) {
-				System.out.println(course.getInt("COURSENUMBER") + " " + course.getInt("ASSIGNMENTID") + " "
-						+ course.getString("FILEPATH"));
-			}
-			course.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * prints all items in database to console
-	 */
-	public void preparedprintEnrolments() {
-		try {
-			String sql = "SELECT * FROM enrolment";
-			statement = connection.prepareStatement(sql);
-			ResultSet rset = statement.executeQuery(sql);
-			System.out.println("Enrolments:");
-			while (rset.next()) {
-				System.out.println(rset.getInt("ENROLMENTID") + " " + rset.getInt("USERID") + " "
-						+ rset.getString("COURSENUMBER"));
-			}
-			rset.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }

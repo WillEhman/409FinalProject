@@ -29,13 +29,34 @@ import javax.swing.event.ListSelectionListener;
  */
 public class StudentGUI extends PageNavigator {
 
+	/**
+	 * client currently in use
+	 */
 	private Client client;
+
+	/**
+	 * current Student in use
+	 */
 	private Student student;
+
+	/**
+	 * current Professor in use
+	 */
 	private Professor currentProf;
 
+	/**
+	 * constructor for ProfessorGUI
+	 * 
+	 * @param user
+	 *            is user of StudentGUI
+	 * @param client
+	 *            is client aggregated by ProfessorGUI
+	 */
 	public StudentGUI(User user, Client client) {
 		super(client);
 		this.client = client;
+
+		// Set up button to refresh list
 		JButton refresh = new JButton("Refresh");
 		refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -44,6 +65,8 @@ public class StudentGUI extends PageNavigator {
 				setCourses((Vector<Course>) recieve.getObject());
 			}
 		});
+
+		// Set up GUI
 		setCourseListener(new CourseListListener(this));
 		setBoxListener(new BoxListener(this));
 		student = new Student(user);
@@ -60,14 +83,36 @@ public class StudentGUI extends PageNavigator {
 		super.setVisible(true);
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 7, 2018
+	 * @version 1.0
+	 * 
+	 */
 	public class HomePage extends JPanel {
 
+		/**
+		 * serial id
+		 */
 		private static final long serialVersionUID = 1L;
+
+		/**
+		 * standard panel and buttons for homepage
+		 */
 		JPanel buttons;
 		JTextArea info;
 		JScrollPane scroll;
 		JButton email;
 
+		/**
+		 * Constructor for HomePage
+		 * 
+		 * @param c
+		 *            is client being used
+		 */
 		public HomePage(Client c) {
 			Message<Course> message = new Message<Course>(getCurrentCourse(), "GETPROF");
 			Message<?> receive = c.communicate(message);
@@ -91,7 +136,15 @@ public class StudentGUI extends PageNavigator {
 			this.add("Center", scroll);
 		}
 
+		/**
+		 * Sends email
+		 * @param to
+		 * @param from
+		 * @param c
+		 */
 		public void mail(String to, String from, Client c) {
+			
+			// Buttons and input fields
 			JFrame options = new JFrame("Send an Email");
 			JTextField subF = new JTextField(5);
 			JTextField toF = new JTextField(to, 5);
@@ -116,6 +169,8 @@ public class StudentGUI extends PageNavigator {
 			info.add(passF);
 			options.add(title);
 			options.add(info);
+			
+			//Button to send email
 			JButton send = new JButton();
 			send.setText("Send");
 			send.addActionListener(new ActionListener() {
@@ -136,6 +191,8 @@ public class StudentGUI extends PageNavigator {
 					}
 				}
 			});
+			
+			// Cancels email
 			JButton cancel = new JButton();
 			cancel.setText("Cancel");
 			cancel.addActionListener(new ActionListener() {
@@ -154,19 +211,44 @@ public class StudentGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 7, 2018
+	 * @version 1.0
+	 * 
+	 */
 	private class AssignmentPage extends JPanel {
 
+		/**
+		 * serial id
+		 */
 		private static final long serialVersionUID = 1L;
+		
+		/**
+		 * standard buttons and inputs
+		 */
 		JPanel buttons, main;
 		JList<String> info, sub;
 		JScrollPane aScroll, sScroll;
 		JButton upload, download;
+		
+		/**
+		 * Current objects being used by page
+		 */
 		private Assignment currentAssignment;
 		private Submission currentSub;
 		private Vector<Assignment> assignVector;
 		private Vector<Submission> subVector;
 
+		/**
+		 * Constructor for AssignmentPage
+		 * @param c is client in use
+		 */
 		public AssignmentPage(Client c) {
+			// Set up buttons and panels in frame
 			buttons = new JPanel();
 			buttons.setLayout(new FlowLayout());
 			main = new JPanel();
@@ -177,8 +259,12 @@ public class StudentGUI extends PageNavigator {
 			aScroll = new JScrollPane(info);
 			sScroll = new JScrollPane(sub);
 			upload = new JButton("Upload Submission");
+			
+			// Button to upload submission
 			upload.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					
+					// Frame to add submission
 					JFrame options = new JFrame("New Submission");
 					JTextField titleF = new JTextField(5);
 					JTextField pathF = new JTextField(5);
@@ -199,6 +285,8 @@ public class StudentGUI extends PageNavigator {
 					info.add(pathF);
 					options.add("North", title);
 					options.add("Center", info);
+					
+					// Button to confirm input
 					JButton confirm = new JButton("Confirm");
 					confirm.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -228,6 +316,8 @@ public class StudentGUI extends PageNavigator {
 
 						}
 					});
+					
+					// Cancel input
 					JButton cancel = new JButton("Cancel");
 					cancel.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent arg0) {
@@ -244,6 +334,8 @@ public class StudentGUI extends PageNavigator {
 					options.setVisible(true);
 				}
 			});
+			
+			// Selects a list
 			info.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (info.getSelectedIndex() >= 0) {
@@ -256,6 +348,8 @@ public class StudentGUI extends PageNavigator {
 					}
 				}
 			});
+			
+			// Selects a submission
 			sub.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (sub.getSelectedIndex() >= 0) {
@@ -264,6 +358,8 @@ public class StudentGUI extends PageNavigator {
 					}
 				}
 			});
+			
+			// Downloads assigment
 			download = new JButton("Download Assignment");
 			download.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -293,6 +389,10 @@ public class StudentGUI extends PageNavigator {
 			setAssignments((Vector<Assignment>) receive.getObject());
 		}
 
+		/**
+		 * Sets assignments in use
+		 * @param v
+		 */
 		public void setAssignments(Vector<Assignment> v) {
 			assignVector = v;
 			String[] temp = new String[v.size()];
@@ -308,6 +408,10 @@ public class StudentGUI extends PageNavigator {
 			}
 		}
 
+		/**
+		 * sets submission
+		 * @param v
+		 */
 		public void setSubmissions(Vector<Submission> v) {
 			subVector = v;
 			String[] temp = new String[v.size()];
@@ -323,6 +427,9 @@ public class StudentGUI extends PageNavigator {
 			}
 		}
 
+		/**
+		 * Sets up buttons
+		 */
 		public void setButtons() {
 			if (currentAssignment != null) {
 				download.setEnabled(true);
@@ -333,6 +440,13 @@ public class StudentGUI extends PageNavigator {
 			}
 		}
 
+		/**
+		 * Reads content of file
+		 * @param path
+		 * @return
+		 * @throws IOException
+		 * @throws FileNotFoundException
+		 */
 		public byte[] readFileContent(String path) throws IOException, FileNotFoundException {
 			File selectedFile = new File(path);
 			long length = selectedFile.length();
@@ -351,6 +465,12 @@ public class StudentGUI extends PageNavigator {
 
 		}
 
+		/**
+		 * Writes file content to server file
+		 * @param input
+		 * @param assign
+		 * @throws IOException
+		 */
 		void writeFileContent(byte[] input, Assignment assign) throws IOException {
 			File newFile = new File(assign.getPath());
 			try {
@@ -367,14 +487,36 @@ public class StudentGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 7, 2018
+	 * @version 1.0
+	 * 
+	 *          Updates current selected course
+	 * 
+	 */
 	private class CourseListListener implements ListSelectionListener {
 
+		/**
+		 * display of PageNavigator
+		 */
 		PageNavigator display;
 
+		/**
+		 * Constructor
+		 * 
+		 * @param disp
+		 */
 		public CourseListListener(PageNavigator disp) {
 			display = disp;
 		}
 
+		/**
+		 * changes course displayed if value of selected course changed
+		 */
 		public void valueChanged(ListSelectionEvent e) {
 			setCurrentCourse();
 			setCourseName(getCurrentCourse().getCourseName());
@@ -391,14 +533,36 @@ public class StudentGUI extends PageNavigator {
 		}
 	}
 
+	/**
+	 * 
+	 * @author William Ehman
+	 * @author David Parkin
+	 * @author Luke Kushneryk
+	 * @since April 6, 2018
+	 * @version 1.0
+	 * 
+	 *          Drop down menu listener
+	 * 
+	 */
 	private class BoxListener implements ActionListener {
 
+		/**
+		 * display
+		 */
 		PageNavigator display;
 
+		/**
+		 * Constructor for BoxListener
+		 * 
+		 * @param disp
+		 */
 		public BoxListener(PageNavigator disp) {
 			display = disp;
 		}
 
+		/**
+		 * changes display when drop down selection changes
+		 */
 		public void actionPerformed(ActionEvent e) {
 			JComboBox c = (JComboBox) e.getSource();
 			String selected = (String) c.getSelectedItem();

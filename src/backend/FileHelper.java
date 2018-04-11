@@ -10,16 +10,28 @@ import shared.*;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 6 2018
+ * @version 1.0
+ * 
+ *          FileHelper for reading from and writing to files
  *
  */
 public class FileHelper {
 	// private String path;
 
+	/**
+	 * Default constructor
+	 */
 	public FileHelper() {
-		// TODO Auto-generated constructor stub
-
 	}
 
+	/**
+	 * writes to a file
+	 * @param input
+	 * @param query
+	 * @return
+	 * @throws IOException
+	 */
 	// Should contain path in query in form CREATEFILE.SPLITTER.TEST.SPLITTER.txt
 	// Should contain data in object in form byte[]
 	boolean writeFileContent(byte[] input, String query) throws IOException {
@@ -43,6 +55,12 @@ public class FileHelper {
 		}
 	}
 
+	/**
+	 * Reads content of a file
+	 * @param path
+	 * @return
+	 * @throws IOException
+	 */
 	byte[] readFileContent(String path) throws IOException {
 		File selectedFile = new File(path);
 		long length = selectedFile.length();
