@@ -893,15 +893,12 @@ public class ProfessorGUI extends PageNavigator {
 			display(c);
 		}
 
-<<<<<<< HEAD
-=======
 		/**
 		 * Displays panels and buttons
 		 * 
 		 * @param c
 		 *            is client being used
 		 */
->>>>>>> origin/master
 		public void display(Client c) {
 			// Buttons
 			buttons = new JPanel();
