@@ -892,7 +892,13 @@ public class ProfessorGUI extends PageNavigator {
 		public HomePage(Client c) {
 			display(c);
 		}
-		
+
+		/**
+		 * Displays panels and buttons
+		 * 
+		 * @param c
+		 *            is client being used
+		 */
 		public void display(Client c) {
 			// Buttons
 			buttons = new JPanel();
@@ -1023,7 +1029,7 @@ public class ProfessorGUI extends PageNavigator {
 			} else if (selected.equals("Students")) {
 				StudentPage p = new StudentPage(display.getClient(), display);
 				displayPage(p);
-			}  else if (selected.equals("Chatroom")) {
+			} else if (selected.equals("Chatroom")) {
 				ChatroomPage p = new ChatroomPage(professor, client, getCurrentCourse());
 				displayPage(p);
 			}
