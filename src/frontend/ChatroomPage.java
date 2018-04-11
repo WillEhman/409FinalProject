@@ -19,19 +19,58 @@ import shared.Course;
 import shared.Message;
 import shared.Submission;
 import shared.User;
-
+/**
+ * 
+ * @author William Ehman
+ * @author David Parkin
+ * @author Luke Kushneryk
+ * @since April 10 2018
+ * @version 1.0
+ * 
+ *          Client for client-server communication
+ *
+ */
 public class ChatroomPage extends JPanel{
 	
+	/**
+	 * Message to be send
+	 */
 	private JTextArea messages;
+	
+	/**
+	 * User using chatroom
+	 */
 	private User user;
+	
+	/**
+	 * Client being used by user
+	 */
 	private Client client;
+	
+	/**
+	 * Course that chatroom is around
+	 */
 	private Course course;
+	
+	/**
+	 * Chat messages vector
+	 */
 	private Vector<Chat> chatVector;
 	
+	/**
+	 * Constructor for ChatroomPage
+	 * @param user
+	 * @param client
+	 * @param course
+	 */
 	public ChatroomPage(User user, Client client, Course course) {
 		this.user = user;
 		this.client = client;
 		this.course = course;
+		
+		/**
+		 * Panel with user info and buttons
+		 */
 		JPanel info = new JPanel();
 		JPanel buttons = new JPanel();
 		messages = new JTextArea();
@@ -40,6 +79,10 @@ public class ChatroomPage extends JPanel{
 		this.setLayout(new BorderLayout());
 		buttons.setLayout(new FlowLayout());
 		info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+		
+		/**
+		 * Sends message
+		 */
 		JButton send = new JButton("Send");
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -50,6 +93,10 @@ public class ChatroomPage extends JPanel{
 				messageF.setText(null);
 			}
 		});	
+		
+		/**
+		 * Vector of courses
+		 */
 		Message<Course> message = new Message<Course>(course, "CHATLIST");
 		Message<?> receive = client.communicate(message);
 		setChat((Vector<Chat>) receive.getObject());
@@ -60,6 +107,10 @@ public class ChatroomPage extends JPanel{
 		this.add("South", buttons);
 	}
 	
+	/**
+	 * Sets up chat
+	 * @param v
+	 */
 	public void setChat(Vector<Chat> v) {
 		String temp = new String();
 		for (int i = 0; i < v.size(); i++) {
