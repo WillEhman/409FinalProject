@@ -5,27 +5,56 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 /**
  * 
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 6 2018
+ * @version 1.0
+ * 
+ *          Server for communicating with client
  *
  */
 public class Server {
 
+	/**
+	 * Standard sockets
+	 */
 	private ServerSocket serverSocket;
 	private Socket commSocket;
 
+	/**
+	 * Tells if server is running or stopped
+	 */
 	protected boolean isStopped = false;
+
+	/**
+	 * running thread
+	 */
 	protected Thread runningThread = null;
 
+	/**
+	 * pool of threads
+	 */
 	private final ExecutorService threadPool;
+
+	/**
+	 * helpers for server tasks
+	 */
 	private FileHelper fileManager;
 	private DatabaseHelper database;
 	private EmailHelper emailService;
+
+	/**
+	 * id of server
+	 */
 	private int uniqueID;
 
+	/**
+	 * Constructor for server
+	 */
 	public Server() {
 		System.out.println("|------------------Server being created------------------|");
 		threadPool = Executors.newCachedThreadPool();
@@ -41,6 +70,11 @@ public class Server {
 
 	}
 
+	/**
+	 * Runs the server
+	 * 
+	 * @param server
+	 */
 	public void run(Server server) {
 		try {
 			for (;;) {
@@ -52,12 +86,22 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Run main to begin server running
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Server server = new Server();
 		server.run(server);
 
 	}
 
+	/**
+	 * Shuts down the server
+	 * 
+	 * @param server
+	 */
 	void shutdown(Server server) {
 		// TODO see if necessary
 		// Close all sockets
@@ -71,8 +115,10 @@ public class Server {
 
 	}
 
+	/**
+	 * getters and setters
+	 */
 	public ExecutorService getThreadPool() {
-		// TODO see if necessary
 		return threadPool;
 	}
 
@@ -80,8 +126,6 @@ public class Server {
 	// this.threadPool = threadPool;
 	// }
 
-	// FOR ALL FOLLOWING
-	// TODO see if necessary
 	public synchronized boolean isStopped() {
 		return this.isStopped;
 	}

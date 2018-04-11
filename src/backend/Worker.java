@@ -20,6 +20,10 @@ import shared.User;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 6 2018
+ * @version 1.0
+ * 
+ *          Worker for helping input and interpret objects. 1 worker per client.
  *
  */
 public class Worker implements Runnable {

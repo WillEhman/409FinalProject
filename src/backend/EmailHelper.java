@@ -12,15 +12,30 @@ import javax.activation.*;
  * @author William Ehman
  * @author David Parkin
  * @author Luke Kushneryk
+ * @since April 8 2018
+ * @version 1.0
+ * 
+ *          EmailHelper for communication with the email servers
  *
  */
 public class EmailHelper {
-	// Should this have variables?
-	
+
+	/**
+	 * Default constructor
+	 */
 	public EmailHelper() {
-		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Sends an email
+	 * 
+	 * @param sender
+	 * @param senderPw
+	 * @param recipient
+	 * @param subject
+	 * @param content
+	 * @return if email succeeded or failed to send
+	 */
 	public String SendEmail(final String sender, String senderPw, String recipient, String subject, String content) {
 		String response = "Success";
 		InternetAddress RECIPIENT_ADDRESS = null;
@@ -54,12 +69,17 @@ public class EmailHelper {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 			response = "Fail";
-			
+
 		}
 		return response;
 	}
-	
-	public static void main(String [] args) {
+
+	/**
+	 * For testing EmailHelper
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
 		String sender1 = "stevesjob69@gmail.com";
 		String senderPw1 = "wowzers409";
 		String recipient1 = "zoochegg@gmail.com";
