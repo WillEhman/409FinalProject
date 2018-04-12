@@ -74,6 +74,7 @@ public class ChatroomPage extends JPanel{
 		JPanel info = new JPanel();
 		JPanel buttons = new JPanel();
 		messages = new JTextArea();
+		messages.setEditable(false);
 		JScrollPane scroll = new JScrollPane(messages);
 		JTextField messageF = new JTextField(60);
 		this.setLayout(new BorderLayout());
